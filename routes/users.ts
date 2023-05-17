@@ -5,22 +5,16 @@ router.post('/register',);
 
 router.post('/login',);
 
-// user
+// get all
 router.get('/',);
 
-// admin
+// get
 router.get('/:id',);
 
-// user
-router.put('/',);
-
-// admin
+// update
 router.put('/:id',);
 
-// user
-router.delete('/',);
-
-// admin
+// delete
 router.delete('/:id',);
 
 // module.exports = router;
