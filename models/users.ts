@@ -2,68 +2,66 @@ import mongoose from "mongoose";
 
 const UsersSchema = new mongoose.Schema(
     {
-        icon:{
-            type: String
-        },
-        nick:{
+        icon: {
             type: String,
-            required: true
+        },
+        nick: {
+            type: String,
+            required: true,
         },
         name: {
             type: String,
-            required: true
+            required: true,
         },
-        surname:{
+        surname: {
             type: String,
-            required: true
+            required: true,
         },
         email: {
             type: String,
             unique: true,
-            required: true
+            required: true,
         },
         password: {
             type: String,
-            required: true
+            required: true,
         },
         role: {
             type: String,
             enum: ["user", "admin"],
             default: "user",
-            required: true
+            required: true,
         },
         birthdate: {
-            type: Date
+            type: Date,
         },
         location: {
-            type: String
-        }
+            type: String,
+        },
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
-        versionKey: false
+        versionKey: false,
     }
 );
 
 UsersSchema.index({ nick: 1 });
 
-const UsersSumSchema = new mongoose.Schema(
-    {
-        _id:{
-            type: String,
-            required: true
-        },
-        icon:{
-            type: String
-        },
-        nick:{
-            type: String
-        },
-        email: {
-            type: String
-        }
-    }
-);
+const UsersSumSchema = new mongoose.Schema({
+    _id: {
+        type: String,
+        required: true,
+    },
+    icon: {
+        type: String,
+    },
+    nick: {
+        type: String,
+    },
+    email: {
+        type: String,
+    },
+});
 
 export default mongoose.model("users", UsersSchema);
-export {UsersSumSchema}
+export { UsersSumSchema };
