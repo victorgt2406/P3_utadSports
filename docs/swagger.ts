@@ -230,7 +230,7 @@ const options:swaggerJsdoc.Options = {
       },
     },
   },
-  apis: ["./routes/*.js"],
+  apis: ["./dist/routes/*.js"],
 };
 
 export default swaggerJsdoc(options);
