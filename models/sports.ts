@@ -1,27 +1,27 @@
 const SPORTS = ["football", "basketball", "padel"];
 import mongoose from "mongoose";
-import { MesageSchema } from "./messages";
+import { ContentSchema } from "./messages";
 
 const SportsSchema = new mongoose.Schema(
-  {
-    _id: {
-      type: String,
-      unique: true,
-      required: true,
+    {
+        _id: {
+            type: String,
+            unique: true,
+            required: true,
+        },
+        rules: {
+            type: ContentSchema,
+            required: true,
+        },
+        locations: {
+            type: [String],
+            required: true,
+        },
     },
-    rules: {
-      type: MesageSchema,
-      required: true,
-    },
-    locations: {
-        type: [String],
-        required: true,
-    },
-  },
-  {
-    timestamps: true, // TODO createdAt, updatedAt
-    versionKey: false,
-  }
+    {
+        timestamps: true, // TODO createdAt, updatedAt
+        versionKey: false,
+    }
 );
 
 SportsSchema.index({ nick: 1 });

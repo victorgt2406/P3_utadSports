@@ -50,19 +50,17 @@ UsersSchema.index({ nick: 1 });
 const UsersSumSchema = new mongoose.Schema(
     {
         _id:{
-            type: String
+            type: String,
+            required: true
         },
         icon:{
             type: String
         },
         nick:{
-            type: String,
-            required: true
+            type: String
         },
         email: {
-            type: String,
-            unique: true,
-            required: true
+            type: String
         }
     }
 );

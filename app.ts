@@ -1,12 +1,12 @@
 // express and preconfiguration
-import express, { Express, Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express, { Express, Request, Response } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 dotenv.config();
 // routes
-import routes from './routes';
+import routes from "./routes";
 // documentation
-import swaggerUi from 'swagger-ui-express';
+import swaggerUi from "swagger-ui-express";
 import swaggerSpecs from "./docs/swagger";
 
 // configuration
@@ -20,11 +20,10 @@ const port = process.env.PORT;
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // import all the routes to the app
-app.use('/api', routes);
+app.use("/api", routes);
 
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Express + TypeScript Server");
 });
 
 app.listen(port, () => {

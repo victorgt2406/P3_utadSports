@@ -6,28 +6,28 @@ const Teams = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true
+            required: true,
         },
-        description:{
+        description: {
             type: String,
-            required: true
+            required: true,
         },
         sport: {
             type: String,
             enum: SPORTS,
-            required: true
+            required: true,
         },
         captain: {
             type: UsersSumSchema,
-            required: true
+            required: true,
         },
         players: {
-            type: [UsersSumSchema]
-        }
+            type: [UsersSumSchema],
+        },
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
-        versionKey: false
+        versionKey: false,
     }
 );
 
