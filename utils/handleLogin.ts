@@ -5,13 +5,13 @@ import { tokenSign } from "./handleJwt";
 * @param {*} user
 * @param {Response} res 
 */
-const handleLogin = async ({_id, role, ...user}:any,res:Response) => {
-    const token = await tokenSign({_id, role});
+const handleLogin = async ({_id, role, ...user}:any,res:Response, hours:number = 2) => {
+    const token = await tokenSign({_id, role, hours});
     res.send({
         user: {_id, role, ...user},
         token: {
             token,
-            hoursExp: 2
+            hoursExp: hours
         }
     });
 }
