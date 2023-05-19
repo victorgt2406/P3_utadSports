@@ -9,12 +9,9 @@ import { RequestWithUser } from "../middleware/tokenAuth";
 
 const registerUser = async (req: Request, res: Response) => {
     const body = matchedData(req);
-    // console.log(req);
     body.password = await encrypt(body.password);
-    // const body = { ...data, password };
     try {
         if (body.icon === undefined) {
-            // console.log(req);
             body.icon = getRamdomAvatarUrl(req);
         }
         const user = await usersModel.create(body);
@@ -51,11 +48,13 @@ const updateUser = async (req: RequestWithUser, res: Response) => {
     const body = matchedData(req);
     if (id === user.id || user.role === "admin") {
         try {
-            res.send(await usersModel.updateOne({ _id: id },{$set: body}));
+            if (body.password) {
+                body.password = await encrypt(body.password);
+            }
+            res.send(await usersModel.updateOne({ _id: id }, { $set: body }));
         } catch (err) {
             console.log(err);
             handleError(res, "UPDATE_ERROR");
-            
         }
     } else {
         handleError(res, "UPDATE_NOT_ALLOWED");
@@ -71,7 +70,6 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
         } catch (err) {
             console.log(err);
             handleError(res, "DELETE_ERROR");
-            
         }
     } else {
         handleError(res, "DELETE_NOT_ALLOWED");
