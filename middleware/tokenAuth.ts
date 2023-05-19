@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 
-import handleError from "./utils/handleError";
-import { verifyToken } from "./utils/handleJwt";
-import { usersModel } from "./models";
+import handleError from "../utils/handleError";
+import { verifyToken } from "../utils/handleJwt";
+import { usersModel } from "../models";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { JwtPayload } from "jsonwebtoken";
-import { User } from "./models/users";
+import { User } from "../models/users";
 import { RequestHandler } from "express";
 
 // Define your own Request type that includes the 'user' property

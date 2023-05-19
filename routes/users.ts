@@ -1,7 +1,7 @@
 import express from "express";
 import { validatorLogin, validatorRegister } from "../validators/users";
 import { deleteUser, loginUser, registerUser } from "../controllers/users";
-import tokenAuth from "../tokenAuth";
+import tokenAuth from "../middleware/tokenAuth";
 const router = express.Router();
 
 /**

@@ -34,9 +34,7 @@ describe("users", () => {
         expect(response.body.user.role).toEqual("user");
         expect(response.body.token.hoursExp).toEqual(2);
 
-        
         token = response.body.token.token;
-        console.log(token);
         id = response.body.user._id;
     });
 
@@ -46,6 +44,8 @@ describe("users", () => {
             .auth(token, { type: "bearer" })
             .expect(200);
         console.log(response.body);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
     });
 });
 

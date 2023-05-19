@@ -5,7 +5,7 @@ import { encrypt, compare } from "../utils/handlePassword";
 import getRamdomAvatarUrl from "../utils/handleRandomAvatar";
 import { Request, Response } from "express";
 import handleLogin from "../utils/handleLogin";
-import { RequestWithUser } from "../tokenAuth";
+import { RequestWithUser } from "../middleware/tokenAuth";
 
 const registerUser = async (req: Request, res: Response) => {
     const body = matchedData(req);
@@ -48,12 +48,13 @@ const loginUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: RequestWithUser, res: Response) => {
     const { id } = req.params;
     const user = req.user!;
-    if (id === user._id || user.role === "admin") {
+    if (id === user.id || user.role === "admin") {
         try {
             res.send(await usersModel.deleteOne({ _id: id }));
         } catch (err) {
             console.log(err);
             handleError(res, "DELETE_ERROR");
+            
         }
     } else {
         handleError(res, "DELETE_NOT_ALLOWED");

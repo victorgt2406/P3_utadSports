@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 interface User extends Document {
-    _id: string;
+    id: string;
     icon: string;
     nick: string;
     name: string;
@@ -35,6 +35,11 @@ const UsersSchema = new mongoose.Schema<User>(
         versionKey: false,
     }
 );
+
+UsersSchema.virtual('id').get(function () {
+    return this._id.toString();
+  });
+  
 
 UsersSchema.index({ nick: 1 });
 
