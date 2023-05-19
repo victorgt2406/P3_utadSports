@@ -17,6 +17,7 @@ describe("users", () => {
             })
             .set("Accept", "application/json")
             .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
         expect(response.body.user.name).toEqual("userName");
         expect(response.body.user.email).toEqual("user@test.com");
         expect(response.body.user.role).toEqual("user");
@@ -29,6 +30,7 @@ describe("users", () => {
             .send({ email: "user@test.com", password: "HolaMundo.01" })
             .set("Accept", "application/json")
             .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
         expect(response.body.user.name).toEqual("userName");
         expect(response.body.user.email).toEqual("user@test.com");
         expect(response.body.user.role).toEqual("user");
@@ -40,12 +42,23 @@ describe("users", () => {
 
     it("should update a user", async () => {
         const response = await request(app)
-            .put("/api/users/"+id)
+            .put("/api/users/" + id)
             .auth(token, { type: "bearer" })
             .send({ nick: "nickUpdated", birthdate: "2002-06-24" })
             .set("Accept", "application/json")
             .expect(200);
-        console.log(response.body);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.modifiedCount).toEqual(1);
+    });
+
+    it("should get a user", async () => {
+        const response = await request(app)
+            .get("/api/users/" + id)
+            .auth(token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.nick).toEqual("nickUpdated");
+        expect(response.body.birthdate).toEqual((new Date("2002-06-24")).toISOString());
     });
 
     it("should delete the user", async () => {

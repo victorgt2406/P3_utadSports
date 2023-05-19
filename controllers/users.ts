@@ -76,4 +76,19 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
     }
 };
 
-export { registerUser, loginUser, updateUser, deleteUser };
+const getUser = async (req: RequestWithUser, res: Response) => {
+    const { id } = req.params;
+    const user = req.user!;
+    if (id === user.id || user.role === "admin") {
+        try {
+            res.send(await usersModel.findOne({ _id: id }, {password: 0}));
+        } catch (err) {
+            console.log(err);
+            handleError(res, "GET_ERROR");
+        }
+    } else {
+        handleError(res, "GET_NOT_ALLOWED");
+    }
+};
+
+export { registerUser, loginUser, updateUser, deleteUser, getUser };
