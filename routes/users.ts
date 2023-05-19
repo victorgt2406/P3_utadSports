@@ -1,4 +1,6 @@
 import express from "express";
+import { validatorLogin, validatorRegister } from "../validators/users";
+import { loginUser, registerUser } from "../controllers/users";
 const router = express.Router();
 
 /**
@@ -12,7 +14,7 @@ const router = express.Router();
  *          '200':
  *              description: User has been registered and it will return a login
  */ 
-router.post('/register',);
+router.post('/register', validatorRegister, registerUser);
 
 /**
  * @openapi
@@ -25,7 +27,7 @@ router.post('/register',);
  *          '200':
  *              description: User has loged succesfully
  */ 
-router.post('/login',);
+router.post('/login', validatorLogin, loginUser);
 
 /**
  * @openapi

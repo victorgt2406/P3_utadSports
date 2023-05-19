@@ -1,12 +1,12 @@
 ### REGISTER ADMIN
-POST http://localhost:3000/api/users/resgister
-Accept: application/json
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
 
 {
     "name": "adminName",
     "surname": "adminSurname",
     "nick": "admin",
-    "pasword": "adminadmin",
+    "password": "adminadmin",
     "email": "admin@admin.com"
 }
 ###

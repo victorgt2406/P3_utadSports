@@ -4,7 +4,7 @@ import { ContentSchema } from "./messages";
 
 const SportsSchema = new mongoose.Schema(
     {
-        _id: {
+        name: {
             type: String,
             unique: true,
             required: true,

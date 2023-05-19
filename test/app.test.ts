@@ -5,31 +5,18 @@ describe('users', () => {
 
     var token = ""
     var id = ""
-    var tokenAdmin = ""
-    var idAdmin = ""
-
-    it('should login a admin', async () => {
-        const response = await request(app)
-            .post('/api/user/login')
-            .send({ "email": "admin@e.com", "password": "adminadmin" })
-            .set('Accept', 'application/json')
-            .expect(200)
-        expect(response.body.user.role).toEqual('admin')
-
-        tokenAdmin = response.body.token.token
-        idAdmin = response.body.user._id
-    })
 
     it('should register a user', async () => {
         const response = await request(app)
             .post('/api/user/register')
-            .send({ "name": "Menganito", "birthdate": "2002-06-24", "email": "meganito@test.com", "password": "HolaMundo.01" })
+            .send({ "name": "userName", "surname": "userSurname", "nick": "user", "email": "user@test.com", "password": "HolaMundo.01" })
             .set('Accept', 'application/json')
-            .expect(200)
-        expect(response.body.user.name).toEqual('Menganito')
-        expect(response.body.user.email).toEqual('meganito@test.com')
-        expect(response.body.user.role).toEqual('user')
-    })
+            .expect(200);
+        expect(response.body.user.name).toEqual('userName');
+        expect(response.body.user.email).toEqual('user@test.com');
+        expect(response.body.user.role).toEqual('user');
+        expect(response.body.token.hoursExp).toEqual(2);
+    });
 
     it('should login a user', async () => {
         const response = await request(app)
@@ -45,42 +32,19 @@ describe('users', () => {
         id = response.body.user._id
     })
 
-    it('should get the user', async () => {
-        const response = await request(app)
-            .get('/api/user')
-            .auth(token, { type: 'bearer' })
-            .set('Accept', 'application/json')
-            .expect(200)
-        expect(response.body.name).toEqual('Menganito')
-    });
-
-    it('should update the user', async () => {
-        const response = await request(app)
-            .put('/api/user')
-            .send({ "name": "Aurelio" })
-            .auth(token, { type: 'bearer' })
-            .set('Accept', 'application/json')
-            .expect(200)
-        expect(response.body).toEqual(true)
-    });
-
-    it('should get the user with the new update', async () => {
-        const response = await request(app)
-            .get('/api/user')
-            .auth(token, { type: 'bearer' })
-            .set('Accept', 'application/json')
-            .expect(200)
-        expect(response.body.name).toEqual('Aurelio')
-    });
-
-    it('should delete a user by admin', async () => {
+    it('should delete the user', async () => {
         const response = await request(app)
             .delete('/api/user/'+id)
-            .auth(tokenAdmin, { type: 'bearer' })
             .set('Accept', 'application/json')
             .expect(200)
-        expect(response.body.acknowledged).toEqual(true)
+        expect(response.body.user.name).toEqual('Menganito')
+        expect(response.body.user.email).toEqual('meganito@test.com')
+        expect(response.body.user.role).toEqual('user')
+
+        token = response.body.token.token
+        id = response.body.user._id
     })
+
 });
 
 

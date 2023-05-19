@@ -6,7 +6,7 @@ import getRamdomAvatarUrl from "../utils/handleRandomAvatar";
 import { Request, Response } from "express";
 import handleLogin from "../utils/handleLogin";
 
-const registerCtrl = async (req: Request, res: Response) => {
+const registerUser = async (req: Request, res: Response) => {
     const body = matchedData(req);
     // console.log(req);
     body.password = await encrypt(body.password);
@@ -25,7 +25,7 @@ const registerCtrl = async (req: Request, res: Response) => {
     }
 };
 
-const loginCtrl = async (req: Request, res: Response) => {
+const loginUser = async (req: Request, res: Response) => {
     const { email, password } = matchedData(req);
     try {
         const user = await usersModel.findOne({ email });
@@ -44,4 +44,4 @@ const loginCtrl = async (req: Request, res: Response) => {
     }
 };
 
-export { registerCtrl, loginCtrl };
+export { registerUser, loginUser };
