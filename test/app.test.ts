@@ -38,12 +38,21 @@ describe("users", () => {
         id = response.body.user._id;
     });
 
+    it("should update a user", async () => {
+        const response = await request(app)
+            .put("/api/users/"+id)
+            .auth(token, { type: "bearer" })
+            .send({ nick: "nickUpdated", birthdate: "2002-06-24" })
+            .set("Accept", "application/json")
+            .expect(200);
+        console.log(response.body);
+    });
+
     it("should delete the user", async () => {
         const response = await request(app)
             .delete("/api/users/" + id)
             .auth(token, { type: "bearer" })
             .expect(200);
-        console.log(response.body);
         expect(response.body.acknowledged).toEqual(true);
         expect(response.body.deletedCount).toEqual(1);
     });

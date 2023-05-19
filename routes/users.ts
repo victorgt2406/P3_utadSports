@@ -1,6 +1,6 @@
 import express from "express";
-import { validatorLogin, validatorRegister } from "../validators/users";
-import { deleteUser, loginUser, registerUser } from "../controllers/users";
+import { validatorLogin, validatorRegister, validatorUpdateUser } from "../validators/users";
+import { deleteUser, loginUser, registerUser, updateUser } from "../controllers/users";
 import tokenAuth from "../middleware/tokenAuth";
 const router = express.Router();
 
@@ -67,7 +67,7 @@ router.get('/:id',);
  *          '200':
  *              description: User updated
  */ 
-router.put('/:id',);
+router.put('/:id', validatorUpdateUser, tokenAuth, updateUser);
 
 /**
  * @openapi

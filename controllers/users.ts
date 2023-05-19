@@ -45,6 +45,23 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
+const updateUser = async (req: RequestWithUser, res: Response) => {
+    const { id } = req.params;
+    const user = req.user!;
+    const body = matchedData(req);
+    if (id === user.id || user.role === "admin") {
+        try {
+            res.send(await usersModel.updateOne({ _id: id },{$set: body}));
+        } catch (err) {
+            console.log(err);
+            handleError(res, "UPDATE_ERROR");
+            
+        }
+    } else {
+        handleError(res, "UPDATE_NOT_ALLOWED");
+    }
+};
+
 const deleteUser = async (req: RequestWithUser, res: Response) => {
     const { id } = req.params;
     const user = req.user!;
@@ -61,4 +78,4 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
     }
 };
 
-export { registerUser, loginUser, deleteUser };
+export { registerUser, loginUser, updateUser, deleteUser };
