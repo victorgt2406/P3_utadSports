@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const tokenSign = async (user: any, hours: number = 2) => {
+const tokenSign = async (user: any, hoursExp: number = 2) => {
   const token = jwt.sign(
     {
       _id: user._id,
@@ -9,11 +9,11 @@ const tokenSign = async (user: any, hours: number = 2) => {
     },
     process.env.JWT_SECRET!,
     {
-      expiresIn: `${hours}h`,
+      expiresIn: `${hoursExp}h`,
     }
   );
 
-  return { token, hours };
+  return { token, hoursExp };
 };
 
 const verifyToken = async (tokenJwt: string) => {

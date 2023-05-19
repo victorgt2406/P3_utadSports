@@ -1,6 +1,7 @@
 import express from "express";
 import { validatorLogin, validatorRegister } from "../validators/users";
-import { loginUser, registerUser } from "../controllers/users";
+import { deleteUser, loginUser, registerUser } from "../controllers/users";
+import tokenAuth from "../tokenAuth";
 const router = express.Router();
 
 /**
@@ -79,7 +80,7 @@ router.put('/:id',);
  *          '200':
  *              description: User deleted
  */ 
-router.delete('/:id',);
+router.delete('/:id', tokenAuth, deleteUser);
 
 // module.exports = router;
 export default router;
