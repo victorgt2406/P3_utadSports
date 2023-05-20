@@ -1,28 +1,53 @@
 import mongoose from "mongoose";
-import { UsersSumSchema } from "./users";
+import { UserSum, UsersSumSchema } from "./users";
 
-const ContentSchema = new mongoose.Schema({
+const LANGS = ["en", "es"];
+type Lang = "en" | "es";
+const MESSAGE_TYPES = ["msg", "input", "news", "notification"];
+type MessageType = "msg" | "input" | "news" | "notification";
+const MESSAGE_STATES = ["read", "unread"];
+type MessageState = "read" | "unread";
+
+interface Content extends Document {
+    lang: Lang;
+    content: string;
+    title: string;
+    image?: string;
+}
+
+interface Message extends Document {
+    type: MessageType;
+    from: UserSum;
+    to: UserSum;
+    content: Content;
+    state: MessageState;
+}
+
+const ContentSchema = new mongoose.Schema<Content>({
     lang: {
         type: String,
-        enum: ["en", "es"],
+        enum: LANGS,
         default: "es",
         required: true,
     },
-    body: {
+    content: {
         type: String,
         required: true,
     },
-    tilte:{
+    title: {
         type: String,
-        default: ""
-    }
+        default: "",
+    },
+    image: {
+        type: String,
+    },
 });
 
-const MessagesSchema = new mongoose.Schema(
+const MessagesSchema = new mongoose.Schema<Message>(
     {
         type: {
             type: String,
-            enum: ["msg", "input", "news", "notification"],
+            enum: MESSAGE_TYPES,
             default: "msg",
             required: true,
         },
@@ -32,12 +57,12 @@ const MessagesSchema = new mongoose.Schema(
         to: {
             type: UsersSumSchema,
         },
-        content:{
-            type: ContentSchema
+        content: {
+            type: ContentSchema,
         },
         state: {
             type: String,
-            enum: ["unread", "read"],
+            enum: MESSAGE_STATES,
             default: "unread",
             required: true,
         },
@@ -48,11 +73,13 @@ const MessagesSchema = new mongoose.Schema(
     }
 );
 
-MessagesSchema.index({ "type": 1 });
-MessagesSchema.index({ "state": 1 });
+MessagesSchema.index({ type: 1 });
+MessagesSchema.index({ state: 1 });
 MessagesSchema.index({ "from._id": 1 });
 MessagesSchema.index({ "to._id": 1 });
 
 export default mongoose.model("messages", MessagesSchema);
 
-export { ContentSchema };
+export { ContentSchema, MESSAGE_STATES, MESSAGE_TYPES, LANGS };
+
+export type { Content, MessageType, MessageState, Lang };

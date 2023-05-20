@@ -1,4 +1,5 @@
 const SPORTS = ["football", "basketball", "padel"];
+type Sport = "football" | "basketball" | "padel";
 import mongoose from "mongoose";
 import { ContentSchema } from "./messages";
 
@@ -29,3 +30,5 @@ SportsSchema.index({ nick: 1 });
 export default mongoose.model("sports", SportsSchema);
 
 export { SPORTS };
+
+export type { Sport };

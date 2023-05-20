@@ -40,6 +40,10 @@ const tokenAuth: RequestHandler = async (
             { _id: dataToken._id },
             { password: 0, deleted: 0 }
         ))!; // findOne válido para Mongoose y Sequelize
+        if (user === null || user === undefined) {
+            handleError(res, "NOT_REGISTERED", 401);
+            return;
+        }
         req.user = user; // Inyecto al user en la petición
 
         next();

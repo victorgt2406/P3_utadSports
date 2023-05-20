@@ -43,7 +43,14 @@ UsersSchema.virtual('id').get(function () {
 
 UsersSchema.index({ nick: 1 });
 
-const UsersSumSchema = new mongoose.Schema({
+interface UserSum extends Document {
+    _id: string;
+    icon: string;
+    nick: string;
+    email: string;
+}
+
+const UsersSumSchema = new mongoose.Schema<UserSum>({
     _id: { type: String, required: true },
     icon: { type: String },
     nick: { type: String },
@@ -52,4 +59,4 @@ const UsersSumSchema = new mongoose.Schema({
 
 export default mongoose.model<User>("users", UsersSchema);
 export { UsersSumSchema };
-export type {User};
+export type {User, UserSum};
