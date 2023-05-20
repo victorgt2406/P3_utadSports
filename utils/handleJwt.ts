@@ -1,3 +1,4 @@
+import { error } from "console";
 import jwt from "jsonwebtoken";
 
 const tokenSign = async (user: any, hoursExp: number = 2) => {
@@ -20,7 +21,8 @@ const verifyToken = async (tokenJwt: string) => {
   try {
     return jwt.verify(tokenJwt, process.env.JWT_SECRET!);
   } catch (err) {
-    console.log("token verify error", err);
+    // console.log("token verify error", err);
+    throw error("token verify error", err);
   }
 };
 

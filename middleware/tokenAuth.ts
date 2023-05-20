@@ -44,7 +44,8 @@ const tokenAuth: RequestHandler = async (
 
         next();
     } catch (err) {
-        handleError(res, "NOT_SESSION", 401);
+        console.log("BAD_TOKEN");
+        handleError(res, "BAD_TOKEN", 401);
     }
 };
 

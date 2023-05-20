@@ -28,7 +28,7 @@ const loginUser = async (req: Request, res: Response) => {
     try {
         const user = await usersModel.findOne({ email });
         if (user === null) {
-            handleError(res, "NOT_REGISTERED", 402);
+            handleError(res, "NOT_REGISTERED");
         } else {
             if (await compare(password, user.password)) {
                 user.set("password", undefined, { strict: false });
@@ -57,7 +57,7 @@ const updateUser = async (req: RequestWithUser, res: Response) => {
             handleError(res, "UPDATE_ERROR");
         }
     } else {
-        handleError(res, "UPDATE_NOT_ALLOWED");
+        handleError(res);
     }
 };
 
@@ -69,10 +69,10 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
             res.send(await usersModel.deleteOne({ _id: id }));
         } catch (err) {
             console.log(err);
-            handleError(res, "DELETE_ERROR");
+            handleError(res, "DELETE_ERROR", 500);
         }
     } else {
-        handleError(res, "DELETE_NOT_ALLOWED");
+        handleError(res);
     }
 };
 
@@ -84,10 +84,10 @@ const getUser = async (req: RequestWithUser, res: Response) => {
             res.send(await usersModel.findOne({ _id: id }, {password: 0}));
         } catch (err) {
             console.log(err);
-            handleError(res, "GET_ERROR");
+            handleError(res, "GET_ERROR", 500);
         }
     } else {
-        handleError(res, "GET_NOT_ALLOWED");
+        handleError(res);
     }
 };
 
