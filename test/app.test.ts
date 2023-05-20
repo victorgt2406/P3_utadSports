@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app";
-
+// users - user
 describe("users", () => {
     var token = "";
     var id = "";
@@ -71,7 +71,8 @@ describe("users", () => {
     });
 });
 
-describe("admin and exceptions", () => {
+// users - admin
+describe("users - admin", () => {
     var adminToken = "";
     var adminId = "";
     var userId = ""
@@ -133,13 +134,57 @@ describe("admin and exceptions", () => {
         expect(response.body.birthdate).toEqual((new Date("2002-06-24")).toISOString());
     });
 
-    it("should NOT login with a wrong password", async () => {
+    it("should delete a user by a admin", async () => {
+        const response = await request(app)
+            .delete("/api/users/" + userId)
+            .auth(adminToken, { type: "bearer" })
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
+    });
+});
+
+
+// users - exceptions
+describe("users - exceptions", () => {
+    var adminToken = "";
+    var adminId = "";
+    var userId = ""
+    var userToken = "";
+
+    it("should register a user", async () => {
+        const response = await request(app)
+            .post("/api/users/register")
+            .send({
+                name: "userName",
+                surname: "userSurname",
+                nick: "user",
+                email: "user@test.com",
+                password: "HolaMundo.01",
+            })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
+        expect(response.body.user.name).toEqual("userName");
+        expect(response.body.user.email).toEqual("user@test.com");
+        expect(response.body.user.role).toEqual("user");
+        expect(response.body.token.hoursExp).toEqual(2);
+        userId = response.body.user._id;
+        userToken = response.body.token.token;
+    });
+
+    it("should login a admin", async () => {
         const response = await request(app)
             .post("/api/users/login")
-            .send({ email: "admin@admin.com", password: "12345678" })
+            .send({ email: "admin@admin.com", password: "adminadmin" })
             .set("Accept", "application/json")
-            .expect(403);
-        expect(response.text).toEqual("PASSWORD_INCORRECT");
+            .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
+        expect(response.body.user.role).toEqual("admin");
+        expect(response.body.token.hoursExp).toEqual(2);
+
+        adminToken = response.body.token.token;
+        adminId = response.body.user._id;
     });
 
     it("should return NOT registered if not registered", async () => {
@@ -151,11 +196,38 @@ describe("admin and exceptions", () => {
         expect(response.text).toEqual("NOT_REGISTERED");
     });
 
+    it("should NOT login with a wrong password", async () => {
+        const response = await request(app)
+            .post("/api/users/login")
+            .send({ email: "admin@admin.com", password: "12345678" })
+            .set("Accept", "application/json")
+            .expect(403);
+        expect(response.text).toEqual("PASSWORD_INCORRECT");
+    });
+
+    it("should NOT get a user with a bad token", async () => {
+        const response = await request(app)
+            .get("/api/users/" + userId)
+            .auth("thisIsABadToken", { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(401);
+        expect(response.text).toEqual("BAD_TOKEN");
+    });
+
     it("should NOT update a user with a bad token", async () => {
         const response = await request(app)
             .put("/api/users/" + userId)
-            .auth("userToken", { type: "bearer" })
+            .auth("thisIsABadToken", { type: "bearer" })
             .send({ nick: "nickUpdated", birthdate: "2002-06-24" })
+            .set("Accept", "application/json")
+            .expect(401);
+        expect(response.text).toEqual("BAD_TOKEN");
+    });
+
+    it("should NOT delete a user with a bad token", async () => {
+        const response = await request(app)
+            .delete("/api/users/" + userId)
+            .auth("thisIsABadToken", { type: "bearer" })
             .set("Accept", "application/json")
             .expect(401);
         expect(response.text).toEqual("BAD_TOKEN");
