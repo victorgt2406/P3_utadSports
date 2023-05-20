@@ -58,7 +58,9 @@ describe("users", () => {
             .set("Accept", "application/json")
             .expect(200);
         expect(response.body.nick).toEqual("nickUpdated");
-        expect(response.body.birthdate).toEqual((new Date("2002-06-24")).toISOString());
+        expect(response.body.birthdate).toEqual(
+            new Date("2002-06-24").toISOString()
+        );
     });
 
     it("should delete the user", async () => {
@@ -75,7 +77,7 @@ describe("users", () => {
 describe("users - admin", () => {
     var adminToken = "";
     var adminId = "";
-    var userId = ""
+    var userId = "";
     var userToken = "";
 
     it("should register a user", async () => {
@@ -131,7 +133,9 @@ describe("users - admin", () => {
             .set("Accept", "application/json")
             .expect(200);
         expect(response.body.nick).toEqual("nickUpdated");
-        expect(response.body.birthdate).toEqual((new Date("2002-06-24")).toISOString());
+        expect(response.body.birthdate).toEqual(
+            new Date("2002-06-24").toISOString()
+        );
     });
 
     it("should delete a user by a admin", async () => {
@@ -144,12 +148,11 @@ describe("users - admin", () => {
     });
 });
 
-
 // users - exceptions
 describe("users - exceptions", () => {
     var adminToken = "";
     var adminId = "";
-    var userId = ""
+    var userId = "";
     var userToken = "";
 
     it("should register a user", async () => {
@@ -267,6 +270,164 @@ describe("users - exceptions", () => {
         const response = await request(app)
             .delete("/api/users/" + userId)
             .auth(adminToken, { type: "bearer" })
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
+    });
+});
+
+// teams - open team
+describe("teams", () => {
+    var user1token = "";
+    var user1id = "";
+    var user2token = "";
+    var user2id = "";
+    var teamId = "";
+
+    it("should register a user (1)", async () => {
+        const response = await request(app)
+            .post("/api/users/register")
+            .send({
+                name: "userName",
+                surname: "userSurname",
+                nick: "user",
+                email: "user@test.com",
+                password: "HolaMundo.01",
+            })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
+        expect(response.body.user.name).toEqual("userName");
+        expect(response.body.user.email).toEqual("user@test.com");
+        expect(response.body.user.role).toEqual("user");
+        expect(response.body.token.hoursExp).toEqual(2);
+
+        user1token = response.body.token.token;
+        user1id = response.body.user._id;
+    });
+
+    it("should register a user (2)", async () => {
+        const response = await request(app)
+            .post("/api/users/register")
+            .send({
+                name: "userName2",
+                surname: "userSurname2",
+                nick: "user2",
+                email: "user2@test.com",
+                password: "HolaMundo.01",
+            })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
+        expect(response.body.user.name).toEqual("userName2");
+        expect(response.body.user.email).toEqual("user2@test.com");
+        expect(response.body.user.role).toEqual("user");
+        expect(response.body.token.hoursExp).toEqual(2);
+
+        user2token = response.body.token.token;
+        user2id = response.body.user._id;
+    });
+
+    it("should create a team, being the creator the captain and not open", async () => {
+        const response = await request(app)
+            .post("/api/teams/")
+            .auth(user1token, { type: "bearer" })
+            .send({
+                name: "teamExample",
+                description: "description example",
+                sport: "football",
+                max: 15,
+                open: false
+            })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.name).toEqual("teamExample");
+        expect(response.body.captain._id).toEqual(user1id);
+        expect(response.body.captain.name).toEqual("userName");
+        expect(response.body.captain.email).toEqual("user@test.com");
+    });
+
+    it("should get the team", async () => {
+        const response = await request(app)
+            .get("/api/teams/" + teamId)
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.name).toEqual("teamExample");
+        expect(response.body.captain._id).toEqual(user1id);
+        expect(response.body.captain.name).toEqual("userName");
+        expect(response.body.captain.email).toEqual("user@test.com");
+    });
+
+    it("should NOT join the user to the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/join/" + teamId)
+            .auth(user2token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(403);
+        expect(response.text).toEqual("NOT_ALLOWED");
+
+        user1token = response.body.token.token;
+        user1id = response.body.user._id;
+    });
+
+    it("should OPEN the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/open/" + teamId)
+            .auth(user2token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(403);
+        expect(response.text).toEqual("OPENED");
+
+        user1token = response.body.token.token;
+        user1id = response.body.user._id;
+    });
+
+    it("should join the user to the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/join/" + teamId)
+            .auth(user2token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.text).toEqual("JOINED");
+
+        user1token = response.body.token.token;
+        user1id = response.body.user._id;
+    });
+
+    it("should unjoin the user of the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/unjoin/" + teamId)
+            .auth(user2token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.text).toEqual("UNJOINED");
+    });
+
+    it("should CLOSE (not open) the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/close/" + teamId)
+            .auth(user2token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(403);
+        expect(response.text).toEqual("CLOSED");
+
+        user1token = response.body.token.token;
+        user1id = response.body.user._id;
+    });
+
+    it("should unjoin the user and delete the team if the user is the only member", async () => {
+        const response = await request(app)
+            .patch("/api/teams/unjoin/" + teamId)
+            .auth(user1token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.text).toEqual("UNJOINED");
+    });
+
+    it("should delete the user", async () => {
+        const response = await request(app)
+            .delete("/api/users/" + user1id)
+            .auth(user1token, { type: "bearer" })
             .expect(200);
         expect(response.body.acknowledged).toEqual(true);
         expect(response.body.deletedCount).toEqual(1);

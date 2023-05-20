@@ -24,6 +24,12 @@ const Teams = new mongoose.Schema(
         players: {
             type: [UsersSumSchema],
         },
+        open: {
+            type: Boolean,
+        },
+        whitelist: {
+            type: [String]
+        }
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
