@@ -85,4 +85,4 @@ export default mongoose.model("messages", MessagesSchema);
 
 export { ContentSchema, MESSAGE_STATES, MESSAGE_TYPES, LANGS };
 
-export type { Content, MessageType, MessageState, Lang };
+export type { Content, Message, MessageType, MessageState, Lang };

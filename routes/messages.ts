@@ -8,11 +8,20 @@ import {
     getUserMessages,
     getUserNotifications,
 } from "../controllers/messages";
-import { validatorMessage } from "../validators/messages";
+import {
+    validateMessageByType,
+    validatorMessage,
+} from "../validators/messages";
 
 const router = express.Router();
 // create a message
-router.post("/", validatorMessage, tokenAuth, createMessage);
+router.post(
+    "/",
+    validatorMessage,
+    validateMessageByType,
+    tokenAuth,
+    createMessage
+);
 
 // get user messages
 router.get("/", tokenAuth, getMessage);

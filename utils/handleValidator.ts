@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
-import { Content } from "../models/messages";
+import { Content, LANGS } from "../models/messages";
 import { UserSum } from "../models/users";
 import { SPORTS } from "../models/sports";
+import { MessageType } from "../models/messages";
 
 const validateResults = (req:Request, res:Response, next:NextFunction) => {
     try {
@@ -15,7 +16,7 @@ const validateResults = (req:Request, res:Response, next:NextFunction) => {
 }
 
 const contentValidator = (element:Content) => {
-    if (element.lang && !['en', 'es'].includes(element.lang)) {
+    if (element.lang && !LANGS.includes(element.lang)) {
         throw new Error('Invalid lang');
     }
     if (element.image && typeof element.image !== 'string') {

@@ -277,7 +277,7 @@ describe("users - exceptions", () => {
 });
 
 // teams - open team
-describe("messages", () => {
+describe("messages type msg", () => {
     var user1token = "";
     var user1id = "";
     var user2token = "";
@@ -328,7 +328,7 @@ describe("messages", () => {
         user2id = response.body.user._id;
     });
 
-    it("should create a message", async () => {
+    it("should NOT create a message type msg missing to", async () => {
         const response = await request(app)
             .post("/api/messages/")
             .auth(user1token, { type: "bearer" })
@@ -337,9 +337,42 @@ describe("messages", () => {
                     content: "holaAmigo"
                 }
             })
+            .expect(403);
+        expect(response.text).toEqual("TO_ID_NEEDED");
+    });
+
+    it("should NOT create a message type msg missing content", async () => {
+        const response = await request(app)
+            .post("/api/messages/")
+            .auth(user1token, { type: "bearer" })
+            .send({
+                to: user2id
+            })
+            .expect(403);
+    });
+
+    it("should NOT create a message type msg missing to and content", async () => {
+        const response = await request(app)
+            .post("/api/messages/")
+            .auth(user1token, { type: "bearer" })
+            .send({
+            })
+            .expect(403);
+    });
+
+    it("should create a message type msg", async () => {
+        const response = await request(app)
+            .post("/api/messages/")
+            .auth(user1token, { type: "bearer" })
+            .send({
+                to: user2id,
+                content: {
+                    content: "holaAmigo"
+                }
+            })
             .expect(200);
-        console.log(response);
         expect(response.body.from._id).toEqual(user1id);
+        expect(response.body.to._id).toEqual(user2id);
         expect(response.body.content.content).toEqual("holaAmigo");
         expect(response.body.content.lang).toEqual("es");
         expect(response.body.content.title).toEqual("");
