@@ -21,10 +21,10 @@ router.post('/join/:id',);
 // unjoin a team
 router.post('/unjoin/:id',);
 
-// add a user  (captain)
+// add a user by a captain
 router.patch('/add/:id',);
 
-// add a user  (captain)
+// remove a user by a captain
 router.patch('/remove/:id',);
 
 // module.exports = router;
