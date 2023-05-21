@@ -277,6 +277,77 @@ describe("users - exceptions", () => {
 });
 
 // teams - open team
+describe("messages", () => {
+    var user1token = "";
+    var user1id = "";
+    var user2token = "";
+    var user2id = "";
+    var teamId = "";
+
+    it("should register a user (1)", async () => {
+        const response = await request(app)
+            .post("/api/users/register")
+            .send({
+                name: "userName",
+                surname: "userSurname",
+                nick: "user",
+                email: "user@test.com",
+                password: "HolaMundo.01",
+            })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
+        expect(response.body.user.name).toEqual("userName");
+        expect(response.body.user.email).toEqual("user@test.com");
+        expect(response.body.user.role).toEqual("user");
+        expect(response.body.token.hoursExp).toEqual(2);
+
+        user1token = response.body.token.token;
+        user1id = response.body.user._id;
+    });
+
+    it("should register a user (2)", async () => {
+        const response = await request(app)
+            .post("/api/users/register")
+            .send({
+                name: "userName2",
+                surname: "userSurname2",
+                nick: "user2",
+                email: "user2@test.com",
+                password: "HolaMundo.01",
+            })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.user.password).toEqual(undefined);
+        expect(response.body.user.name).toEqual("userName2");
+        expect(response.body.user.email).toEqual("user2@test.com");
+        expect(response.body.user.role).toEqual("user");
+        expect(response.body.token.hoursExp).toEqual(2);
+
+        user2token = response.body.token.token;
+        user2id = response.body.user._id;
+    });
+
+    it("should delete the user (1)", async () => {
+        const response = await request(app)
+            .delete("/api/users/" + user1id)
+            .auth(user1token, { type: "bearer" })
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
+    });
+
+    it("should delete the user (2)", async () => {
+        const response = await request(app)
+            .delete("/api/users/" + user2id)
+            .auth(user2token, { type: "bearer" })
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
+    });
+});
+
+// teams - open team
 describe("teams", () => {
     var user1token = "";
     var user1id = "";
@@ -424,10 +495,19 @@ describe("teams", () => {
         expect(response.text).toEqual("UNJOINED");
     });
 
-    it("should delete the user", async () => {
+    it("should delete the user (1)", async () => {
         const response = await request(app)
             .delete("/api/users/" + user1id)
             .auth(user1token, { type: "bearer" })
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
+    });
+
+    it("should delete the user (2)", async () => {
+        const response = await request(app)
+            .delete("/api/users/" + user2id)
+            .auth(user2token, { type: "bearer" })
             .expect(200);
         expect(response.body.acknowledged).toEqual(true);
         expect(response.body.deletedCount).toEqual(1);

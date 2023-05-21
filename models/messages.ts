@@ -3,8 +3,8 @@ import { UserSum, UsersSumSchema } from "./users";
 
 const LANGS = ["en", "es"];
 type Lang = "en" | "es";
-const MESSAGE_TYPES = ["msg", "input", "news", "notification"];
-type MessageType = "msg" | "input" | "news" | "notification";
+const MESSAGE_TYPES = ["msg", "news", "notification"];
+type MessageType = "msg" | "news" | "notification";
 const MESSAGE_STATES = ["read", "unread"];
 type MessageState = "read" | "unread";
 
@@ -17,8 +17,8 @@ interface Content extends Document {
 
 interface Message extends Document {
     type: MessageType;
-    from: UserSum;
-    to: UserSum;
+    from?: UserSum;
+    to?: UserSum;
     content: Content;
     state: MessageState;
 }
