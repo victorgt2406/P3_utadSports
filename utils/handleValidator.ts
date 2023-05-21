@@ -15,7 +15,7 @@ const validateResults = (req:Request, res:Response, next:NextFunction) => {
 }
 
 const contentValidator = (element:Content) => {
-    if (!element.lang || !['en', 'es'].includes(element.lang)) {
+    if (element.lang && !['en', 'es'].includes(element.lang)) {
         throw new Error('Invalid lang');
     }
     if (element.image && typeof element.image !== 'string') {
@@ -34,13 +34,13 @@ const userValidator = (element:UserSum) => {
     if (!element._id || typeof element._id !== 'string') {
         throw new Error('Invalid _id');
     }
-    if (!element.nick || typeof element.nick !== 'string') {
+    if (element.nick && typeof element.nick !== 'string') {
         throw new Error('Invalid nick');
     }
-    if (!element.icon || typeof element.icon !== 'string') {
+    if (element.icon && typeof element.icon !== 'string') {
         throw new Error('Invalid icon');
     }
-    if (!element.email || typeof element.email !== 'string') {
+    if (element.email && typeof element.email !== 'string') {
         throw new Error('Invalid email');
     }
     return true;

@@ -8,14 +8,14 @@ type MessageType = "msg" | "news" | "notification";
 const MESSAGE_STATES = ["read", "unread"];
 type MessageState = "read" | "unread";
 
-interface Content extends Document {
+interface Content {
     lang: Lang;
     content: string;
     title: string;
     image?: string;
 }
 
-interface Message extends Document {
+interface Message {
     type: MessageType;
     from?: UserSum;
     to?: UserSum;
@@ -23,25 +23,28 @@ interface Message extends Document {
     state: MessageState;
 }
 
-const ContentSchema = new mongoose.Schema<Content>({
-    lang: {
-        type: String,
-        enum: LANGS,
-        default: "es",
-        required: true,
+const ContentSchema = new mongoose.Schema<Content>(
+    {
+        lang: {
+            type: String,
+            enum: LANGS,
+            default: "es",
+            required: true,
+        },
+        content: {
+            type: String,
+            required: true,
+        },
+        title: {
+            type: String,
+            default: "",
+        },
+        image: {
+            type: String,
+        },
     },
-    content: {
-        type: String,
-        required: true,
-    },
-    title: {
-        type: String,
-        default: "",
-    },
-    image: {
-        type: String,
-    },
-});
+    { _id: false }
+);
 
 const MessagesSchema = new mongoose.Schema<Message>(
     {

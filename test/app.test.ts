@@ -282,7 +282,7 @@ describe("messages", () => {
     var user1id = "";
     var user2token = "";
     var user2id = "";
-    var teamId = "";
+    var messageId = "";
 
     it("should register a user (1)", async () => {
         const response = await request(app)
@@ -326,6 +326,35 @@ describe("messages", () => {
 
         user2token = response.body.token.token;
         user2id = response.body.user._id;
+    });
+
+    it("should create a message", async () => {
+        const response = await request(app)
+            .post("/api/messages/")
+            .auth(user1token, { type: "bearer" })
+            .send({
+                content: {
+                    content: "holaAmigo"
+                }
+            })
+            .expect(200);
+        console.log(response);
+        expect(response.body.from._id).toEqual(user1id);
+        expect(response.body.content.content).toEqual("holaAmigo");
+        expect(response.body.content.lang).toEqual("es");
+        expect(response.body.content.title).toEqual("");
+
+        messageId = response.body._id;
+
+    });
+
+    it("should delete a message", async () => {
+        const response = await request(app)
+            .delete("/api/messages/" + messageId)
+            .auth(user1token, { type: "bearer" })
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
     });
 
     it("should delete the user (1)", async () => {

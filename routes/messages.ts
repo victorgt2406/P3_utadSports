@@ -12,7 +12,7 @@ import { validatorMessage } from "../validators/messages";
 
 const router = express.Router();
 // create a message
-router.post("/", validatorMessage, createMessage);
+router.post("/", validatorMessage, tokenAuth, createMessage);
 
 // get user messages
 router.get("/", tokenAuth, getMessage);

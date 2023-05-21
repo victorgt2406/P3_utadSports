@@ -1,6 +1,6 @@
 import mongoose, { ObjectId } from "mongoose";
 
-interface User extends Document {
+interface User {
     id: string;
     icon: string;
     nick: string;
@@ -36,27 +36,29 @@ const UsersSchema = new mongoose.Schema<User>(
     }
 );
 
-UsersSchema.virtual('id').get(function () {
+UsersSchema.virtual("id").get(function () {
     return this._id.toString();
-  });
-  
+});
 
 UsersSchema.index({ nick: 1 });
 
-interface UserSum extends Document {
+interface UserSum {
     _id: string;
     icon: string;
     nick: string;
     email: string;
 }
 
-const UsersSumSchema = new mongoose.Schema<UserSum>({
-    _id: { type: String, required: true },
-    icon: { type: String },
-    nick: { type: String },
-    email: { type: String },
-});
+const UsersSumSchema = new mongoose.Schema<UserSum>(
+    {
+        _id: { type: String, required: true },
+        icon: { type: String },
+        nick: { type: String },
+        email: { type: String },
+    },
+    { _id: false }
+);
 
 export default mongoose.model<User>("users", UsersSchema);
 export { UsersSumSchema };
-export type {User, UserSum};
+export type { User, UserSum };

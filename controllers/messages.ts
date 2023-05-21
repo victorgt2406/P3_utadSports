@@ -1,12 +1,36 @@
 import { Request, Response } from "express";
 import { matchedData } from "express-validator";
-import { messagesModel } from "../models";
+import { messagesModel, usersModel } from "../models";
 import handleError from "../utils/handleError";
 import { RequestWithUser } from "../middleware/tokenAuth";
+import { User, UserSum } from "../models/users";
 
-const createMessage = async (req: Request, res: Response) => {
+const createMessage = async (req: RequestWithUser, res: Response) => {
     const body = matchedData(req);
+    const user = req.user!;
     try {
+        const from: UserSum = {
+            _id: user.id,
+            email: user.email,
+            icon: user.nick,
+            nick: user.nick,
+        };
+        body.from = from;
+        if (body.to) {
+            const toUser = await usersModel.findOne({ _id: body.to });
+            if (toUser) {
+                const to: UserSum = {
+                    _id: toUser.id,
+                    email: toUser.email,
+                    icon: toUser.nick,
+                    nick: toUser.nick,
+                };
+                body.to = to;
+            } else {
+                handleError(res, "BAD_TO_USER");
+                return;
+            }
+        }
         const message = await messagesModel.create(body);
         res.send(message);
     } catch (err) {
@@ -104,5 +128,5 @@ export {
     getUserMessages,
     getNews,
     getUserNotifications,
-    deleteMessage
+    deleteMessage,
 };
