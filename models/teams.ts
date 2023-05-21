@@ -1,8 +1,20 @@
 import mongoose from "mongoose";
-import { UsersSumSchema } from "./users";
-import { SPORTS } from "./sports";
+import { UserSum, UsersSumSchema } from "./users";
+import { SPORTS, SportNames } from "./sports";
 
-const Teams = new mongoose.Schema(
+interface Team {
+    name: string;
+    description: string;
+    sport: SportNames;
+    captain: UserSum;
+    players?: UserSum[];
+    open?: boolean;
+    whitelist?: string[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const Teams = new mongoose.Schema<Team>(
     {
         name: {
             type: String,
@@ -28,8 +40,8 @@ const Teams = new mongoose.Schema(
             type: Boolean,
         },
         whitelist: {
-            type: [String]
-        }
+            type: [String],
+        },
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
@@ -40,3 +52,5 @@ const Teams = new mongoose.Schema(
 Teams.index({ nick: 1 });
 
 export default mongoose.model("teams", Teams);
+
+export type { Team };

@@ -1,12 +1,19 @@
 const SPORTS = ["football", "basketball", "padel"];
-type Sport = "football" | "basketball" | "padel";
+type SportNames = "football" | "basketball" | "padel";
 import mongoose from "mongoose";
-import { ContentSchema } from "./messages";
+import { Content, ContentSchema } from "./messages";
 
-const SportsSchema = new mongoose.Schema(
+interface Sport {
+    name: SportNames;
+    rules: Content;
+    locations: string[];
+}
+
+const SportsSchema = new mongoose.Schema<Sport>(
     {
         name: {
             type: String,
+            enum: SPORTS,
             unique: true,
             required: true,
         },
@@ -31,4 +38,4 @@ export default mongoose.model("sports", SportsSchema);
 
 export { SPORTS };
 
-export type { Sport };
+export type { SportNames, Sport };
