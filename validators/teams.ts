@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { check } from 'express-validator';
 import validateResults from "../utils/handleValidator";
 import { SPORTS } from "../models/sports";
+import { SportNames } from "../models/sports";
+import { type } from "os";
 
 const validatorTeamCreation = [
     check('icon').optional().isString(),
@@ -10,7 +12,9 @@ const validatorTeamCreation = [
     check('description').exists().notEmpty().isString(),
     check('sport').exists().notEmpty().isIn(SPORTS),
     check('captain').optional().notEmpty().isString(),
-    check('players').optional().notEmpty().isArray(),
+    check('players').optional().notEmpty().isArray().custom((value, { req }) => {
+        return value.every((player: any) => typeof player === 'string');
+    }),
     check('open').optional().notEmpty().isBoolean(),
     (req:Request, res:Response, next:NextFunction) => {
         return validateResults(req, res, next)
@@ -23,9 +27,33 @@ const validatorTeamUpdate = [
     check('description').optional().notEmpty().isString(),
     check('sport').optional().notEmpty().isIn(SPORTS),
     check('captain').optional().notEmpty().isString(),
-    check('players').optional().notEmpty().isArray(),
+    check('players').optional().notEmpty().isArray().custom((value, { req }) => {
+        return value.every((player: any) => typeof player === 'string');
+    }),
     check('open').optional().notEmpty().isBoolean(),
     (req:Request, res:Response, next:NextFunction) => {
         return validateResults(req, res, next)
     }
 ];
+
+interface TeamCreationRequest {
+    icon?: string;
+    name: string;
+    description: string;
+    sport: SportNames;
+    captain?: string;
+    players?: string[];
+    open?: boolean;
+};
+
+interface TeamUpdateRequest {
+    icon?: string;
+    name?: string;
+    description?: string;
+    sport?: SportNames;
+    captain?: string;
+    players?: string[];
+    open?: boolean;
+};
+
+export type {TeamCreationRequest, TeamUpdateRequest};
