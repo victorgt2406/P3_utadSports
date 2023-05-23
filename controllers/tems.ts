@@ -4,7 +4,7 @@ import { body, matchedData } from "express-validator";
 import { UserSum } from "../models/users";
 import { teamsModel, usersModel } from "../models";
 import handleError from "../utils/handleError";
-import { TeamCreationRequest } from "../validators/teams";
+import { TeamCreationRequest, TeamUpdateRequest } from "../validators/teams";
 import { Team } from "../models/teams";
 
 const createTeam = async (req: RequestWithUser, res: Response) => {
@@ -46,3 +46,29 @@ const createTeam = async (req: RequestWithUser, res: Response) => {
         handleError(res, "ERROR_CREATE_TEAM", 500);
     }
 };
+
+
+const updateTeam = async (req: RequestWithUser, res: Response) => {
+    const {id} = req.params;
+    const body:TeamUpdateRequest = matchedData(req) as TeamUpdateRequest;
+    try {
+        const response = await teamsModel.updateOne({_id: id},{$set:{body}});
+        res.send(response);
+    } catch (err) {
+        console.log(err);
+        handleError(res, "ERROR_UPDATE_TEAM", 500);
+    }
+};
+
+const deleteTeam = async (req: RequestWithUser, res: Response) => {
+    const {id} = req.params;
+    try {
+        const response = await teamsModel.deleteOne({_id: id});
+        res.send(response);
+    } catch (err) {
+        console.log(err);
+        handleError(res, "ERROR_DELETE_TEAM", 500);
+    }
+};
+
+export {createTeam, updateTeam, deleteTeam};

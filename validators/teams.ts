@@ -26,10 +26,6 @@ const validatorTeamUpdate = [
     check('name').optional().notEmpty().isLength({ min: 3, max: 20 }),
     check('description').optional().notEmpty().isString(),
     check('sport').optional().notEmpty().isIn(SPORTS),
-    check('captain').optional().notEmpty().isString(),
-    check('players').optional().notEmpty().isArray().custom((value, { req }) => {
-        return value.every((player: any) => typeof player === 'string');
-    }),
     check('open').optional().notEmpty().isBoolean(),
     (req:Request, res:Response, next:NextFunction) => {
         return validateResults(req, res, next)
@@ -51,8 +47,6 @@ interface TeamUpdateRequest {
     name?: string;
     description?: string;
     sport?: SportNames;
-    captain?: string;
-    players?: string[];
     open?: boolean;
 };
 
