@@ -505,16 +505,22 @@ describe("teams", () => {
         user1id = response.body.user._id;
     });
 
-    it("should OPEN the team", async () => {
+    it("should NOT OPEN the team", async () => {
         const response = await request(app)
             .patch("/api/teams/open/" + teamId)
             .auth(user2token, { type: "bearer" })
             .set("Accept", "application/json")
             .expect(403);
-        expect(response.text).toEqual("OPENED");
+        expect(response.text).toEqual("NOT_CAPTAIN");
+    });
 
-        user1token = response.body.token.token;
-        user1id = response.body.user._id;
+    it("should open the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/open/" + teamId)
+            .auth(user1token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.text).toEqual("OPENED");
     });
 
     it("should join the user to the team", async () => {
@@ -524,9 +530,6 @@ describe("teams", () => {
             .set("Accept", "application/json")
             .expect(200);
         expect(response.text).toEqual("JOINED");
-
-        user1token = response.body.token.token;
-        user1id = response.body.user._id;
     });
 
     it("should unjoin the user of the team", async () => {
@@ -538,16 +541,22 @@ describe("teams", () => {
         expect(response.text).toEqual("UNJOINED");
     });
 
-    it("should CLOSE (not open) the team", async () => {
+    it("should NOT close the team", async () => {
         const response = await request(app)
             .patch("/api/teams/close/" + teamId)
             .auth(user2token, { type: "bearer" })
             .set("Accept", "application/json")
             .expect(403);
-        expect(response.text).toEqual("CLOSED");
+        expect(response.text).toEqual("NOT_CAPTAIN");
+    });
 
-        user1token = response.body.token.token;
-        user1id = response.body.user._id;
+    it("should close the team", async () => {
+        const response = await request(app)
+            .patch("/api/teams/close/" + teamId)
+            .auth(user1token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.text).toEqual("CLOSED");
     });
 
     it("should unjoin the user and delete the team if the user is the only member", async () => {
@@ -557,6 +566,15 @@ describe("teams", () => {
             .set("Accept", "application/json")
             .expect(200);
         expect(response.text).toEqual("UNJOINED");
+    });
+
+    it("should NOT delete the team", async () => {
+        const response = await request(app)
+            .delete("/api/teams/" + teamId)
+            .auth(user2token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(403);
+        expect(response.text).toEqual("NOT_CAPTAIN");
     });
 
     it("should delete the team", async () => {

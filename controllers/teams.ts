@@ -47,7 +47,7 @@ const createTeam = async (req: RequestWithUser, res: Response) => {
             handleError(res, "REPEATED_NAME", 403);
         }
     } else {
-        handleError(res, "USER_DELETED", 403);
+        handleError(res, "DELETED_USER", 403);
     }
 };
 
@@ -68,7 +68,7 @@ const updateTeam = async (req: RequestWithUser, res: Response) => {
             handleError(res, "ERROR_UPDATE_TEAM", 500);
         }
     } else {
-        handleError(res, "USER_DELETED", 403);
+        handleError(res, "NOT_CAPTAIN", 403);
     }
 };
 
@@ -85,7 +85,7 @@ const deleteTeam = async (req: RequestWithUser, res: Response) => {
             handleError(res, "ERROR_DELETE_TEAM", 500);
         }
     } else {
-        handleError(res, "USER_DELETED", 403);
+        handleError(res, "NOT_CAPTAIN", 403);
     }
 };
 
@@ -111,4 +111,90 @@ const getTeam = async (req: RequestWithUser, res: Response) => {
     }
 };
 
-export { createTeam, updateTeam, deleteTeam, getTeams, getTeam };
+const addTeamPlayer = async (req: RequestWithUser, res: Response) => {
+    const user = req.user!;
+    const team = await teamsModel.findOne({ _id: req.params.team });
+    const player = await usersModel.findOne({ _id: req.params.player });
+
+    if (user && team && player && team?.captain._id === user.id) {
+        const players = team.players === undefined ? [] : team.players;
+        players.push({
+            _id: player.id,
+            icon: player.icon,
+            nick: player.nick,
+            email: player.email,
+        });
+        try {
+            const response = await teamsModel.updateOne(
+                { _id: team.id },
+                { $set: players }
+            );
+            res.send(response);
+        } catch (err) {
+            console.log(err);
+            handleError(res, "ERROR_ADD_PLAYER", 500);
+        }
+    } else {
+        handleError(res, "NOT_CAPTAIN", 403);
+    }
+};
+
+const removeTeamPlayer = async (req: RequestWithUser, res: Response) => {
+    const user = req.user!;
+    const team = await teamsModel.findOne({ _id: req.params.team });
+    const player = await usersModel.findOne({ _id: req.params.player });
+
+    if (user && team && player && team?.captain._id === user.id) {
+        const players = (team.players === undefined ? [] : team.players).filter(
+            (p) => p._id !== player.id
+        );
+        try {
+            const response = await teamsModel.updateOne(
+                { _id: team.id },
+                { $set: players }
+            );
+            res.send(response);
+        } catch (err) {
+            console.log(err);
+            handleError(res, "ERROR_REMOVE_PLAYER", 500);
+        }
+    } else {
+        handleError(res, "NOT_CAPTAIN", 403);
+    }
+};
+
+const openCloseTeam =
+    (open: boolean) => async (req: RequestWithUser, res: Response) => {
+        const { id } = req.params;
+        const user = req.user!;
+        const team = await teamsModel.findOne({ _id: id });
+        if (user && team?.captain._id === user.id) {
+            try {
+                const response = await teamsModel.updateOne(
+                    { _id: id },
+                    { $set: { open } }
+                );
+                res.send(response.acknowledged?(open?"OPENED":"CLOSED"):"FAILED");
+            } catch (err) {
+                console.log(err);
+                handleError(res, "ERROR_UPDATE_TEAM", 500);
+            }
+        } else {
+            handleError(res, "NOT_CAPTAIN", 403);
+        }
+    };
+
+const openTeam = openCloseTeam(true);
+const closeTeam = openCloseTeam(false);
+
+export {
+    createTeam,
+    updateTeam,
+    deleteTeam,
+    getTeams,
+    getTeam,
+    addTeamPlayer,
+    removeTeamPlayer,
+    openTeam,
+    closeTeam,
+};
