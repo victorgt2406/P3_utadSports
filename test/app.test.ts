@@ -276,7 +276,7 @@ describe("users - exceptions", () => {
     });
 });
 
-// teams - open team
+// messages
 describe("messages type msg", () => {
     var user1token = "";
     var user1id = "";
@@ -333,9 +333,11 @@ describe("messages type msg", () => {
             .post("/api/messages/")
             .auth(user1token, { type: "bearer" })
             .send({
-                content: {
-                    content: "holaAmigo",
-                },
+                content: [
+                    {
+                        content: "holaAmigo",
+                    },
+                ],
             })
             .expect(403);
         expect(response.text).toEqual("TO_ID_NEEDED");
@@ -365,16 +367,18 @@ describe("messages type msg", () => {
             .auth(user1token, { type: "bearer" })
             .send({
                 to: user2id,
-                content: {
-                    content: "holaAmigo",
-                },
+                content: [
+                    {
+                        content: "holaAmigo",
+                    },
+                ],
             })
             .expect(200);
         expect(response.body.from._id).toEqual(user1id);
         expect(response.body.to._id).toEqual(user2id);
-        expect(response.body.content.content).toEqual("holaAmigo");
-        expect(response.body.content.lang).toEqual("es");
-        expect(response.body.content.title).toEqual("");
+        expect(response.body.content[0].content).toEqual("holaAmigo");
+        expect(response.body.content[0].lang).toEqual("es");
+        expect(response.body.content[0].title).toEqual("");
 
         messageId = response.body._id;
     });
@@ -493,16 +497,13 @@ describe("teams", () => {
         expect(response.body.captain.email).toEqual("user@test.com");
     });
 
-    it("should NOT join the user to the team", async () => {
+    it("should ASK to join the user to the team", async () => {
         const response = await request(app)
             .patch("/api/teams/join/" + teamId)
             .auth(user2token, { type: "bearer" })
             .set("Accept", "application/json")
-            .expect(403);
-        expect(response.text).toEqual("NOT_ALLOWED");
-
-        user1token = response.body.token.token;
-        user1id = response.body.user._id;
+            .expect(200);
+        expect(response.text).toEqual("CAPTAIN_WAS_ASKED");
     });
 
     it("should NOT OPEN the team", async () => {

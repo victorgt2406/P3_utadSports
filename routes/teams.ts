@@ -1,7 +1,7 @@
 import express from "express";
 import { validatorTeamCreation, validatorTeamUpdate } from "../validators/teams";
 import tokenAuth from "../middleware/tokenAuth";
-import { addTeamPlayer, closeTeam, createTeam, deleteTeam, getTeam, getTeams, openTeam, removeTeamPlayer, updateTeam } from "../controllers/teams";
+import { addTeamPlayer, closeTeam, createTeam, deleteTeam, getTeam, getTeams, joinTeam, openTeam, removeTeamPlayer, unjoinTeam, updateTeam } from "../controllers/teams";
 const router = express.Router();
 // create a team
 router.post('/', validatorTeamCreation, tokenAuth, createTeam);
@@ -19,10 +19,10 @@ router.put('/:id', validatorTeamUpdate, tokenAuth, updateTeam);
 router.delete('/:id', tokenAuth, deleteTeam);
 
 // ask to join as a player to a team
-router.post('/join/:id',);
+router.patch('/join/:team', tokenAuth, joinTeam);
 
 // unjoin a team
-router.post('/unjoin/:id',);
+router.patch('/unjoin/:team', tokenAuth, unjoinTeam);
 
 // open team
 router.patch('/open/:id', tokenAuth, openTeam);

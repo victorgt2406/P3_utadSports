@@ -2,10 +2,12 @@ import { Response } from "express";
 import { RequestWithUser } from "../middleware/tokenAuth";
 import { body, matchedData } from "express-validator";
 import { UserSum } from "../models/users";
-import { teamsModel, usersModel } from "../models";
+import { messagesModel, teamsModel, usersModel } from "../models";
 import handleError from "../utils/handleError";
 import { TeamCreationRequest, TeamUpdateRequest } from "../validators/teams";
 import { Team } from "../models/teams";
+import { Message } from "../models/messages";
+import { title } from "process";
 
 const createTeam = async (req: RequestWithUser, res: Response) => {
     const data: TeamCreationRequest = matchedData(req) as TeamCreationRequest;
@@ -174,7 +176,13 @@ const openCloseTeam =
                     { _id: id },
                     { $set: { open } }
                 );
-                res.send(response.acknowledged?(open?"OPENED":"CLOSED"):"FAILED");
+                res.send(
+                    response.acknowledged
+                        ? open
+                            ? "OPENED"
+                            : "CLOSED"
+                        : "FAILED"
+                );
             } catch (err) {
                 console.log(err);
                 handleError(res, "ERROR_UPDATE_TEAM", 500);
@@ -187,6 +195,75 @@ const openCloseTeam =
 const openTeam = openCloseTeam(true);
 const closeTeam = openCloseTeam(false);
 
+const joinTeam = async (req: RequestWithUser, res: Response) => {
+    const team = await teamsModel.findOne({ _id: req.params.team });
+    if (team && req.user) {
+        const player = (await usersModel.findOne({ _id: req.user.id }))!;
+        const players = team.players === undefined ? [] : team.players;
+        if (team.open) {
+            players.push({
+                _id: player.id,
+                icon: player.icon,
+                nick: player.nick,
+                email: player.email,
+            });
+            try {
+                await teamsModel.updateOne(
+                    { _id: team.id },
+                    { $set: players }
+                );
+                res.send("JOINED");
+            } catch (err) {
+                console.log(err);
+                handleError(res, "ERROR_JOIN_PLAYER", 500);
+            }
+        } else {
+            const message: Message = {
+                type: "notification",
+                content: [
+                    {
+                        lang: "es",
+                        content: `${player.nick} se quiere unir a ${team.name} %%join=https://localhost:3000%%`,
+                        title: `${player.nick} se quiere unir a ${team.name}`,
+                    },
+                    {
+                        lang: "en",
+                        content: `${player.nick} wants to join ${team.name} %%join=https://localhost:3000%%`,
+                        title: `${player.nick} wants to join ${team.name}`,
+                    }
+                ],
+                state: "unread",
+                to: team.captain
+            };
+            messagesModel.create(message);
+            res.send("CAPTAIN_WAS_ASKED");
+        }
+    } else {
+        handleError(res, "DELETED_USER", 403);
+    }
+};
+
+
+const unjoinTeam = async (req: RequestWithUser, res: Response) => {
+    const team = await teamsModel.findOne({ _id: req.params.team });
+    if (team && req.user) {
+        const players = (team.players === undefined ? [] : team.players).filter(
+            (p) => p._id !== req.user!.id
+        );
+        try {
+            await teamsModel.updateOne(
+                { _id: team.id },
+                { $set: players }
+            );
+            res.send("UNJOINED");
+        } catch (err) {
+            console.log(err);
+            handleError(res, "ERROR_REMOVE_PLAYER", 500);
+        }
+    } else {
+        handleError(res, "DELETED_USER", 403);
+    }
+};
 export {
     createTeam,
     updateTeam,
@@ -197,4 +274,6 @@ export {
     removeTeamPlayer,
     openTeam,
     closeTeam,
+    joinTeam,
+    unjoinTeam
 };

@@ -19,7 +19,7 @@ interface Message {
     type: MessageType;
     from?: UserSum;
     to?: UserSum;
-    content: Content;
+    content: Content[];
     state: MessageState;
 }
 
@@ -61,7 +61,7 @@ const MessagesSchema = new mongoose.Schema<Message>(
             type: UsersSumSchema,
         },
         content: {
-            type: ContentSchema,
+            type: [ContentSchema],
         },
         state: {
             type: String,
