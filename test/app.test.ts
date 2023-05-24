@@ -334,8 +334,8 @@ describe("messages type msg", () => {
             .auth(user1token, { type: "bearer" })
             .send({
                 content: {
-                    content: "holaAmigo"
-                }
+                    content: "holaAmigo",
+                },
             })
             .expect(403);
         expect(response.text).toEqual("TO_ID_NEEDED");
@@ -346,7 +346,7 @@ describe("messages type msg", () => {
             .post("/api/messages/")
             .auth(user1token, { type: "bearer" })
             .send({
-                to: user2id
+                to: user2id,
             })
             .expect(403);
     });
@@ -355,8 +355,7 @@ describe("messages type msg", () => {
         const response = await request(app)
             .post("/api/messages/")
             .auth(user1token, { type: "bearer" })
-            .send({
-            })
+            .send({})
             .expect(403);
     });
 
@@ -367,8 +366,8 @@ describe("messages type msg", () => {
             .send({
                 to: user2id,
                 content: {
-                    content: "holaAmigo"
-                }
+                    content: "holaAmigo",
+                },
             })
             .expect(200);
         expect(response.body.from._id).toEqual(user1id);
@@ -378,7 +377,6 @@ describe("messages type msg", () => {
         expect(response.body.content.title).toEqual("");
 
         messageId = response.body._id;
-
     });
 
     it("should delete a message", async () => {
@@ -470,14 +468,18 @@ describe("teams", () => {
                 description: "description example",
                 sport: "football",
                 max: 15,
-                open: false
+                open: false,
             })
             .set("Accept", "application/json")
             .expect(200);
         expect(response.body.name).toEqual("teamExample");
         expect(response.body.captain._id).toEqual(user1id);
-        expect(response.body.captain.name).toEqual("userName");
+        expect(response.body.captain.nick).toEqual("user");
         expect(response.body.captain.email).toEqual("user@test.com");
+        expect(response.body.description).toEqual("description example");
+        expect(response.body.sport).toEqual("football");
+
+        teamId = response.body._id;
     });
 
     it("should get the team", async () => {
@@ -487,7 +489,7 @@ describe("teams", () => {
             .expect(200);
         expect(response.body.name).toEqual("teamExample");
         expect(response.body.captain._id).toEqual(user1id);
-        expect(response.body.captain.name).toEqual("userName");
+        expect(response.body.captain.nick).toEqual("user");
         expect(response.body.captain.email).toEqual("user@test.com");
     });
 
@@ -555,6 +557,16 @@ describe("teams", () => {
             .set("Accept", "application/json")
             .expect(200);
         expect(response.text).toEqual("UNJOINED");
+    });
+
+    it("should delete the team", async () => {
+        const response = await request(app)
+            .delete("/api/teams/" + teamId)
+            .auth(user1token, { type: "bearer" })
+            .set("Accept", "application/json")
+            .expect(200);
+        expect(response.body.acknowledged).toEqual(true);
+        expect(response.body.deletedCount).toEqual(1);
     });
 
     it("should delete the user (1)", async () => {

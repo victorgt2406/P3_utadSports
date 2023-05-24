@@ -51,3 +51,5 @@ interface TeamUpdateRequest {
 };
 
 export type {TeamCreationRequest, TeamUpdateRequest};
+
+export {validatorTeamCreation, validatorTeamUpdate};

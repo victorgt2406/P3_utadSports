@@ -23,6 +23,7 @@ const Teams = new mongoose.Schema<Team>(
         name: {
             type: String,
             required: true,
+            unique: true
         },
         description: {
             type: String,
@@ -42,10 +43,7 @@ const Teams = new mongoose.Schema<Team>(
         },
         open: {
             type: Boolean,
-        },
-        // whitelist: {
-        //     type: [String],
-        // },
+        }
     },
     {
         timestamps: true, // TODO createdAt, updatedAt
