@@ -8,7 +8,7 @@ const COOKIE_NAME = "u-tadSports_cookie";
 interface CookieInterface {
     user: User | null;
     page: Page;
-    token: string;
+    token: string | null;
     language: Lang;
     cache: any;
 }

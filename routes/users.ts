@@ -1,6 +1,6 @@
 import express from "express";
 import { validatorLogin, validatorRegister, validatorUpdateUser } from "../validators/users";
-import { deleteUser, getUser, loginUser, registerUser, updateUser } from "../controllers/users";
+import { deleteUser, getUser, getUsers, loginUser, registerUser, updateUser } from "../controllers/users";
 import tokenAuth from "../middleware/tokenAuth";
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.post('/login', validatorLogin, loginUser);
  *          '200':
  *              description: All the users base on the filter
  */ 
-router.get('/',);
+router.get('/', tokenAuth, getUsers);
 
 /**
  * @openapi

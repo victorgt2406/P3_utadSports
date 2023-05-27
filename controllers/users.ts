@@ -91,4 +91,18 @@ const getUser = async (req: RequestWithUser, res: Response) => {
     }
 };
 
-export { registerUser, loginUser, updateUser, deleteUser, getUser };
+const getUsers = async (req: RequestWithUser, res: Response) => {
+    const user = req.user!;
+    if (user) {
+        try {
+            res.send(await usersModel.find({}, {nick: 1, email: 1, _id: 1, icon: 1}));
+        } catch (err) {
+            console.log(err);
+            handleError(res, "GET_ERROR", 500);
+        }
+    } else {
+        handleError(res);
+    }
+};
+
+export { registerUser, loginUser, updateUser, deleteUser, getUser, getUsers };

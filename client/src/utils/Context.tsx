@@ -9,7 +9,7 @@ import cookieContext from './Cookies';
 interface ContextInterface {
     user: User | null;
     setUser: (user: User) => void,
-    token: string;
+    token: string |  null;
     setToken: (token: string) => void;
     setPage: (page:Page)=>void,
     page: Page,
@@ -42,11 +42,11 @@ const CONTEXT = createContext<ContextInterface>({
 
 // Provider
 function ContextProvider({ children }: { children: JSX.Element}) {
-    const [cookieLoaded, setCookieLoaded] = useState<boolean>(false);
-    const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string>("");
-    const [language, setLanguage] = useState<Lang>("es");
-    const [page, setPage] = useState<Page>("activities");
+    const cookie = cookieContext.getCookie();
+    const [user, setUser] = useState<User | null>(cookie.user);
+    const [token, setToken] = useState<string | null>(cookie.token);
+    const [language, setLanguage] = useState<Lang>(cookie.language);
+    const [page, setPage] = useState<Page>(cookie.page);
     const [cache, setCache] =  useState<any>(null);
     const getText = ()=>LANGS[language];
 
@@ -67,18 +67,19 @@ function ContextProvider({ children }: { children: JSX.Element}) {
       }
 
     useEffect(()=>{
-        if(!cookieLoaded){
-            const cookie = cookieContext.getCookie();
-            setUser(cookie.user);
-            setLanguage(cookie.language);
-            setPage(cookie.page);
-            setCache(cookie.cache);
-            setCookieLoaded(true);
-        }
-        else{
+        // if(!cookieLoaded){
+        //     const cookie = cookieContext.getCookie();
+        //     setToken(cookie.token);
+        //     setUser(cookie.user);
+        //     setLanguage(cookie.language);
+        //     setPage(cookie.page);
+        //     setCache(cookie.cache);
+        //     setCookieLoaded(true);
+        // }
+        // else{
             cookieContext.setCookie({user, language, page, cache, token});
-        }
-    },[user, page, language, cache]);
+        // }
+    },[user, page, language, cache, token]);
 
     return (
         <CONTEXT.Provider value={{
