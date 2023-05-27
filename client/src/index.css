@@ -1,0 +1,243 @@
+/* Personalizando el bootstrap */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap'); */
+
+/* Colores */
+:root {
+    --light-blue: rgba(0, 101, 243, 0.05);
+    --light-blue-opaque: #F0F6FE;
+    --bs-primary: #0065F3;
+}
+
+/* Fuente */
+* {
+    font-family: 'Montserrat', 'Poppins', sans-serif;
+}
+
+.MuiSvgIcon-root{
+    font-size: inherit !important;
+}
+
+.black-placeholder::placeholder {
+    color: black;
+    font-size: 16px;
+}
+
+.activity-heading {
+    font-size: 16px;
+    color: #505050;
+}
+
+.fw-light {
+    font-weight: 300;
+}
+
+input[type="checkbox"] {
+    position: relative;
+    left: -1.15%;
+}
+
+/* definiciones */
+.bg-light-blue {
+    background-color: var(--light-blue);
+}
+
+.botonRaro .btn {
+    height: 44px;
+}
+
+@media (max-width: 768px) {
+    .text-muted {
+        font-size: 14px;
+    }
+}
+
+.button-icon {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.button-icon:hover {
+    opacity: 0.5;
+}
+
+.text-light-blue {
+    color: var(--light-blue);
+}
+
+.text-light-blue-opaque {
+    color: var(--light-blue-opaque);
+}
+
+  
+
+/* PopOver sin borders ni flechas */
+.popover {
+    border: none;
+    box-shadow: none;
+}
+
+.popover-arrow,
+.popover-arrow::after,
+.popover-arrow::before {
+    display: none !important;
+}
+
+/* nav-footer, links*/
+.nav-footer-item,
+.nav-footer-info-item {
+    border-bottom: 2px solid black;
+    transition: 0.2s;
+}
+
+.nav-footer-item-active {
+    color: var(--bs-primary);
+    border-bottom: 2.5px solid var(--bs-primary);
+    transition: 0.2s;
+}
+
+.nav-footer-item:hover {
+    color: var(--bs-secondary);
+    border-bottom: 2.5px solid var(--bs-secondary);
+}
+
+/* nav-header */
+.nav-header-img {
+    height: 40px;
+}
+
+.nav-header-item {
+    font-size: 30px;
+}
+.imagenBandera{
+    background-image: url(/cliente/src/assets/icons/FlagFilled.svg);
+}
+
+/* navbar OffCambas */
+.nav-offcambas-item{
+    transition: 0.1s;
+}
+
+.nav-offcambas-item:hover {
+    color: var(--bs-gray-600);
+}
+
+.Link {
+    text-decoration: none;
+    color: inherit;
+    cursor: default;
+  }
+
+/* Placeholders */
+.img-placeholder {
+    height: 152px;
+    width: 152px;
+    border-radius: 100%;
+    background-color: var(--bs-secondary);
+}
+
+/* inputs */
+.btn,
+.form-control,
+.formBasicCheckbox,
+.btn-light-blue,
+.rounded {
+    border-radius: 5px;
+}
+
+.rounded-md{
+    border-radius: 15px;
+}
+
+.rounded-lg{
+    border-radius: 25px;
+}
+
+.resultados {
+    width: 100%;
+    max-width: 100%;
+  }
+
+.form-control,
+.formBasicCheckbox,
+.btn-light-blue {
+    border: 1px solid var(--light-blue);
+}
+
+.form-control,
+.formBasicCheckbox,
+.btn-light-blue {
+    background-color: var(--light-blue);
+}
+
+.btn-light-blue:hover {
+    background-color: var(--bs-white);
+    border: 1px solid var(--bs-primary);
+}
+
+/* extra inputs */
+.autocomplete-items,
+.autocomplete-item:hover,
+.autocomplete-item-active,
+.profile-option:hover {
+    background-color: var(--light-blue-opaque);
+}
+
+.autocomplete-items{
+    border: 1px solid var(--bs-secondary);
+}
+
+/* BackButton */
+.back-btn {
+    position: relative;
+    transition: transform 0.5s ease-in-out;
+}
+
+.back-btn:hover {
+    transform: translateX(-15px);
+    transition: transform 1.5s ease-in-out;
+
+}
+
+/* body html */
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+#notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* icons */
+.icon-sm{
+    width: 20px;
+    height: 20px;
+}
+
+.icon-md{
+    width: 50px;
+    height: 50px;
+}
+
+.icon-lg{
+    width: 80px;
+    height: 80px;
+}
+
+.icon-xl{
+    width: 100px;
+    height: 100px;
+}

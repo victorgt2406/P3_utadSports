@@ -1,0 +1,1 @@
+imagenes documentos ficheros en general que no formen parte del codigo
