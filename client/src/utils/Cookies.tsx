@@ -2,13 +2,14 @@ import { Lang } from "../langs/langs";
 import User from "../models/User";
 import { Page } from "../routes";
 import Cookie from "js-cookie";
-const COOKIE_NAME = "u-tadSports_cookie"
+const COOKIE_NAME = "u-tadSports_cookie";
 
 // Cookie Interface
 interface CookieInterface {
     user: User | null;
-    page: Page,
-    language: Lang,
+    page: Page;
+    token: string;
+    language: Lang;
     cache: any;
 }
 
@@ -25,10 +26,11 @@ class CookieContext {
             console.log("Cookie not found.");
             return {
                 user: null,
+                token: "",
                 page: "login",
                 language: "es",
-                cache: null
-            }
+                cache: null,
+            };
         }
     }
 
@@ -39,6 +41,6 @@ class CookieContext {
     }
 }
 const cookieContext = new CookieContext();
-export default (cookieContext);
+export default cookieContext;
 export { CookieContext };
 export type { CookieInterface };

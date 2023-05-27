@@ -14,7 +14,6 @@ function notify(title: string, subtitle: string, msg: string) {
         </div>
     </div>`;
     document.getElementById("notification")!.appendChild(template.content);
-    console.log(title);
     // $('.toast').toast('show');
     document.querySelectorAll('.toast').forEach(function (toastNode) {
         var toast = new bootstrap.Toast(toastNode);

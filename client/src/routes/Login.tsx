@@ -12,20 +12,18 @@ export default function Login() {
     const context = useRouterContext();
 
     function handleSubmit(event: React.ChangeEvent<any>) {
-        event.preventDefault(); // Prevent page reload
-        // email:"henan31978@terkoer.com",
-        // password:"Me_gustan_las_magdalenas"       
+        event.preventDefault(); // Prevent page reload 
         (async () => {
             try {
-                let login = await axios.post(`${context.apiUrl}/user/login/`, {
+                let res = await axios.post(`${context.apiUrl}/users/login/`, {
                     email: email.current?.value,
                     password: password.current?.value
                 });
-                console.log(login);
-                let data = login.data;
-                data.icon= "https://img.freepik.com/premium-photo/natural-real-person-portrait-closeup-woman-girl-female-outside-nature-forest-artistic-edgy-cute-pretty-face-ai-generated_590464-133625.jpg?w=2000"
-                context.setUser(data as User);
-                context.setPage("activities");
+                // console.log(res);
+                context.setUser(res.data.user);
+                context.setToken(res.data.token.token);
+                context.setPage("news");
+                console.log(context);
             }
             catch (err){
                 console.log(err);

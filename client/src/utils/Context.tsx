@@ -8,9 +8,11 @@ import cookieContext from './Cookies';
 // ContextInterface
 interface ContextInterface {
     user: User | null;
+    setUser: (user: User) => void,
+    token: string;
+    setToken: (token: string) => void;
     setPage: (page:Page)=>void,
     page: Page,
-    setUser: (user: User) => void,
     getText: ()=>Texts,
     language: Lang,
     setLanguage: (lang: Lang) => void,
@@ -24,6 +26,8 @@ interface ContextInterface {
 const CONTEXT = createContext<ContextInterface>({
     user: null,
     setUser: (user: User) => { },
+    token: "null",
+    setToken: (token: string) => { },
     page: "activities",
     getText: ()=>LANGS.es,
     language: "en",
@@ -40,6 +44,7 @@ const CONTEXT = createContext<ContextInterface>({
 function ContextProvider({ children }: { children: JSX.Element}) {
     const [cookieLoaded, setCookieLoaded] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string>("");
     const [language, setLanguage] = useState<Lang>("es");
     const [page, setPage] = useState<Page>("activities");
     const [cache, setCache] =  useState<any>(null);
@@ -71,7 +76,7 @@ function ContextProvider({ children }: { children: JSX.Element}) {
             setCookieLoaded(true);
         }
         else{
-            cookieContext.setCookie({user, language, page, cache});
+            cookieContext.setCookie({user, language, page, cache, token});
         }
     },[user, page, language, cache]);
 
@@ -79,10 +84,12 @@ function ContextProvider({ children }: { children: JSX.Element}) {
         <CONTEXT.Provider value={{
             user,
             setUser,
+            token,
+            setToken,
             getText,
             language,
             setLanguage,
-            apiUrl: "http://localhost:3000",
+            apiUrl: "http://localhost:3000/api",
             setPage,
             page,
             cache,

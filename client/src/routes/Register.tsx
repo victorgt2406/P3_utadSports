@@ -23,46 +23,28 @@ export default function Register() {
     const context = useRouterContext();//useContext(CONTEXT);
     // const context = getContext();
 
-    notify("hey","hey","hey");
-
     const handleRegister = () => {
         (async () => {
             try {
-                const res: {msg:string, data:User} = handleResponse(await axios.post(`${context.apiUrl}/user/register/`,
+                const res = await axios.post(`${context.apiUrl}/users/register/`,
                     {
                         "name": name.current?.value,
+                        "icon": "https://img.freepik.com/premium-photo/natural-real-person-portrait-closeup-woman-girl-female-outside-nature-forest-artistic-edgy-cute-pretty-face-ai-generated_590464-133625.jpg?w=2000",
                         "surname": surname.current?.value,
                         "email": email.current?.value,
                         "password": psw1.current?.value,
-                        "nikname": nickname.current?.value,
-                        "degree": degree,
-                        "time_table": timeTable
+                        "nick": nickname.current?.value,
                     }
 
-                ));
+                );
                 console.log(res);
-                context.setUser(res.data);
-                context.setPage("activities");
-
-
-                // setTimeout(async () => {
-                //     let login = await axios.post(`${context.apiUrl}/user/login/`, {
-                //         email: email.current?.value,
-                //         password: psw1.current?.value
-                //     });
-                //     console.log(login);
-                //     let data = login.data;
-                //     try {
-                //         context.setUser(data);
-                //         context.setPage("activities");
-                //     }
-                //     catch {
-                //         alert(data.msg);
-                //     }
-                // }, 1000);
+                context.setUser(res.data.user);
+                context.setToken(res.data.token.token);
+                context.setPage("news");
             }
             catch (err) {
                 console.log(err);
+                notify("error","","password incorrect");
             }
         })();
     };
