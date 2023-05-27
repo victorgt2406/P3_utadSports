@@ -10,6 +10,8 @@ interface Team {
     captain: UserSum;
     players?: UserSum[];
     open?: boolean;
+    primaryColor?: string;
+    secondaryColor?: string;
     // whitelist?: string[];
     createdAt: Date;
     updatedAt: Date;
@@ -43,6 +45,12 @@ const Teams = new mongoose.Schema<Team>(
         },
         open: {
             type: Boolean,
+        },
+        primaryColor: {
+            type: String
+        },
+        secondaryColor: {
+            type: String
         }
     },
     {
@@ -51,7 +59,7 @@ const Teams = new mongoose.Schema<Team>(
     }
 );
 
-Teams.index({ nick: 1 });
+Teams.index({ name: 1 });
 
 export default mongoose.model("teams", Teams);
 

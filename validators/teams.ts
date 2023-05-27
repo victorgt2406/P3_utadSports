@@ -12,6 +12,8 @@ const validatorTeamCreation = [
     check('description').exists().notEmpty().isString(),
     check('sport').exists().notEmpty().isIn(SPORTS),
     check('captain').optional().notEmpty().isString(),
+    check('primaryColor').optional().notEmpty().isString(),
+    check('secondaryColor').optional().notEmpty().isString(),
     check('players').optional().notEmpty().isArray().custom((value, { req }) => {
         return value.every((player: any) => typeof player === 'string');
     }),
