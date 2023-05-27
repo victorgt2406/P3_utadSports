@@ -8,22 +8,22 @@ export default function ({ sport, setSport}: MyProps) {
         <div className="d-flex flex-wrap justify-content-center my-3">
             <button
                 type="button"
-                className={`col me-2 btn ${sport === "PADEL" ? "btn-primary" : "btn-light-blue"} fs-3 p-1`}
+                className={`col me-2 btn ${sport === "padel" ? "btn-primary" : "btn-light-blue"} fs-3 p-1`}
                 style={{ height: "40x", display: "flex", alignItems: "center", justifyContent: "center" }}
-                onClick={() => setSport("PADEL")}
-            >{ICONS_SPORTS["PADEL"]}</button>
+                onClick={() => setSport("padel")}
+            >{ICONS_SPORTS["padel"]}</button>
             <button
                 type="button"
-                className={`col mx-2 btn ${sport === "BALONCESTO" ? "btn-primary" : "btn-light-blue"} fs-3 p-1`}
+                className={`col mx-2 btn ${sport === "basketball" ? "btn-primary" : "btn-light-blue"} fs-3 p-1`}
                 style={{ height: "40x", display: "flex", alignItems: "center", justifyContent: "center" }}
-                onClick={() => setSport("BALONCESTO")}
-            >{ICONS_SPORTS["BALONCESTO"]}</button>
+                onClick={() => setSport("basketball")}
+            >{ICONS_SPORTS["basketball"]}</button>
             <button
                 type="button"
-                className={`col ms-2 btn ${sport === "FUTBOL" ? "btn-primary" : "btn-light-blue"} fs-3 p-1`}
+                className={`col ms-2 btn ${sport === "football" ? "btn-primary" : "btn-light-blue"} fs-3 p-1`}
                 style={{ height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}
-                onClick={() => setSport("FUTBOL")}
-            >{ICONS_SPORTS["FUTBOL"]}</button>
+                onClick={() => setSport("football")}
+            >{ICONS_SPORTS["football"]}</button>
         </div>
     );
 }

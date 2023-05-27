@@ -1,5 +1,4 @@
 import AutoComplete from "./AutoComplete";
-import { DEGREES } from "../../models/Options";
 
 type PillProps = {
     value: string;
@@ -32,9 +31,10 @@ type MyProps = {
     select?: boolean;
     repeat?: boolean;
     filter?: boolean;
+    onSelect?: (item:string)=>void;
 }
 
-export default function ({ margin = 3, value, setValue, values, setValues, array, components, select = true, repeat = false, placeholder = "value", filter }: MyProps) {
+export default function ({ margin = 3, value, setValue, values, setValues, array, components, select = true, repeat = false, placeholder = "value", filter, onSelect }: MyProps) {
 
     const handleClick = (value: string) => {
         if (((select && array.includes(value)) || (!select))
@@ -58,7 +58,8 @@ export default function ({ margin = 3, value, setValue, values, setValues, array
                     value,
                     setValue,
                     className: "col me-2",
-                    filter
+                    filter,
+                    onSelect
                 }} />
                 <button
                     type="button"

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Degree, Sport, TIMETABLE } from "../models/Options";
+import { Sport } from "../models/Options";
 import AutoComplete from "../components/inputs/AutoComplete";
 import GetIcon from "../components/inputs/GetIcon";
 import NavBarTemplate from "../templates/NavBarTemplate";
@@ -8,15 +8,17 @@ import SportsButtons from "../components/inputs/SportsButtons";
 import AutoCompleteAdder from "../components/inputs/AutoCompleteAdder";
 import useRouterContext from "../utils/RouterContext";
 import User from "../models/User";
+import { Team } from "../models/Team";
+import notify from "../utils/notify";
 
 export default function CreateTeam() {
     const context = useRouterContext();
     const name = useRef<HTMLInputElement>(null);
     const description = useRef<HTMLInputElement>(null);
-    const maxMembers = useRef<HTMLInputElement>(null);
+    const maxPlayers = useRef<HTMLInputElement>(null);
     const [captain, setCaptain] = useState<string>("");
-    const [member, setMember] = useState<string>("");
-    const [members, setMembers] = useState<string[]>([]);
+    const [nick, setNick] = useState<string>("");
+    const [nickPlayers, setNickPlayers] = useState<string[]>([]);
     const [users, setUsers] = useState<User[]>([]);
     const [imageExists, setImageExists] = useState<boolean>(false);
     const [sport, setSport] = useState<Sport>("" as Sport);
@@ -25,19 +27,22 @@ export default function CreateTeam() {
     useEffect(() => {
         const getUsers = async () => {
             // get all users
-            const users = (
-                await axios.get(`${context.apiUrl}/users/`, {
+            try {
+                const res = await axios.get(`${context.apiUrl}/users/`, {
                     headers: {
                         Authorization: await context.token,
                         "Content-Type": "application/json",
                     },
-                })
-            ).data as User[];
-            console.log(users);
-            setUsers(users);
+                });
+                const users = res.data;
+                console.log(users);
+                setUsers(users.filter((user:User)=>user.nick !== context.user?.nick));
+            } catch (err) {
+                console.log(err);
+            }
         };
         getUsers();
-    }, [member]);
+    }, []);
 
     let image = <></>;
     if (imageExists) {
@@ -45,27 +50,34 @@ export default function CreateTeam() {
     }
 
     const handleClick = async () => {
-        var team;
         try {
-            // esto es un ñapa
-            const captainData: User = users.filter(
-                (user) => user.name === captain
-            )[0];
-            const teamToCreate = {
-                name: name.current?.value,
+            const teamToCreate: Team = {
+                name: name.current?.value!,
                 sport: sport,
-                description: description.current?.value,
-                time_table: timeTable,
-                id_creator: context.user?._id,
-                id_captain: captainData._id,
-                max_members: maxMembers.current?.value,
+                description: description.current?.value!,
+                captain: users.find((user) => {
+                    user.nick === captain;
+                })!,
+                players: nickPlayers.map(
+                    (nick) => users.find((user) => user.nick === nick)!
+                ),
+                max: parseInt(maxPlayers.current?.value!),
                 open: true,
+                icon: "",
             };
-            console.log(teamToCreate);
+
+            const res = await axios.post(context.apiUrl+"/teams", teamToCreate, {
+                headers: {
+                    Authorization: await context.token,
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log(res.data);
+            notify("Team created","notification",`${res.data.name} was succesfully created`);
         } catch (err: any) {
             console.log(err);
+            notify("Ups...","error","The team can not have that name");
         }
-        console.log(team);
     };
 
     return (
@@ -93,13 +105,13 @@ export default function CreateTeam() {
                         <AutoCompleteAdder
                             {...{
                                 className: "my-3",
-                                value: member,
-                                setValue: setMember,
-                                values: members,
-                                setValues: setMembers,
+                                value: nick,
+                                setValue: setNick,
+                                values: nickPlayers,
+                                setValues: setNickPlayers,
                                 array: users.map((user) => user.nick),
                                 placeholder: "Miembros del equipo",
-                                filter: false,
+                                filter: true,
                             }}
                         />
                         {/* <input type="text" className="form-control light-blue my-3" placeholder="Miembros del equipo" /> */}
@@ -109,7 +121,7 @@ export default function CreateTeam() {
                                 value: captain,
                                 setValue: setCaptain,
                                 placeholder: "Seleccionar lider del equipo",
-                                array: members,
+                                array: [...nickPlayers, context.user?.nick!],
                             }}
                         />
                         {/* <input type="text" className="form-control light-blue my-3" placeholder="Seleccionar lider del equipo" /> */}
@@ -126,18 +138,18 @@ export default function CreateTeam() {
                     placeholder="Descripcion"
                 />
                 <input
-                    ref={maxMembers}
+                    ref={maxPlayers}
                     type="number"
                     className="form-control light-blue my-2"
                     placeholder="Máximo número de miembros"
                 />
-                <AutoComplete
+                {/* <AutoComplete
                     className="my-2"
                     placeholder={"Horario"}
                     value={timeTable}
                     setValue={setTimeTable}
                     array={TIMETABLE}
-                />
+                /> */}
                 <div className="my-5 d-flex justify-content-center">
                     <button
                         type="button"

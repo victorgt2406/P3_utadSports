@@ -1,11 +1,7 @@
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import AutoComplete from "../components/inputs/AutoComplete";
 import axios from "axios";
-import { CONTEXT } from "../utils/Context";
-import { DEGREES, HOURS, TIMETABLE } from "../models/Options";
 import LogoTemplate from "../templates/LogoTemplate";
-import handleResponse from "../utils/handleResponse";
-import User from "../models/User";
 import notify from "../utils/notify";
 import useRouterContext from "../utils/RouterContext";
 
@@ -84,16 +80,16 @@ export default function Register() {
                         <input ref={psw2} type="text" className="form-control" placeholder="Repetir contraseña" />
                     </div>
 
-                    <div className="w-100"></div>
+                    {/* <div className="w-100"></div> */}
 
-                    <div className="col-sm m-3">
+                    {/* <div className="col-sm m-3">
                         <label className="form-label"><i className="bi bi-book"></i> Grado</label>
                         <AutoComplete placeholder={"Grado"} select={true} value={degree} array={DEGREES} setValue={setDegree} />
                     </div>
                     <div className="col-sm m-3">
                         <label className="form-label"><i className="bi bi-calendar3-week"></i> Horario de clases</label>
                         <AutoComplete placeholder={"Horario de clases"} select={true} value={timeTable} array={TIMETABLE} setValue={setTimeTable} />
-                    </div>
+                    </div> */}
                 </div>
                 <div className="mt-5 d-flex flex-column align-items-center">
                     <button

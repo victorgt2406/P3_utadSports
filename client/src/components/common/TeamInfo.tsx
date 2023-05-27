@@ -7,18 +7,18 @@ import { capitalizeFirstLetter } from "../../utils/simpleFunctions";
 export default function () {
     const context = useRouterContext();
     const team: Team | null = context.cache;
-    let image_url = "", name = "", captain = "", players: string[] = [];
+    let icon = "", name = "", captain = "", players: string[] = [];
     if (team !== null) {
-        image_url = team.image_url;
+        icon = team.icon;
         name = team.name;
-        captain = team.captain;
-        players = team.players;
+        captain = team.captain.nick;
+        players = team.players?.map((player)=>player.nick)!;
     }
     return (
         <>
             <div className="d-flex justify-content-center align-items-center my-4">
-                <img src={image_url} style={{ height: "70px", width: "70px", borderRadius: "40px" }} />
-                <svg className={"ms-2 me-4 text-primary"} style={{ height: "80px", width: "80px" }}>{ICONS_SPORTS.BALONCESTO}</svg>
+                <img src={icon} style={{ height: "70px", width: "70px", borderRadius: "40px" }} />
+                <svg className={"ms-2 me-4 text-primary"} style={{ height: "80px", width: "80px" }}>{ICONS_SPORTS.basketball}</svg>
                 <div className="d-flex flex-column align-items-center">
                     <div className="fw-bold">{name}</div>
                     <div className="fw-light">{capitalizeFirstLetter(context.getText().createdBy)} {captain}</div>

@@ -18,6 +18,7 @@ const validatorTeamCreation = [
         return value.every((player: any) => typeof player === 'string');
     }),
     check('open').optional().notEmpty().isBoolean(),
+    check('max').exists().notEmpty().isNumeric(),
     (req:Request, res:Response, next:NextFunction) => {
         return validateResults(req, res, next)
     }
@@ -29,6 +30,7 @@ const validatorTeamUpdate = [
     check('description').optional().notEmpty().isString(),
     check('sport').optional().notEmpty().isIn(SPORTS),
     check('open').optional().notEmpty().isBoolean(),
+    check('max').optional().notEmpty().isNumeric(),
     (req:Request, res:Response, next:NextFunction) => {
         return validateResults(req, res, next)
     }
@@ -41,6 +43,7 @@ interface TeamCreationRequest {
     sport: SportNames;
     captain?: string;
     players?: string[];
+    max: number;
     open?: boolean;
 };
 

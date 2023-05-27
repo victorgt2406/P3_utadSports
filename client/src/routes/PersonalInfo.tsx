@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useRef, useState } from "react";
 import { CONTEXT } from "../utils/Context";
-import { DEGREES, HOURS } from "../models/Options";
+// import { DEGREES, HOURS } from "../models/Options";
 import AutoComplete from "../components/inputs/AutoComplete";
 import GetIcon from "../components/inputs/GetIcon";
 
@@ -40,7 +40,7 @@ export default function PersonalInfo() {
                 let data = login.data;
                 try {
                     context.setUser(data);
-                    context.setPage("start");
+                    context.setPage("news");
                 }
                 catch {
                     alert(data.msg);
@@ -86,7 +86,7 @@ export default function PersonalInfo() {
                     <input ref={psw2} type="text" className="form-control" placeholder="Repetir contraseña" />
                 </div>
 
-                <div className="w-100"></div>
+                {/* <div className="w-100"></div>
 
                 <div className="col-sm m-3">
                     <label className="form-label"><i className="bi bi-book"></i> Grado</label>
@@ -95,7 +95,7 @@ export default function PersonalInfo() {
                 <div className="col-sm m-3">
                     <label className="form-label"><i className="bi bi-calendar3-week"></i> Horario de clases</label>
                     <AutoComplete placeholder={"Horario de clases"} select={true} value={timeTable} array={HOURS} setValue={setTimeTable} />
-                </div>
+                </div> */}
             </div>
             <div className="my-5 d-flex flex-column align-items-center">
                 <button

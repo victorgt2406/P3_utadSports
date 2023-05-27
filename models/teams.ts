@@ -12,9 +12,9 @@ interface Team {
     open?: boolean;
     primaryColor?: string;
     secondaryColor?: string;
-    // whitelist?: string[];
-    createdAt: Date;
-    updatedAt: Date;
+    max: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const Teams = new mongoose.Schema<Team>(
@@ -45,6 +45,10 @@ const Teams = new mongoose.Schema<Team>(
         },
         open: {
             type: Boolean,
+        },
+        max: {
+            required: true,
+            type: Number
         },
         primaryColor: {
             type: String

@@ -11,7 +11,7 @@ import OpenTeam from '@mui/icons-material/Groups3';
 import Add from '@mui/icons-material/AddRounded';
 import Join from '@mui/icons-material/LaunchRounded';
 import Basketball from '@mui/icons-material/SportsBasketballRounded';
-import Soccer from '@mui/icons-material/SportsSoccer';
+import Football from '@mui/icons-material/SportsSoccer';
 import Padel from '@mui/icons-material/SportsTennis';
 import Menu from '@mui/icons-material/Menu';
 import Expand from '@mui/icons-material/ExpandMore';
@@ -51,9 +51,9 @@ const ICONS_PAGE: { [key in Page]: JSX.Element } = {
 };
 
 const ICONS_SPORTS: { [key in Sport]: JSX.Element } = {
-    FUTBOL: <Soccer />,
-    BALONCESTO: <Basketball />,
-    PADEL: <Padel />
+    football: <Football />,
+    basketball: <Basketball />,
+    padel: <Padel />
 };
 
 const ICONS_BASIC = {

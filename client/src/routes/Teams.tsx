@@ -7,14 +7,6 @@ import notify from "../utils/notify";
 import { Team } from "../models/Team";
 
 export default function () {
-    const axiosInstance = axios.create({
-        baseURL: window.location.origin,
-    });
-    axiosInstance.interceptors.request.use((config) => {
-        const apiURL = config.headers['X-API-URL'];
-        config.baseURL = apiURL ? apiURL : config.baseURL;
-        return config;
-    });
     const context = useRouterContext();
     const [teams, setTeams] = useState<Team[]>([]);
     const filters = ["todos","futbol","baloncesto","padel"];
@@ -23,7 +15,8 @@ export default function () {
     useEffect(() => {
         const getTeams = async () => {
             try {
-                const response = await axiosInstance.get(`${context.apiUrl}/user_team/`);
+                const response = await axios.get(`${context.apiUrl}/teams/`);
+                console.log(response);
                 setTeams(response.data);
             }
             catch(err) {

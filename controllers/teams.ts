@@ -34,13 +34,14 @@ const createTeam = async (req: RequestWithUser, res: Response) => {
             });
         }
         try {
-            const body = {
+            const body:Team = {
                 icon: data.icon ? data.icon : "",
                 name: data.name,
                 description: data.description,
                 sport: data.sport,
                 players,
                 captain,
+                max: data.max
             };
             const team: Team = await teamsModel.create(body);
             res.send(team);

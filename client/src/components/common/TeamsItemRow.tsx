@@ -26,7 +26,7 @@ export default function ({ team, white }: MyProps) {
     let description: string = "description";
     let leader: string = "captain";
     let members: string[] = [];
-    let sport: Sport = "BALONCESTO";
+    let sport: Sport = "basketball";
     let membersString: string = "members...";
     let total: number = 0;
     let max: number = 0;
@@ -39,12 +39,12 @@ export default function ({ team, white }: MyProps) {
     try {
         name = team.name;
         description = team.description;
-        leader = team.captain;
-        members = team.players;
+        leader = team.captain.nick;
         sport = team.sport;
-        membersString = members.sort().reduce((previusMembers, member) => `${previusMembers}, ${member}`);
-        total = team.total_members;
-        max = team.max_members;
+        total = team.players!.length;
+        max = team.max;
+        members = team.players!.map((player)=>player.nick);
+        membersString = members.sort().reduce((previusMembers, member) => `${previusMembers}, ${member}`, "");
     }
     catch {
         console.log("error loading Teams Item Row");
@@ -53,7 +53,7 @@ export default function ({ team, white }: MyProps) {
         <div className="d-flex flex-wrap">
             <div className="d-flex justify-content-between px-3 me-2 align-items-center">
                 <svg className="text-primary" style={{ height: "60px", width: "60px" }}>{ICONS_SPORTS[sport]}</svg>
-                <img src={team.image_url} style={{ height: "50px", width: "50px", borderRadius: "40px" }}></img>
+                <img src={team.icon} style={{ height: "50px", width: "50px", borderRadius: "40px" }}></img>
             </div>
             <div className="d-flex flex-column">
                 <p className="fw-bold my-1 fs-5">{team.name}</p>
