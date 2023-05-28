@@ -1,6 +1,5 @@
 import { useState } from "react";
 import NavBarTemplate from "../templates/NavBarTemplate";
-import { ICONS_BASIC, ICONS_NEWS } from "../utils/Icons";
 
 export default function () {
     const [content, setContent] = useState("");
@@ -26,14 +25,21 @@ export default function () {
                     {/* image preview */}
                     <div className="col pe-3">
                         {image ? (
-                            <img src={image} className="col" />
+                            <div
+                                className="d-flex justify-content-center"
+                                style={{
+                                    width: "100%",
+                                    height: "200px",
+                                }}
+                            >
+                                <img src={image} style={{ height: "100%" }} />
+                            </div>
                         ) : (
                             <div
                                 className="bg-secondary rounded"
                                 style={{
                                     width: "100%",
                                     height: "100%",
-                                    // backgroundColor: "var(--bs-secondary)",
                                 }}
                             ></div>
                         )}
@@ -56,7 +62,20 @@ export default function () {
                     {/* image button */}
                     <div className="col d-flex justify-content-center align-items-center mt-2">
                         <div className="form-floating pe-2 col">
-                            <input type="text" className="form-control" />
+                            <input
+                                type="text"
+                                className="form-control"
+                                onChange={(event: React.ChangeEvent<any>) => {
+                                    const val = event.target.value;
+                                    setImageLink(val);
+                                    if (val === "") {
+                                        setImage(null);
+                                    } else {
+                                        setImage(val);
+                                    }
+                                }}
+                                value={imageLink}
+                            />
                             <label htmlFor="floatingInput">Image link</label>
                         </div>
                         <button
@@ -76,7 +95,9 @@ export default function () {
                     <div className="col d-flex justify-content-end mt-2">
                         <div className="card">
                             <div className="card-body d-flex">
-                                <div className="me-2 fw-light">number of characters:</div>
+                                <div className="me-2 fw-light">
+                                    number of characters:
+                                </div>
                                 <div className="fw-bold">{content.length}</div>
                             </div>
                         </div>
