@@ -17,9 +17,10 @@ interface Team {
     updatedAt?: Date;
 }
 
-const Teams = new mongoose.Schema<Team>(
+const TeamsSchema = new mongoose.Schema<Team>(
     {
         icon: {
+            required: true,
             type: String
         },
         name: {
@@ -63,8 +64,8 @@ const Teams = new mongoose.Schema<Team>(
     }
 );
 
-Teams.index({ name: 1 });
+TeamsSchema.index({ name: 1 });
 
-export default mongoose.model("teams", Teams);
+export default mongoose.model("teams", TeamsSchema);
 
 export type { Team };
