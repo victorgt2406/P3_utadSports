@@ -17,4 +17,11 @@ interface User {
     address?: string;
 }
 
+interface Token {
+    token: string;
+    hoursExp: number;
+    date?: Date;
+}
+
 export default User;
+export type {Token};

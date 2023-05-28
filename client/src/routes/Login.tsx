@@ -19,9 +19,9 @@ export default function Login() {
                     email: email.current?.value,
                     password: password.current?.value
                 });
-                // console.log(res);
+                console.log(res);
                 context.setUser(res.data.user);
-                context.setToken(res.data.token.token);
+                context.setToken(res.data.token);
                 context.setPage("news");
                 console.log(context);
             }

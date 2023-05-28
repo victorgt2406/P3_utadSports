@@ -2,6 +2,7 @@ import { Sport } from "./Options";
 import User from "./User";
 
 interface Team {
+    _id?: string;
     icon: string;
     name: string;
     description: string;
