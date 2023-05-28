@@ -113,7 +113,14 @@ input[type="checkbox"] {
 
 .nav-header-item {
     font-size: 30px;
+    transition: 0.5s;
 }
+
+.nav-header-item:hover {
+    color: var(--bs-primary);
+    /* transition: 0.1s; */
+}
+
 .imagenBandera{
     background-image: url(/cliente/src/assets/icons/FlagFilled.svg);
 }

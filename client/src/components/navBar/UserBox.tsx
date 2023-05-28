@@ -2,13 +2,15 @@ import { useContext } from "react";
 import { CONTEXT } from "../../utils/Context";
 import UserIcon from "./UserIcon";
 import useRouterContext from "../../utils/RouterContext";
+import UserNotifications from "./UserNotifications";
 
 function LoggedBox() {
     return (
         <>
-        {/* <div className="d-flex justify-content-center align-items-center"> */}
+        <div className="d-flex justify-content-center align-items-center">
+            <UserNotifications/>
             <UserIcon />
-        {/* </div> */}
+        </div>
         </>
     );
 }

@@ -14,7 +14,7 @@ export default function ProfileIcon() {
         }} />);
     return (
         <PopOver body={<div className="me-2"><UserOptions /></div>}>
-            <div role="button" className="nav-header-item ms-2">
+            <div role="button" className="ms-2">
                 {userIcon}
             </div>
         </PopOver>

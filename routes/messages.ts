@@ -24,7 +24,7 @@ router.post(
 );
 
 // get user messages
-router.get("/", tokenAuth, getMessage);
+router.get("/", tokenAuth, getUserMessages);
 
 // get news
 router.get("/news", getNews);
@@ -33,7 +33,7 @@ router.get("/news", getNews);
 router.get("/notifications", tokenAuth, getUserNotifications);
 
 // get a message
-router.get("/:id", tokenAuth, getUserMessages);
+router.get("/:id", tokenAuth, getMessage);
 
 // delete a message
 router.delete("/:id", tokenAuth, deleteMessage);

@@ -29,7 +29,7 @@ export default function () {
                     user.nick === captain;
                 })!,
                 players: nickPlayers.map(
-                    (nick) => users.find((user) => user.nick === nick)!
+                    (nick) => (users.find((user) => user.nick === nick)!)._id
                 ),
                 max: parseInt(max),
                 open: true,

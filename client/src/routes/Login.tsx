@@ -1,10 +1,11 @@
-import axios from 'axios';
-import { useRef } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import LogoTemplate from '../templates/LogoTemplate';
-import User from '../models/User';
-import useRouterContext from '../utils/RouterContext';
+import axios from "axios";
+import { useRef } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import LogoTemplate from "../templates/LogoTemplate";
+import User from "../models/User";
+import useRouterContext from "../utils/RouterContext";
+import notify from "../utils/notify";
 
 export default function Login() {
     const email = useRef<HTMLInputElement>(null);
@@ -12,59 +13,83 @@ export default function Login() {
     const context = useRouterContext();
 
     function handleSubmit(event: React.ChangeEvent<any>) {
-        event.preventDefault(); // Prevent page reload 
-        (async () => {
+        event.preventDefault(); // Prevent page reload
+        console.log("login");
+        const login = async () => {
             try {
                 let res = await axios.post(`${context.apiUrl}/users/login/`, {
                     email: email.current?.value,
-                    password: password.current?.value
+                    password: password.current?.value,
                 });
                 console.log(res);
                 context.setUser(res.data.user);
                 context.setToken(res.data.token);
                 context.setPage("news");
                 console.log(context);
-            }
-            catch (err){
+            } catch (err) {
+                notify("Login failed","ERROR","user or password are incorrect")
                 console.log(err);
             }
-        })();
-
+        };
+        login();
     }
     return (
-        <div className='mt-5'>
+        <div className="mt-5">
             <br></br>
             <br></br>
-        <LogoTemplate>
-        <br></br>
-        <br></br>
-            <Form>
-                <Form.Group className="mb-4 mt-5 px-5" controlId="formBasicEmail">
-                    <Form.Label>Correo electrónico</Form.Label>
-                    <Form.Control ref={email} type="email" placeholder="Campo a rellenar" />
-                </Form.Group>
-                <Form.Group className="mb-4 mt-5 px-5" controlId="formBasicPassword">
-                    <Form.Label>Contraseña</Form.Label>
-                    <Form.Control ref={password} type="password" placeholder="Password" />
-                </Form.Group>
-                <Form.Group className="mb-3 mx-3 px-5" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Mantener cuenta" />
-                </Form.Group>
-                <div className="mt-5 d-flex flex-column align-items-center">
-                    <Button variant="primary" className='mb-2' onClick={handleSubmit} >
-                        Iniciar sesion
-                    </Button>
-                    <p className="text-muted mt-2">
-                        ¿No estas registrado?
-                        <span
-                            role="button"
-                            className="text-decoration-underline ms-2"
-                            onClick={() => context.setPage("register")}
-                        >Registrate</span>
-                    </p>
-                </div>
-            </Form>
-        </LogoTemplate>
+            <LogoTemplate>
+                <br></br>
+                <br></br>
+                <Form>
+                    <Form.Group
+                        className="mb-4 mt-5 px-5"
+                        controlId="formBasicEmail"
+                    >
+                        <Form.Label>Correo electrónico</Form.Label>
+                        <Form.Control
+                            ref={email}
+                            type="email"
+                            placeholder="Campo a rellenar"
+                        />
+                    </Form.Group>
+                    <Form.Group
+                        className="mb-4 mt-5 px-5"
+                        controlId="formBasicPassword"
+                    >
+                        <Form.Label>Contraseña</Form.Label>
+                        <Form.Control
+                            ref={password}
+                            type="password"
+                            placeholder="Password"
+                        />
+                    </Form.Group>
+                    <Form.Group
+                        className="mb-3 mx-3 px-5"
+                        controlId="formBasicCheckbox"
+                    >
+                        <Form.Check type="checkbox" label="Mantener cuenta" />
+                    </Form.Group>
+                    <div className="mt-5 d-flex flex-column align-items-center">
+                        <Button
+                            variant="primary"
+                            className="mb-2"
+                            onClick={handleSubmit}
+                        >
+                            Iniciar sesion
+                        </Button>
+                        <p className="text-muted mt-2">
+                            ¿No estas registrado?
+                            <span
+                                role="button"
+                                className="text-decoration-underline ms-2"
+                                onClick={() => context.setPage("register")}
+                            >
+                                Registrate
+                            </span>
+                        </p>
+                    </div>
+                </Form>
+            </LogoTemplate>
         </div>
     );
 }

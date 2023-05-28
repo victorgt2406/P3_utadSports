@@ -35,7 +35,7 @@ export default function Register() {
                 );
                 console.log(res);
                 context.setUser(res.data.user);
-                context.setToken(res.data.token.token);
+                context.setToken(res.data.token);
                 context.setPage("news");
             }
             catch (err) {
@@ -73,11 +73,11 @@ export default function Register() {
 
                     <div className="col-sm m-3">
                         <label className="form-label"><i className="bi bi-key"></i> Contraseña (minimo 8 caracteres)</label>
-                        <input ref={psw1} type="text" className="form-control" placeholder="Contraseña" />
+                        <input ref={psw1} type="password" className="form-control" placeholder="Contraseña" />
                     </div>
                     <div className="col-sm m-3">
                         <label className="form-label"><i className="bi bi-key"></i> Repetir contraseña</label>
-                        <input ref={psw2} type="text" className="form-control" placeholder="Repetir contraseña" />
+                        <input ref={psw2} type="password" className="form-control" placeholder="Repetir contraseña" />
                     </div>
 
                     {/* <div className="w-100"></div> */}

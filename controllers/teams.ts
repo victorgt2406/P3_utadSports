@@ -213,6 +213,24 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
                     { _id: team.id },
                     { $set: players }
                 );
+                const message: Message = {
+                    type: "notification",
+                    content: [
+                        {
+                            lang: "es",
+                            content: `${player.nick} se ha unido a ${team.name} %%join=https://localhost:3000%%`,
+                            title: `${player.nick} se ha unido a ${team.name}`,
+                        },
+                        {
+                            lang: "en",
+                            content: `${player.nick} has joined ${team.name} %%join=https://localhost:3000%%`,
+                            title: `${player.nick} has joined ${team.name}`,
+                        }
+                    ],
+                    state: "unread",
+                    to: team.captain
+                };
+                messagesModel.create(message);
                 res.send("JOINED");
             } catch (err) {
                 console.log(err);

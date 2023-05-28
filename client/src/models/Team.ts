@@ -8,7 +8,7 @@ interface Team {
     description: string;
     sport: Sport;
     captain: User;
-    players?: User[];
+    players?: User[] | string[];
     open?: boolean;
     max: number,
     primaryColor?: string;

@@ -16,7 +16,7 @@ export default function () {
         const getTeams = async () => {
             try {
                 const response = await axios.get(`${context.apiUrl}/teams/`);
-                console.log(response);
+                // console.log(response);
                 setTeams(response.data);
             }
             catch(err) {
