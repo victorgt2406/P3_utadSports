@@ -49,7 +49,6 @@ export default function ({
     handleSubmit
 }: MyProps) {
     const context = useRouterContext();
-    // const [imageExists, setImageExists] = useState<boolean>(false);
 
     useEffect(() => {
         const getUsers = async () => {
@@ -80,12 +79,6 @@ export default function ({
         };
         getUsers();
     }, []);
-
-    // let image = <></>;
-    // if (imageExists) {
-    //     image = <img src="..." alt="team logo" />;
-    // }
-
     return (
         <>
             <div className="d-flex flex-column justify-content-center">
@@ -105,7 +98,7 @@ export default function ({
                             value={name}
                             type="text"
                             className="form-control light-blue my-3"
-                            placeholder="Nombre del equipo"
+                            placeholder={context.getText().teamName}
                         />
                         <AutoCompleteAdder
                             {...{
@@ -115,21 +108,19 @@ export default function ({
                                 values: nickPlayers,
                                 setValues: setNickPlayers,
                                 array: users.map((user) => user.nick),
-                                placeholder: "Miembros del equipo",
+                                placeholder: context.getText().teamPlayers,
                                 filter: true,
                             }}
                         />
-                        {/* <input type="text" className="form-control light-blue my-3" placeholder="Miembros del equipo" /> */}
                         <AutoComplete
                             {...{
                                 className: "my-3",
                                 value: captain,
                                 setValue: setCaptain,
-                                placeholder: "Seleccionar lider del equipo",
+                                placeholder: context.getText().captain,
                                 array: [...nickPlayers, context.user?.nick!],
                             }}
                         />
-                        {/* <input type="text" className="form-control light-blue my-3" placeholder="Seleccionar lider del equipo" /> */}
                     </div>
                 </div>
                 <div>
@@ -137,24 +128,22 @@ export default function ({
                     <SportsButtons {...{ sport, setSport }} />
                 </div>
                 <input
-                    // ref={description}
                     onChange={(event: React.ChangeEvent<any>) => {
                         setDescription(event.target.value);
                     }}
                     value={description}
                     type="text"
                     className="form-control light-blue my-2 mt-1"
-                    placeholder="Descripcion"
+                    placeholder={context.getText().description}
                 />
                 <input
-                    // ref={maxPlayers}
                     onChange={(event: React.ChangeEvent<any>) => {
                         setMax(event.target.value);
                     }}
                     value={max.toString()}
                     type="number"
                     className="form-control light-blue my-2"
-                    placeholder="Máximo número de miembros"
+                    placeholder={context.getText().maxPlayers}
                 />
                 <div className="my-5 d-flex justify-content-center">
                     <button

@@ -25,7 +25,7 @@ export default function () {
                 </div>
             </div>
             <div>
-                <LabelInfo label={context.getText().teamMembers} className="text-primary">
+                <LabelInfo label={context.getText().teamPlayers} className="text-primary">
                     {captain}
                 </LabelInfo>
                 {players.sort().map((player, index) => <LabelInfo key={index}>{player}</LabelInfo>)}

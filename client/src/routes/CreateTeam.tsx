@@ -10,10 +10,6 @@ import notify from "../utils/notify";
 
 export default function () {
     const context = useRouterContext();
-    // inputs
-    // const name = useRef<HTMLInputElement>(null);
-    // const description = useRef<HTMLInputElement>(null);
-    // const max = useRef<HTMLInputElement>(null);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [max, setMax] = useState<string>("");
@@ -26,10 +22,8 @@ export default function () {
     const handleSubmit = async () => {
         try {
             const teamToCreate: Team = {
-                // name: name.current?.value!,
                 name,
                 sport,
-                // description: description.current?.value!,
                 description,
                 captain: users.find((user) => {
                     user.nick === captain;
@@ -37,7 +31,6 @@ export default function () {
                 players: nickPlayers.map(
                     (nick) => users.find((user) => user.nick === nick)!
                 ),
-                // max: parseInt(max.current?.value!),
                 max: parseInt(max),
                 open: true,
                 icon: "",
