@@ -94,6 +94,9 @@ function New({ className = "" }: { className?: string }) {
 
 export default function () {
     const { user } = useRouterContext();
+
+    
+
     return (
         <NavBarTemplate>
             {user?.role === "admin" ? (

@@ -13,7 +13,6 @@ import Teams from "./Teams";
 import Activities from "./Activities";
 import InscriptionActivity from "./joinActivity"
 import Test from "./test";
-// import News from "./News";
 import GanadorActividad from "./ganadorActividad";
 import ResultsActivity from "./ResultsActivity";
 import ResultsTorneo from "./ResultsTorneo";
@@ -21,12 +20,13 @@ import JoinTournament from "./joinTournament";
 import Events from "./Events";
 import ViewTeam from "./ViewTeam";
 import ViewActivity from "./ViewActivity";
-import Start from "./Start";
+import News from "./News";
+import CreateNew from "./CreateNew";
 
 
-type Page = "login" | "register" | "createActivity" | "tournaments" | "openTeams" | "events" | "results" | "ResultsActivity" | "ResultsTorneo" | "ganadorTorneo" | "ganadorActividad" | "createTeam" | "personalInfo" | "myTeams" | "myEvents" | "myHistory" | "joinTeam" | "joinTournament" | "news" | "createTournament" | "teams" | "activities" | "inscriptionActivity" | "test" | "viewTeam" | "viewActivity";
+type Page = "login" | "register" | "createActivity" | "tournaments" | "openTeams" | "events" | "results" | "ResultsActivity" | "ResultsTorneo" | "ganadorTorneo" | "ganadorActividad" | "createTeam" | "personalInfo" | "myTeams" | "myEvents" | "myHistory" | "joinTeam" | "joinTournament" | "news" | "createTournament" | "teams" | "activities" | "inscriptionActivity" | "test" | "viewTeam" | "viewActivity" | "createNew";
 
-const PAGES: Page[] = ["login", "register", "createActivity", "tournaments", "openTeams", "events", "results", "ResultsActivity", "ResultsTorneo", "ganadorTorneo", "ganadorActividad", "createTeam", "personalInfo", "myTeams", "myEvents", "myHistory", "joinTeam", "joinTournament", "news", "createTournament", "teams", "activities", "inscriptionActivity", "test", "viewTeam", "viewActivity"];
+const PAGES: Page[] = ["login", "register", "createActivity", "tournaments", "openTeams", "events", "results", "ResultsActivity", "ResultsTorneo", "ganadorTorneo", "ganadorActividad", "createTeam", "personalInfo", "myTeams", "myEvents", "myHistory", "joinTeam", "joinTournament", "news", "createTournament", "teams", "activities", "inscriptionActivity", "test", "viewTeam", "viewActivity", "createNew"];
 
 const PAGES_COMPONENTS: { [key in Page]: JSX.Element } = {
     login: <Login />,
@@ -48,13 +48,14 @@ const PAGES_COMPONENTS: { [key in Page]: JSX.Element } = {
     myHistory: <NavBarTemplate><></></NavBarTemplate>,
     joinTeam: <JoinTeam />,
     joinTournament: <NavBarTemplate page="joinTournament" parentPage="tournaments"><JoinTournament /></NavBarTemplate>,
-    news: <Start />,
+    news: <News />,
     createTournament: <NavBarTemplate><CreateTournament /></NavBarTemplate>,
     inscriptionActivity: <NavBarTemplate><InscriptionActivity /></NavBarTemplate>,
     teams: <Teams />,
     test: <Test />,
     viewTeam: <ViewTeam />,
-    viewActivity: <ViewActivity />
+    viewActivity: <ViewActivity />,
+    createNew: <CreateNew/>
 }
 
 export type { Page };
