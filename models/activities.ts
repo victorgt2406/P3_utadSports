@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { SPORTS, SportNames } from "./sports";
-import teams, { Team } from "./teams";
+import teams, { Team, TeamsSchema } from "./teams";
 
 const LOCATIONS = ["pista","padel"];
 type Location = "pista" | "padel"
@@ -18,7 +18,7 @@ interface Activity {
 };
 
 
-const Activities = new mongoose.Schema<Activity>(
+const ActivitiesSchema = new mongoose.Schema<Activity>(
     {
         icon: {
             type: String
@@ -43,15 +43,16 @@ const Activities = new mongoose.Schema<Activity>(
             required: true
         },
         registeredTeams: {
-            required: true,
-            type: Boolean
+            type: Boolean,
+            required: true
+            
         },
         home:{
+            type: TeamsSchema,
             required: true,
-            type: teams
         },
         away:{
-            type: teams
+            type: TeamsSchema
         }
     },
     {
@@ -60,8 +61,8 @@ const Activities = new mongoose.Schema<Activity>(
     }
 );
 
-Activities.index({ name: 1 });
+ActivitiesSchema.index({ name: 1 });
 
-export default mongoose.model("activities", Activities);
+export default mongoose.model("activities", ActivitiesSchema);
 
 export type {Activity, Location};

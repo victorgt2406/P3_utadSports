@@ -1,12 +1,14 @@
 import express from "express";
 const router = express.Router();
 // get all
-router.get("/");
+router.get("/",);
 // get one
-router.get("/:id");
+router.get("/:id",);
 // insert one
-router.post("/");
+router.post("/",);
 // put one
-router.put("/:id");
+router.put("/:id",);
 // delete one
-router.delete("/:id");
+router.delete("/:id",);
+
+export default router;
