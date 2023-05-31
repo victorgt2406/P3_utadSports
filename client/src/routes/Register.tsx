@@ -25,7 +25,6 @@ export default function Register() {
                 const res = await axios.post(`${context.apiUrl}/users/register/`,
                     {
                         "name": name.current?.value,
-                        "icon": "https://img.freepik.com/premium-photo/natural-real-person-portrait-closeup-woman-girl-female-outside-nature-forest-artistic-edgy-cute-pretty-face-ai-generated_590464-133625.jpg?w=2000",
                         "surname": surname.current?.value,
                         "email": email.current?.value,
                         "password": psw1.current?.value,

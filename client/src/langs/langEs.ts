@@ -2,6 +2,11 @@ import ResultsActivity from "../routes/ResultsActivity";
 import Texts from "./Texts";
 
 const langEs: Texts = {
+    email: "correo electrónico",
+    emailExample: "nombre.apellido@live.u-tad.com",
+    password: "contraseña",
+    notRegistered: "¿No estas registrado?",
+    keepAccount: "Mantener sesión iniciada",
     title: "U-tad Sports",
     login: "iniciar sesion",
     register: "registrarse",
@@ -52,7 +57,9 @@ const langEs: Texts = {
     teamName: "nombre del equipo",
     selectCaptain: "selecciona al capitan",
     maxPlayers: "máximo número de jugadores",
-    createNew: "crear noticia"
+    createNew: "crear noticia",
+    en: "inglés",
+    es: "español"
 };
 
 export default langEs;

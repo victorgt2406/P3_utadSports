@@ -6,6 +6,7 @@ import LogoTemplate from "../templates/LogoTemplate";
 import User from "../models/User";
 import useRouterContext from "../utils/RouterContext";
 import notify from "../utils/notify";
+import { capitalizeFirstLetter } from "../utils/simpleFunctions";
 
 export default function Login() {
     const email = useRef<HTMLInputElement>(null);
@@ -27,69 +28,72 @@ export default function Login() {
                 context.setPage("news");
                 console.log(context);
             } catch (err) {
-                notify("Login failed","ERROR","user or password are incorrect")
+                notify(
+                    "Login failed",
+                    "ERROR",
+                    "user or password are incorrect"
+                );
                 console.log(err);
             }
         };
         login();
     }
     return (
-        <div className="mt-5">
-            <br></br>
-            <br></br>
-            <LogoTemplate>
-                <br></br>
-                <br></br>
-                <Form>
-                    <Form.Group
-                        className="mb-4 mt-5 px-5"
-                        controlId="formBasicEmail"
+        <LogoTemplate>
+            <Form>
+                <Form.Group
+                    className="mb-4 mt-3 px-5"
+                    controlId="formBasicEmail"
+                >
+                    <Form.Label>
+                        {capitalizeFirstLetter(context.getText().email)}
+                    </Form.Label>
+                    <Form.Control
+                        ref={email}
+                        type="email"
+                        placeholder={context.getText().emailExample}
+                    />
+                </Form.Group>
+                <Form.Group
+                    className="mb-4 mt-5 px-5"
+                    controlId="formBasicPassword"
+                >
+                    <Form.Label>
+                        {capitalizeFirstLetter(context.getText().password)}
+                    </Form.Label>
+                    <Form.Control
+                        ref={password}
+                        type="password"
+                        placeholder="****"
+                        autoComplete="off"
+                    />
+                </Form.Group>
+                <Form.Group
+                    className="mb-3 mx-3 px-5"
+                    controlId="formBasicCheckbox"
+                >
+                    <Form.Check type="checkbox" label={context.getText().keepAccount} />
+                </Form.Group>
+                <div className="mt-5 d-flex flex-column align-items-center">
+                    <Button
+                        variant="primary"
+                        className="mb-2"
+                        onClick={handleSubmit}
                     >
-                        <Form.Label>Correo electrónico</Form.Label>
-                        <Form.Control
-                            ref={email}
-                            type="email"
-                            placeholder="Campo a rellenar"
-                        />
-                    </Form.Group>
-                    <Form.Group
-                        className="mb-4 mt-5 px-5"
-                        controlId="formBasicPassword"
-                    >
-                        <Form.Label>Contraseña</Form.Label>
-                        <Form.Control
-                            ref={password}
-                            type="password"
-                            placeholder="Password"
-                        />
-                    </Form.Group>
-                    <Form.Group
-                        className="mb-3 mx-3 px-5"
-                        controlId="formBasicCheckbox"
-                    >
-                        <Form.Check type="checkbox" label="Mantener cuenta" />
-                    </Form.Group>
-                    <div className="mt-5 d-flex flex-column align-items-center">
-                        <Button
-                            variant="primary"
-                            className="mb-2"
-                            onClick={handleSubmit}
+                        {capitalizeFirstLetter(context.getText().login)}
+                    </Button>
+                    <p className="text-muted mt-2">
+                        {context.getText().notRegistered}
+                        <span
+                            role="button"
+                            className="text-decoration-underline ms-2"
+                            onClick={() => context.setPage("register")}
                         >
-                            Iniciar sesion
-                        </Button>
-                        <p className="text-muted mt-2">
-                            ¿No estas registrado?
-                            <span
-                                role="button"
-                                className="text-decoration-underline ms-2"
-                                onClick={() => context.setPage("register")}
-                            >
-                                Registrate
-                            </span>
-                        </p>
-                    </div>
-                </Form>
-            </LogoTemplate>
-        </div>
+                            {capitalizeFirstLetter(context.getText().register)}
+                        </span>
+                    </p>
+                </div>
+            </Form>
+        </LogoTemplate>
     );
 }

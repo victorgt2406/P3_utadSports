@@ -45,6 +45,7 @@ const TeamsSchema = new mongoose.Schema<Team>(
         },
         open: {
             type: Boolean,
+            default: true
         },
         max: {
             required: true,

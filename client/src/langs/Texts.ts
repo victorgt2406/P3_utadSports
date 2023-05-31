@@ -1,8 +1,10 @@
 import { Sport, State, Pista } from "../models/Options";
 import { Page } from "../routes";
+import { Lang } from "./langs";
 
 // tipo en el que se inclullen todos los textos que pueden ser traducibles
 type PagesStr = { [key in Page]: string };
+type LangStr = { [key in Lang]: string };
 type Options = { [key in Sport]: string } 
     // & {[key in Degree]: string } 
     & {[key in State]: string }
@@ -11,6 +13,11 @@ type Options = { [key in Sport]: string }
 
 
 type Others = {
+    email: string;
+    emailExample: string;
+    password: string;
+    notRegistered: string;
+    keepAccount: string;
     start: string;
     title: string;
     description: string;
@@ -21,9 +28,8 @@ type Others = {
     join: string;
     teamName: string;
     selectCaptain: string;
-    maxPlayers: string;
-    
+    maxPlayers: string;    
 }
 
-interface Texts extends PagesStr, Options, Others {}
+interface Texts extends PagesStr, Options, LangStr, Others {}
 export default Texts;

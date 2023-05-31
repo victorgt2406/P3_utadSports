@@ -1,6 +1,11 @@
 import Others from "./Texts";
 
 const langEn: Others = {
+    email: "email",
+    emailExample: "name.surname@live.u-tad.com",
+    password: "password",
+    notRegistered: "Not registered?",
+    keepAccount: "Keep sesion",
     title: "U-tad Sports",
     login: "login",
     register: "register",
@@ -51,7 +56,9 @@ const langEn: Others = {
     teamName: "team name",
     selectCaptain: "select your captain",
     maxPlayers: "max number of players",
-    createNew: "create a new"
+    createNew: "create a new",
+    en: "english",
+    es: "spanish"
 }
 
 export default langEn;

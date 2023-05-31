@@ -3,6 +3,7 @@ import LogoUtad from "../assets/pictures/LOGO_U-SPORTS.svg";
 import { CONTEXT } from "../utils/Context";
 import getContext from "../utils/Cookies";
 import useRouterContext from "../utils/RouterContext";
+import ChangeLanguageButton from "../components/navBar/ChangeLanguageButton";
 
 type MyProps = {
     children: React.ReactNode
@@ -14,10 +15,11 @@ export default function LogoTemplate({ children }: MyProps) {
     return (
         <>
             <div className="container">
-                <div role="button" className="d-flex justify-content-center align-items-center" onClick={()=>{
+                <div className="d-flex justify-content-end mt-2"><ChangeLanguageButton/></div>
+                <div role="button" className="d-flex justify-content-center align-items-center my-5" onClick={()=>{
                     context.setPage("news");
                 }}>
-                    <img className="mt-5 mb-4" src={LogoUtad} style={{width:"55%"}}/>
+                    <img src={LogoUtad} style={{width:"70%"}}/>
                 </div>
                 {children}
             </div>

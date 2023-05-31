@@ -1,14 +1,4 @@
-import { useContext } from "react";
-import { CONTEXT } from "../../utils/Context";
 import { Page } from "../../routes";
-import News from "../../assets/icons/News.svg";
-import NewsSelected from "../../assets/icons/NewsSelected.svg";
-import Results from "../../assets/icons/Results.svg";
-import ResultsSelected from "../../assets/icons/ResultsSelected.svg";
-import Calendar from "../../assets/icons/Calendar.svg";
-import CalendarSelected from "../../assets/icons/CalendarSelected.svg";
-import OpenTeams from "../../assets/icons/OpenTeams.svg";
-import OpenTeamsSelected from "../../assets/icons/OpenTeamsSelected.svg";
 import useRouterContext from "../../utils/RouterContext";
 import { ICONS_PAGE } from "../../utils/Icons";
 
@@ -57,7 +47,7 @@ function NavFooterItem({ page }: { page: Page }) {
             className={`col mx-1 nav-footer-item${active ? "-active" : ""} d-flex flex-column align-items-center justify-content-between`}
             onClick={() => {
                 context.setPage(page);
-                console.log(page);
+                // console.log(page);
             }}>
             <div className="fs-4">{active? iconsActive[page]:icons[page]}</div>
             <div 
