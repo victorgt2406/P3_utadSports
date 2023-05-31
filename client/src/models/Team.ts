@@ -1,3 +1,4 @@
+import React from "react";
 import { Sport } from "./Options";
 import User from "./User";
 
@@ -15,6 +16,6 @@ interface Team {
     secondaryColor?: string;
     createdAt?: Date;
     updatedAt?: Date;
-}
-
-export type {Team};
+  }
+  
+export type {Team}

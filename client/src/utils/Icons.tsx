@@ -47,7 +47,8 @@ const ICONS_PAGE: { [key in Page]: JSX.Element } = {
     ResultsActivity: <></>,
     ResultsTorneo: <></>,
     viewTeam: <Team />,
-    viewActivity: <Activity />
+    viewActivity: <Activity />,
+    createNew: <></>
 };
 
 const ICONS_SPORTS: { [key in Sport]: JSX.Element } = {

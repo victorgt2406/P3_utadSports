@@ -15,14 +15,14 @@ import FechaGrande from '../components/common/FechaGrande';
 
 export default function Events() {
   let [resultados, setResultados] = useState<{
-    localitation: string; description: string, sport: string, total_team: number, result: string, start_date: string
+    location: string; description: string, sport: string, total_team: number, result: string, date: string
   }[]>([]);
   const context = useContext(CONTEXT);
   const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
 
 
   useEffect(() => {
-    axios.get(`${context.apiUrl}/activity/`)
+    axios.get(`${context.apiUrl}/activities/`)
       .then(response => {
         setResultados(response.data);
       })
@@ -37,16 +37,15 @@ export default function Events() {
   
 
   const sorted = resultados
-  .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
-  .filter((res) => new Date(res.start_date).getTime() > new Date().getTime())
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  .filter((res) => new Date(res.date).getTime() > new Date().getTime())
   .map((res) => ({ 
       nombre: res.description,
       escudo: Escudo,
       deporte: res.sport, 
-      numEquipos: res.total_team,
       resultado: res.result,
-      location: res.localitation,
-      fecha: res.start_date,
+      location: res.location,
+      fecha: res.date,
     }));
   const isSmallScreen = context.isMobile();
   

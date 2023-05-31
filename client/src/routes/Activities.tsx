@@ -12,12 +12,12 @@ import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import NavBarTemplate from '../templates/NavBarTemplate';
 import VsImage from '../components/common/VsImage';
-
+import { Team } from '../models/Team';
 
 
 export default function ActivityList() {
   const [resultados, setResultados] = useState<{
-    localitation: string; description: string, sport: string, total_team: number, result: string, start_date: string
+    localitation: Location; description: string, sport: String, home: Team, result: string, date: string
   }[]>([]);
   const context = useContext(CONTEXT);
   const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
@@ -25,7 +25,7 @@ export default function ActivityList() {
   const filters = ["Todas las actividades", "Mis actividades", "Actividades finalizadas"];
 
   useEffect(() => {
-    axios.get(`${context.apiUrl}/activity/`)
+    axios.get(`${context.apiUrl}/activities`)
       .then(response => {
         setResultados(response.data);
       })
@@ -40,7 +40,7 @@ export default function ActivityList() {
   }
   const isSmallScreen = context.isMobile();
   const actividad = resultados
-    .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .map((res) => ({
       nombre: res.description,
       escudo: Escudo,
@@ -52,36 +52,13 @@ export default function ActivityList() {
             : res.sport === 'PADEL'
               ? Raqueta
               : '',
-      numEquipos: res.total_team,
       resultado: res.result,
       location: res.localitation,
-      fecha: res.start_date,
+      fecha: res.date,
     }));
 
   return (
     <NavBarTemplate {...{ filter, setFilter, filters, create: "createActivity", info: "activities", container: false }}>
-      {/* <div className="resultados-container"> */}
-      {/* <div className="d-flex justify-content-between align-items-center mt-3 mb-4">
-        <div className="dropdown mx-5 ">
-          <button
-            className="btn bg-transparent dropdown-toggle dropdown-toggle-icon"
-            type="button"
-            id="dropdownMenuButton"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Todas las actividades
-          </button>
-          <ul className="dropdown-menu " aria-labelledby="dropdownMenuButton">
-            <li><a className="dropdown-item" href="#">Todas las actividades</a></li>
-            <li><a className="dropdown-item" href="#">Mis actividades</a></li>
-            <li><a className="dropdown-item" href="#">Actividades finalizadas</a></li>
-          </ul>
-
-        </div>
-        <Link to={"/createActivity"} className="Link"> <button type="button" className="bi bi-plus-lg mx-5 button-icon" style={{ position: 'relative', left: '-10px' }}></button></Link>
-
-      </div> */}
       <div className="resultados">
         <div className="d-flex flex-column">
           {resultados.map((resultado, index) => (
@@ -124,7 +101,7 @@ export default function ActivityList() {
                       src={Calendario}
                       style={{ width: '24px', height: '24px' }}
                     />
-                    <span className="text-muted ms-1">{formatDate(resultado.start_date)}</span>
+                    <span className="text-muted ms-1">{formatDate(resultado.date)}</span>
                   </div>
                   <div className="d-flex align-items-center">
                     <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
@@ -136,8 +113,6 @@ export default function ActivityList() {
           ))}
         </div>
       </div>
-
-      {/* </div> */}
     </NavBarTemplate>
   );
 

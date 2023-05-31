@@ -13,7 +13,6 @@ import Select from 'react-select';
 
 export default function crearActividad() {
   const context = useRouterContext();
-
   const [sport, setSport] = useState<Sport>("" as Sport);//Deporte
   const description = useRef<HTMLInputElement>(null);//Descripcion
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
@@ -21,14 +20,15 @@ export default function crearActividad() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isChecked, setIsChecked] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
-  const [selectedTeam, setSelectedTeam] = useState<string>("");
+  const [selectedTeam, setSelectedTeam] = useState<Team>();
+
 
 
 
   useEffect(() => {
     const getTeams = async () => {
       try {
-        const response = await axios.get(`${context.apiUrl}/user_team/`);
+        const response = await axios.get(`${context.apiUrl}/teams/`);
         setTeams(response.data);
       }
       catch (err) {
@@ -70,27 +70,31 @@ export default function crearActividad() {
   }
 
   const handleClick = async () => {
-    console.log(dateConverter(currentDate, selectedHour))
+    console.log(dateConverter(currentDate, selectedHour));
     if (selectedHour !== null) {
-      const localitation = sport === "PADEL" ? "PISTA_02" : "PISTA_01";
-      const nUsers = sport === "PADEL" ? 4 : 10;
+      const localitation = sport === "padel" ? "padel" : "pista";
+      const nUsers = sport === "padel" ? 4 : 10;
       const activity_type = isChecked ? "OPEN" : "CLOSE";
+      let registeredTeams = true;
+      if (!selectedTeam) {
+        registeredTeams = false;
+      }
       try {
-        const activity = await axios.post(`${context.apiUrl}/activity/`, {
-          "sport": sport,
-          "description": description.current?.value,
-          "total_team": 2,
-          "total_users": 4,
-          "activity_type": activity_type,
-          "state": "START",
-          "start_date": dateConverter(currentDate, selectedHour),
-          "end_date": dateConverter(currentDate, selectedHour + 1),
-          "result": "0:0",
-          "localitation": localitation,
-          "manager": context.user?._id
-        },);
+        const activity = await axios.post(`${context.apiUrl}/activities/`, {
+          sport: sport,
+          name: description.current?.value,
+          date: dateConverter(currentDate, selectedHour),
+          location: localitation,
+          home: selectedTeam?._id,
+          registeredTeams: registeredTeams,
+        }, {
+          headers: {
+            Authorization: await context.token?.token,
+            "Content-Type": "application/json",
+          },
+        });
+
         console.log(activity);
-        console.log(description.current?.value);
       } catch (error) {
         console.log(error);
       }
@@ -122,9 +126,9 @@ export default function crearActividad() {
           <Select
             className="custom-select"
             classNamePrefix="custom-select"
-            options={teams.map(team => ({ label: team.name, value: team.name }))}
-            value={{ label: selectedTeam, value: selectedTeam }}
-            onChange={selectedOption => setSelectedTeam(selectedOption ? selectedOption.label : "")}
+            options={teams.map(team => ({ label: team.name, value: team }))}
+            value={selectedTeam ? { label: selectedTeam.name, value: selectedTeam } : null}
+            onChange={selectedOption => setSelectedTeam(selectedOption ? selectedOption.value : undefined)}
             formatOptionLabel={({ label }) => label}
             styles={{
               control: styles => ({
@@ -154,6 +158,7 @@ export default function crearActividad() {
               }),
             }}
           />
+
         </div>
         <Form.Group className="mb-2 mx-3 mt-2" controlId="formBasicCheckbox">
           <Form.Check

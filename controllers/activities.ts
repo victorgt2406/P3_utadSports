@@ -1,13 +1,10 @@
 import { Response } from "express";
 import { RequestWithUser } from "../middleware/tokenAuth";
-import { body, matchedData } from "express-validator";
+import { matchedData } from "express-validator";
 import { UserSum } from "../models/users";
 import { activitiesModel, messagesModel, teamsModel, usersModel } from "../models";
 import handleError from "../utils/handleError";
-import { TeamCreationRequest, TeamUpdateRequest } from "../validators/teams";
 import { Team } from "../models/teams";
-import { Message } from "../models/messages";
-import { title } from "process";
 import { ActivityCreationRequest } from "../validators/activities";
 import { Activity } from "../models/activities";
 
@@ -50,9 +47,9 @@ const createActivity = async (req: RequestWithUser, res: Response) => {
             }
             const body: Activity = {
                 ...data,
-                icon: data.icon?data.icon:"",
                 home,
-                away
+                away,
+                result: data.result
             }
             activitiesModel.create(body)
         } catch (err) {
@@ -62,6 +59,31 @@ const createActivity = async (req: RequestWithUser, res: Response) => {
         handleError(res, "DELETED_USER", 403);
     }
 };
+const getActivity = async (req: RequestWithUser, res: Response) => {
+    try {
+        const response = await activitiesModel.find();
+        res.send(response);
+    } catch (err) {
+        console.log(err);
+        handleError(res, "ERROR_GET_ACTIVITY", 500);
+    }
+};
+const getCalendar = async (req: RequestWithUser, res: Response) => {
+    const { startOfDay, endOfDay } = req.query;
 
-
-export {createActivity};
+    const filter = {
+      date: {
+        $gte: new Date(String(startOfDay)),
+        $lte: new Date(String(endOfDay)),
+      },
+    };
+  
+    try {
+      const response = await activitiesModel.find(filter);
+      res.send(response);
+    } catch (err) {
+      console.log(err);
+      handleError(res, "ERROR_GET_CALENDAR", 500);
+    }
+}
+export {createActivity, getActivity, getCalendar};

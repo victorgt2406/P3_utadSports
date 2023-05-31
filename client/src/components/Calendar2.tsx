@@ -56,7 +56,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     return {
       ...hourObject,
       matches: hourObject.matches.filter(match => {
-        const matchDate = new Date(match.start_date);
+        const matchDate = new Date(match.date);
         return matchDate.getFullYear() === selectedDate.getFullYear() &&
           matchDate.getMonth() === selectedDate.getMonth() &&
           matchDate.getDate() === selectedDate.getDate();
@@ -78,18 +78,23 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     const today = date || new Date();
     setSelectedDate(today);
     cycleMatches(today, sport);
-    onValueChange(selectedDate);
+    onValueChange(date);
   }
+  
 
   const cycleMatches = async (date: Date, sport: string | null) => {
     const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
     const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 24, 0, 0, 0);
 
 
-    const activities = await axiosInstance.post(`${context.apiUrl}/activity/calendar/`, {
-      start_date: startOfDay,
-      end_date: endOfDay,
+    const activities = await axiosInstance.get(`${context.apiUrl}/activities/calendar`, {
+      params: {
+        startOfDay: startOfDay,
+        endOfDay: endOfDay,
+      },
     });
+    
+    console.log(activities);
 
     const hourObjects: HourObject[] = [];
 
@@ -104,10 +109,10 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     let matchCount = 0;
 
     activities.data.forEach((match: any) => {
-      const startHour = new Date(match.start_date).getHours();
-      const endHour = new Date(match.end_date).getHours();
+      const startHour = new Date(match.date).getHours();
+      const endHour = startHour + 1;
 
-      if (sport === "BALONCESTO" && match.sport === "BALONCESTO") {
+      if (sport === "basketball" && match.sport === "basketball") {
         if (startHour === lastHour) {
           matchCount++;
         } else {
@@ -121,21 +126,21 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
       for (let i = startHour; i < endHour; i++) {
         const index = i - 12; // subtract 12 to get zero-based index
 
-        if (hourObjects[index] && sport === "PADEL" && match.sport === "PADEL") {
+        if (hourObjects[index] && sport === "padel" && match.sport === "padel") {
           if (hourObjects[index].matches.length < 1) {
             hourObjects[index].matches.push(match);
           }
         }
-        else if (hourObjects[index] && sport === "FUTBOL" && (match.sport === "FUTBOL" || match.sport === "BALONCESTO")) {
+        else if (hourObjects[index] && sport === "football" && (match.sport === "football" || match.sport === "basketball")) {
           if (hourObjects[index].matches.length < 1) {
             hourObjects[index].matches.push(match);
           }
         }
-        else if (hourObjects[index] && sport === "BALONCESTO" && match.sport === "FUTBOL") {
+        else if (hourObjects[index] && sport === "basketball" && match.sport === "football") {
           if (hourObjects[index].matches.length < 1) {
             hourObjects[index].matches.push(match);
           }
-        } else if (hourObjects[index] && sport === "BALONCESTO" && match.sport === "BALONCESTO") {
+        } else if (hourObjects[index] && sport === "basketball" && match.sport === "basketball") {
           if (lastHour === startHour && matchCount === 2 && hourObjects[index].matches.length < 1) {
             matchCount = 0;
             hourObjects[index].matches.push(match);
@@ -223,40 +228,41 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
       );
       currentDate = addDays(currentDate, 1);
     }
-    return <>{week}</>;
+    return week;
   };
 
   const getDates = () => {
-    const id = 1;
     const startOfTheSelectedMonth = startOfMonth(activeDate);
     const endOfTheSelectedMonth = endOfMonth(activeDate);
     const startDate = startOfWeek(startOfTheSelectedMonth);
     const endDate = endOfWeek(endOfTheSelectedMonth);
-
-
+  
     let currentDate = startDate;
-
+  
     const allWeeks = [];
-
+  
+    let weekIndex = 0;
     while (currentDate <= endDate) {
       allWeeks.push(
-        generateDatesForCurrentWeek(currentDate, selectedDate, activeDate)
+        ...generateDatesForCurrentWeek(currentDate, selectedDate, activeDate).map(item => 
+          React.cloneElement(item, { key: `${weekIndex++}-${item.key}` })
+        )
       );
       currentDate = addDays(currentDate, 7);
     }
-
+  
     return <div className="weekContainer">{allWeeks}</div>;
   };
 
   const Match: React.FC<{ match: any }> = React.memo(({ match }) => {
-    const startDateTime = parseISO(match.start_date);
-    const endDateTime = parseISO(match.end_date);
+    const startDateTime = parseISO(match.date);
+    const endDateTime = parseISO(match.date +1);
     const imgSrc =
-      match.sport === "FUTBOL"
-        ? ICONS_SPORTS.FUTBOL
-        : match.sport === "PADEL"
-          ? ICONS_SPORTS.PADEL
-          : ICONS_SPORTS.BALONCESTO;
+      match.sport === "futbol"
+        ? ICONS_SPORTS.football
+        : match.sport === "padel"
+          ? ICONS_SPORTS.padel
+          : ICONS_SPORTS.basketball;
   
     const isSmallScreen = context.isMobile();
     const isAlignLeft = isSmallScreen ? {marginLeft: "120%" } : {};
@@ -301,8 +307,8 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
       <div className="col " >
         <section className="test">
           <h2 className="mb-4">
-            <time dateTime={format(selectedDate, "yyyy-MM-dd")}>
-              {format(selectedDate, "MMM dd, yyy")}
+            <time dateTime={format(selectedDate, "yyyy-MM-dd" ,)}>
+              {format(selectedDate, calLang === 'es' ? "dd MMM, yyy" : "MMM dd, yyy", { locale: calLang === 'es' ? es : enUS })}
             </time>
           </h2>
           <div className="col" style={{ height: `${leftHeight - 50}px`, overflowX: "hidden" }} ref={hourListRef}>

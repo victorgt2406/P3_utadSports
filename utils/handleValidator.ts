@@ -47,6 +47,7 @@ const userValidator = (element:UserSum) => {
     return true;
 };
 
+
 const sportValidator = (element: string) => {
     return SPORTS.includes(element);
 }

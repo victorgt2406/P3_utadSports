@@ -20,7 +20,6 @@ interface Team {
 const TeamsSchema = new mongoose.Schema<Team>(
     {
         icon: {
-            required: true,
             type: String
         },
         name: {

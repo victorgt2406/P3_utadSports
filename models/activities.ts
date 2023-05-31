@@ -1,36 +1,29 @@
 import mongoose from "mongoose";
 import { SPORTS, SportNames } from "./sports";
 import teams, { Team, TeamsSchema } from "./teams";
+import { StringDecoder } from "string_decoder";
 
 const LOCATIONS = ["pista","padel"];
 type Location = "pista" | "padel"
 
 interface Activity {
-    icon: string;
     name: string;
-    description:string;
-    date: Date;
+    date: String;
     sport: SportNames;
     location: Location;
     registeredTeams: boolean;
     home: Team;
     away?: Team;
+    result: string
 };
 
 
 const ActivitiesSchema = new mongoose.Schema<Activity>(
     {
-        icon: {
-            type: String
-        },
         name: {
             type: String,
             required: true,
             unique: true
-        },
-        description: {
-            type: String,
-            required: true,
         },
         sport: {
             type: String,
@@ -53,6 +46,13 @@ const ActivitiesSchema = new mongoose.Schema<Activity>(
         },
         away:{
             type: TeamsSchema
+        },
+        result:{
+            type: String
+        },
+        date:{
+            type: String,
+            required: true
         }
     },
     {
