@@ -18,6 +18,8 @@ type Others = {
     password: string;
     repeatPassword: string;
     notRegistered: string;
+    yesRegistered: string;
+    dataProtection: string;
     keepAccount: string;
     nick: string;
     name: string;

@@ -6,6 +6,8 @@ const langEs: Texts = {
     emailExample: "nombre.apellido@live.u-tad.com",
     password: "contraseña",
     notRegistered: "¿No estas registrado?",
+    yesRegistered: "¿Estas registrado?",
+    dataProtection: "protección de datos",
     keepAccount: "Mantener sesión iniciada",
     title: "U-tad Sports",
     login: "iniciar sesion",

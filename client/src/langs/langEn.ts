@@ -5,6 +5,8 @@ const langEn: Others = {
     emailExample: "name.surname@live.u-tad.com",
     password: "password",
     notRegistered: "Not registered?",
+    yesRegistered: "Are you registered?",
+    dataProtection: "data protection",
     keepAccount: "Keep sesion",
     title: "U-tad Sports",
     login: "login",

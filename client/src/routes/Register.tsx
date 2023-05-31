@@ -23,6 +23,8 @@ export default function Register() {
     const [email, setEmail] = useState("");
     const [psw1, setPsw1] = useState("");
     const [psw2, setPsw2] = useState("");
+    const [viewData, setDataView] = useState(false);
+    const [accept, setAccept] = useState(false);
     // const [degree, setDegree] = useState<string>("");
     // const [timeTable, setTimeTable] = useState<string>("");
     const context = useRouterContext(); //useContext(CONTEXT);
@@ -185,7 +187,9 @@ export default function Register() {
                             value={psw2}
                             type="password"
                             className={`form-control ${
-                                (psw2.length >= 8 && psw2 === psw1) ? "is-valid" : ""
+                                psw2.length >= 8 && psw2 === psw1
+                                    ? "is-valid"
+                                    : ""
                             }`}
                             placeholder="****"
                         />
@@ -202,23 +206,54 @@ export default function Register() {
                         <AutoComplete placeholder={"Horario de clases"} select={true} value={timeTable} array={TIMETABLE} setValue={setTimeTable} />
                     </div> */}
                 </div>
-                <div className="mt-5 d-flex flex-column align-items-center">
+                {viewData ? (
+                    <p className="mt-3 card p-2">
+                        U-TAD recoge datos de los usuarios para gestionar el uso
+                        normal de la web y realizar análisis estadísticos. Se
+                        garantizan los derechos de los usuarios sobre sus datos
+                        (acceso, rectificación, supresión, oposición,
+                        limitación, portabilidad, revocación del consentimiento)
+                        y estos pueden ejercerse en dpo@u-tad.com. Los datos de
+                        IP se conservan 12 meses y los de consultas hasta
+                        resolver la solicitud, posteriormente durante 3 años.
+                        Los menores de 14 años deben acceder bajo supervisión de
+                        un adulto.
+                    </p>
+                ) : (
+                    <></>
+                )}
+                <div className="mt-3 d-flex justify-content-center">
+                    <input
+                        className="form-check-input"
+                        type="checkbox"
+                        onChange={()=>setAccept(!accept)}
+                    />
+                    <p
+                        role="button"
+                        className="text-decoration-underline ms-2"
+                        onClick={() => setDataView(!viewData)}
+                    >
+                        {capitalizeFirstLetter(context.getText().dataProtection)}
+                    </p>
+                </div>
+                <div className="my-5 d-flex flex-column align-items-center">
                     <button
                         type="button"
                         className="btn btn-primary px-4 mb-2"
                         style={{ width: "fit-content" }}
                         onClick={handleRegister}
+                        disabled={!accept}
                     >
-                        Registrarme
+                        {context.getText().register}
                     </button>
                     <p className="text-muted">
-                        ¿Ya estas registrado?
+                        {context.getText().yesRegistered}
                         <span
                             role="button"
                             className="text-decoration-underline ms-2"
                             onClick={() => context.setPage("login")}
                         >
-                            Inicia sesion
+                            {capitalizeFirstLetter(context.getText().login)}
                         </span>
                     </p>
                 </div>
