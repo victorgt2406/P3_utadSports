@@ -60,7 +60,7 @@ export default function CreateTournament() {
        }, []);
 
     const teamsComponents = teams.filter((team) => team.open).map((team, index) => {
-        return <JoinTeamItemRow team={team} white={(index + 1) % 2 == 0} key={team.id_team}></JoinTeamItemRow>
+        return <JoinTeamItemRow team={team} white={(index + 1) % 2 == 0} key={team._id}></JoinTeamItemRow>
     });
     function dateConverter(date: Date, selectedHour: number | null): string {
         const year = date.getFullYear();
@@ -84,7 +84,7 @@ export default function CreateTournament() {
             "sport":{sport}
         },{
              headers: {
-                 Authorization: context.user?.token,
+                 Authorization: context.token?.token,
                  "Content-Type": "application/json"
              }
          });
@@ -101,7 +101,7 @@ export default function CreateTournament() {
             
          },{
              headers: {
-                 Authorization: context.user?.token,
+                 Authorization: context.token?.token,
                  "Content-Type": "application/json"
              }
          });

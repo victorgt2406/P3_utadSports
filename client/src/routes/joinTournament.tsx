@@ -75,7 +75,7 @@ export default function joinTournament(){
 
 
     const teamsComponents = teams.filter((team) => team.open).map((team, index) => {
-        return <JoinTeamItemRow team={team} white={index % 2 == 0} key={team.id_team}></JoinTeamItemRow>
+        return <JoinTeamItemRow team={team} white={index % 2 == 0} key={team._id}></JoinTeamItemRow>
     });
 
     const handleClick = async() => {
@@ -94,7 +94,7 @@ export default function joinTournament(){
  
          },{
              headers: {
-                 Authorization: context.user?.token,
+                 Authorization: context.token?.token,
                  "Content-Type": "application/json"
              }
          });

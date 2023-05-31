@@ -51,7 +51,8 @@ const langEs: Texts = {
     description: "descripción",
     teamName: "nombre del equipo",
     selectCaptain: "selecciona al capitan",
-    maxPlayers: "máximo número de jugadores"
+    maxPlayers: "máximo número de jugadores",
+    createNew: "crear noticia"
 };
 
 export default langEs;

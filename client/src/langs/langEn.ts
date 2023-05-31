@@ -50,7 +50,8 @@ const langEn: Others = {
     description: "description",
     teamName: "team name",
     selectCaptain: "select your captain",
-    maxPlayers: "max number of players"
+    maxPlayers: "max number of players",
+    createNew: "create a new"
 }
 
 export default langEn;

@@ -20,7 +20,7 @@ const port = process.env.PORT;
 
 const storageRouter = express.Router();
 // Serve the static files from the React app
-storageRouter.use(express.static(path.join(__dirname, 'storage')));
+storageRouter.use(express.static(path.join(__dirname, '/../storage')));
 storageRouter.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname+req.path));
 });
@@ -33,11 +33,11 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use("/api", routes);
 
 // Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'client/dist')));
+app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 // Handles any requests that don't match the ones above
 app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/client/dist/index.html'));
+    res.sendFile(path.join(__dirname+'/../client/dist/index.html'));
 });
 
 app.listen(port, () => {

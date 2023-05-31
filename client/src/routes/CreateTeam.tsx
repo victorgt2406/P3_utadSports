@@ -28,9 +28,10 @@ export default function () {
                 captain: users.find((user) => {
                     user.nick === captain;
                 })!,
+                // @ts-ignore especial exception when creating
                 players: nickPlayers.map(
                     (nick) => (users.find((user) => user.nick === nick)!)._id
-                ),
+                ) as string[],
                 max: parseInt(max),
                 open: true,
                 icon: "",

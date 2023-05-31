@@ -3,6 +3,7 @@ import { Team } from "../../models/Team";
 import { ICONS_SPORTS } from "../../utils/Icons";
 import useRouterContext from "../../utils/RouterContext";
 import { capitalizeFirstLetter } from "../../utils/simpleFunctions";
+import User from "../../models/User";
 
 export default function () {
     const context = useRouterContext();
@@ -12,7 +13,7 @@ export default function () {
         icon = team.icon;
         name = team.name;
         captain = team.captain.nick;
-        players = team.players?.map((player)=>player.nick)!;
+        players = (team.players! as User[])?.map((player)=>player.nick)!;
     }
     return (
         <>

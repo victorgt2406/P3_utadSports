@@ -17,7 +17,7 @@ export default function () {
     return (
         <NavBarTemplate info="activities" parentPage="activities" page="viewActivity">
             <div className="d-flex justify-content-center align-items-center my-4">
-                <svg className={"me-2 text-primary"} style={{ height: "80px", width: "80px" }}>{ICONS_SPORTS.BALONCESTO}</svg>
+                <svg className={"me-2 text-primary"} style={{ height: "80px", width: "80px" }}>{ICONS_SPORTS.basketball}</svg>
                 <div className="d-flex flex-column align-items-center mx-2">
                     <div className="fw-bold">{"nombre de la actividad"}</div>
                     <div className="fw-light">creador por {"nombre del creador"}</div>

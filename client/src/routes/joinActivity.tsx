@@ -67,7 +67,7 @@ export default function inscriptionActivity(){
        }, []);
        
     const teamsComponents = teams.filter((team) => team.open).map((team, index) => {
-        return <JoinTeamItemRow team={team} white={(index + 1) % 2 == 0} key={team.id_team}></JoinTeamItemRow>
+        return <JoinTeamItemRow team={team} white={(index + 1) % 2 == 0} key={team._id}></JoinTeamItemRow>
     });
     const handleClick = async() => {
         if (selectedHour !== null){
@@ -85,7 +85,7 @@ export default function inscriptionActivity(){
 
             },{
                 headers: {
-                    Authorization: context.user?.token,
+                    Authorization: context.token?.token,
                     "Content-Type": "application/json"
                 }
             });

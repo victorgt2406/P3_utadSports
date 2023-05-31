@@ -2,11 +2,12 @@ import ItemRow from "./ItemRow";
 import { Team } from "../../models/Team";
 import useRouterContext from "../../utils/RouterContext";
 import { ICONS_SPORTS } from "../../utils/Icons";
+import User from "../../models/User";
 type MyProps = { team: Team, white: boolean };
 
 export default function JoinTeamItemRow({ team, white }: MyProps) {
     const context = useRouterContext();
-    const {name, captain, players: members, sport, image_url:image } = team;
+    const {name, captain, players: members, sport, icon:image } = team;
 
     const handleClick = ()=>{
         console.log(team);
@@ -15,7 +16,7 @@ export default function JoinTeamItemRow({ team, white }: MyProps) {
     }
     let teamMembersString:string;
     try{
-        teamMembersString = members.reduce((previusMembers, member)=>`${previusMembers}, ${member}`);
+        teamMembersString = (members! as User[]).reduce((previusMembers:string, member:User)=>`${previusMembers}, ${member.nick}`, "");
     }
     catch{
         teamMembersString = "";
@@ -32,7 +33,7 @@ export default function JoinTeamItemRow({ team, white }: MyProps) {
             </div>
             <div className="d-flex flex-column">
                 <p className="text-uppercase fw-bold my-1 fs-5">{name}</p>
-                <p className="fw-light text-secondary my-1"><span className="text-primary fw-bold me-2">{captain}</span>{teamMembersString}</p>
+                <p className="fw-light text-secondary my-1"><span className="text-primary fw-bold me-2">{captain.nick}</span>{teamMembersString}</p>
             </div>
 
         </div>
@@ -40,7 +41,7 @@ export default function JoinTeamItemRow({ team, white }: MyProps) {
     const right: JSX.Element = (
         <>
             <div className="d-flex flex-column align-items-center justify-content-center">
-                <p className="fw-light text-secondary my-1">Faltan {team.max_members - team.total_members} personas</p>
+                <p className="fw-light text-secondary my-1">Faltan {team.max - team.players!.length} personas</p>
                 <button type="button" className="btn btn-sm btn-primary px-3 fs-5" onClick={handleClick}>Inscribirse</button>
             </div>
 
