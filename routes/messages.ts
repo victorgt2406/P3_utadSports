@@ -17,9 +17,9 @@ const router = express.Router();
 // create a message
 router.post(
     "/",
+    tokenAuth,
     validatorMessage,
     validateMessageByType,
-    tokenAuth,
     createMessage
 );
 

@@ -45,12 +45,12 @@ const validateMessageByType = (
         }
 
         body.content.forEach((content) => {
-            if (body.type === "news" && content.title) {
+            if (body.type === "news" && !content.title) {
                 handleError(res, "CONTENT_TITLE_NEEDED");
                 return;
             }
 
-            if (body.type === "news" && content.image) {
+            if (body.type === "news" && !content.image) {
                 handleError(res, "CONTENT_IMAGE_NEEDED");
                 return;
             }

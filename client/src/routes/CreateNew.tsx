@@ -1,11 +1,42 @@
 import { useState } from "react";
 import NavBarTemplate from "../templates/NavBarTemplate";
+import useRouterContext from "../utils/RouterContext";
+import notify from "../utils/notify";
+import axios from "axios";
 
 export default function () {
+    const context = useRouterContext();
     const [content, setContent] = useState("");
     const [title, setTitle] = useState("");
-    const [imageLink, setImageLink] = useState("");
+    const [imageInternet, setImageInternet] = useState("");
+    const [imageFile, setImageFile] = useState<File | undefined>(undefined);
     const [image, setImage] = useState<string | null>(null);
+
+    const handleCreate = async()=>{
+        try{
+            const res = await axios.post(`${context.apiUrl}/messages`,{
+                type: "news",
+                content: [{
+                    lang: "es",
+                    title,
+                    content,
+                    image
+                }]
+
+            }, {
+                headers: {
+                    Authorization: await context.token?.token,
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log(res);
+            notify("Created!!","new created", "The new was created succesfully");
+        }
+        catch(err){
+            console.log(err);
+            notify("ERROR","create new", "new could not be updated");
+        }
+    }
 
     return (
         <NavBarTemplate>
@@ -18,7 +49,7 @@ export default function () {
                         }}
                         value={title}
                     />
-                    <label htmlFor="floatingInput">Title</label>
+                    <label htmlFor="floatingInput">Título</label>
                 </div>
 
                 <div className="d-flex justify-content-between mt-3 flex-wrap">
@@ -55,7 +86,7 @@ export default function () {
                                 }}
                                 value={content}
                             ></textarea>
-                            <label htmlFor="floatingTextarea">Content</label>
+                            <label htmlFor="floatingTextarea">Contenido</label>
                         </div>
                     </div>
                     <div className="w-100"></div>
@@ -67,16 +98,16 @@ export default function () {
                                 className="form-control"
                                 onChange={(event: React.ChangeEvent<any>) => {
                                     const val = event.target.value;
-                                    setImageLink(val);
+                                    setImageInternet(val);
                                     if (val === "") {
                                         setImage(null);
                                     } else {
                                         setImage(val);
                                     }
                                 }}
-                                value={imageLink}
+                                value={imageInternet}
                             />
-                            <label htmlFor="floatingInput">Image link</label>
+                            <label htmlFor="floatingInput">Url de imagen</label>
                         </div>
                         <button
                             type="button"
@@ -104,8 +135,8 @@ export default function () {
                     </div>
                 </div>
                 <div className="d-flex justify-content-center my-4">
-                    <button type="button" className="btn btn-primary">
-                        Create new <i className="bi bi-upload"></i>
+                    <button type="button" className="btn btn-primary" onClick={handleCreate}>
+                        Create new
                     </button>
                 </div>
             </div>
