@@ -20,6 +20,7 @@ type Others = {
     notRegistered: string;
     yesRegistered: string;
     dataProtection: string;
+    updateChanges: string;
     keepAccount: string;
     nick: string;
     name: string;

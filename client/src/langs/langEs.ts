@@ -8,6 +8,7 @@ const langEs: Texts = {
     notRegistered: "¿No estas registrado?",
     yesRegistered: "¿Estas registrado?",
     dataProtection: "protección de datos",
+    updateChanges: "actualizar cambios",
     keepAccount: "Mantener sesión iniciada",
     title: "U-tad Sports",
     login: "iniciar sesion",

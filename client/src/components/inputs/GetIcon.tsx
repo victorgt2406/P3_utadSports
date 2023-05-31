@@ -2,11 +2,13 @@ import React, { useState } from "react";
 
 type MyProps = {
     pixels?: number;
+    onChange?: (file:File)=>void,
+    src?:string;
 }
 
 
-export default function GetIcon({ pixels = 152 }: MyProps) {
-    const [src, setSrc] = useState<string | null>(null);
+export default function GetIcon({ pixels = 152, onChange, src: source }: MyProps) {
+    const [src, setSrc] = useState<string | undefined>(source);
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file: File = event.target.files![0];
         // console.log(file);
@@ -20,6 +22,9 @@ export default function GetIcon({ pixels = 152 }: MyProps) {
                 // console.log(`Width: ${width}, Height: ${height}`);
                 if(width === height){
                     setSrc(event.target!.result as string);
+                    if(onChange){
+                        onChange(file);
+                    }
                 }
                 else{
                     alert("las imagenes tienen que ser cuadradas, NO rectangulares")
@@ -49,7 +54,7 @@ export default function GetIcon({ pixels = 152 }: MyProps) {
         height: `${pixels / 2 + 2}px`,
         width: `${pixels + 2}px`,
         borderRadius: `0 0 ${pixels}px ${pixels}px`,
-        backgroundColor: src===null?"var(--light-blue-opaque)":"rgba(255,255,255,0.5)",
+        backgroundColor: src===undefined?"var(--light-blue-opaque)":"rgba(255,255,255,0.5)",
     };
 
     const textStyle: React.CSSProperties = {
@@ -63,7 +68,7 @@ export default function GetIcon({ pixels = 152 }: MyProps) {
 
     return (
         <div style={templateStyle}>
-            {(src!==null)?<img style={pictureStyle}src={src}/>:<></>}
+            {(src!==undefined)?<img style={pictureStyle}src={src}/>:<></>}
             <input
                 type="file"
                 id="file-upload"

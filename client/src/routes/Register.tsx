@@ -11,12 +11,6 @@ import {
 } from "../utils/simpleFunctions";
 
 export default function Register() {
-    // const name = useRef<HTMLInputElement>(null);
-    // const surname = useRef<HTMLInputElement>(null);
-    // const nickname = useRef<HTMLInputElement>(null);
-    // const email = useRef<HTMLInputElement>(null);
-    // const psw1 = useRef<HTMLInputElement>(null);
-    // const psw2 = useRef<HTMLInputElement>(null);
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [nick, setNick] = useState("");
@@ -25,10 +19,7 @@ export default function Register() {
     const [psw2, setPsw2] = useState("");
     const [viewData, setDataView] = useState(false);
     const [accept, setAccept] = useState(false);
-    // const [degree, setDegree] = useState<string>("");
-    // const [timeTable, setTimeTable] = useState<string>("");
     const context = useRouterContext(); //useContext(CONTEXT);
-    // const context = getContext();
 
     const handleRegister = () => {
         (async () => {
@@ -36,15 +27,10 @@ export default function Register() {
                 const res = await axios.post(
                     `${context.apiUrl}/users/register/`,
                     {
-                        // name: name.current?.value,
-                        // surname: surname.current?.value,
-                        // email: email.current?.value,
                         name,
                         surname,
                         email,
-                        // password: psw1.current?.value,
                         password: psw1,
-                        // nick: nickname.current?.value,
                         nick,
                     }
                 );
@@ -194,17 +180,6 @@ export default function Register() {
                             placeholder="****"
                         />
                     </div>
-
-                    {/* <div className="w-100"></div> */}
-
-                    {/* <div className="col-sm m-3">
-                        <label className="form-label"><i className="bi bi-book"></i> Grado</label>
-                        <AutoComplete placeholder={"Grado"} select={true} value={degree} array={DEGREES} setValue={setDegree} />
-                    </div>
-                    <div className="col-sm m-3">
-                        <label className="form-label"><i className="bi bi-calendar3-week"></i> Horario de clases</label>
-                        <AutoComplete placeholder={"Horario de clases"} select={true} value={timeTable} array={TIMETABLE} setValue={setTimeTable} />
-                    </div> */}
                 </div>
                 {viewData ? (
                     <p className="mt-3 card p-2">

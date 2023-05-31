@@ -7,6 +7,7 @@ const langEn: Others = {
     notRegistered: "Not registered?",
     yesRegistered: "Are you registered?",
     dataProtection: "data protection",
+    updateChanges: "update changes",
     keepAccount: "Keep sesion",
     title: "U-tad Sports",
     login: "login",
