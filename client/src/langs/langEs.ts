@@ -59,7 +59,11 @@ const langEs: Texts = {
     maxPlayers: "máximo número de jugadores",
     createNew: "crear noticia",
     en: "inglés",
-    es: "español"
+    es: "español",
+    repeatPassword: "repetir contraseña",
+    nick: "apodo",
+    name: "nombre",
+    surname: "apellido"
 };
 
 export default langEs;

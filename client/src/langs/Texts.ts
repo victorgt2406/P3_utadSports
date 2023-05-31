@@ -16,8 +16,12 @@ type Others = {
     email: string;
     emailExample: string;
     password: string;
+    repeatPassword: string;
     notRegistered: string;
     keepAccount: string;
+    nick: string;
+    name: string;
+    surname: string;
     start: string;
     title: string;
     description: string;

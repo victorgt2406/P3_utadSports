@@ -58,7 +58,11 @@ const langEn: Others = {
     maxPlayers: "max number of players",
     createNew: "create a new",
     en: "english",
-    es: "spanish"
+    es: "spanish",
+    repeatPassword: "repeat password",
+    nick: "nick name",
+    name: "name",
+    surname: "surname"
 }
 
 export default langEn;
