@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { check } from "express-validator";
+import { check, oneOf } from "express-validator";
 import validateResults from "../utils/handleValidator";
 import { SportNames } from "../models/sports";
 import { Location } from "../models/activities";
@@ -21,7 +21,16 @@ const validatorActivity = [
     check("sport").exists().notEmpty().isString(),
     check("date").exists().notEmpty().isString(),
     check("location").exists().notEmpty().isString(),
-    check("home").exists().notEmpty().isString(),
+    oneOf([
+        [
+            check('registeredTeams').isBoolean().equals('true'),
+            check("home").exists().notEmpty().isString(),
+        ],
+        [
+            check('registeredTeams').isBoolean().equals('false'),
+            check("home").optional().notEmpty().isString(),
+        ]
+    ]),
     check("away").optional().notEmpty().isString(),
     check("registeredTeams").optional().notEmpty().isBoolean(),
     (req: Request, res: Response, next: NextFunction) => {

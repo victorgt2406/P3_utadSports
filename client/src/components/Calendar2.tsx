@@ -25,7 +25,6 @@ interface Props {
   selectedHour: number | null;
   onValueChange: (value: Date) => void;
   onSelectedHourChange: (selectedHour: number | null) => void;
-  calLang: any
 }
 
 interface HourObject {
@@ -34,7 +33,7 @@ interface HourObject {
 }
 
 
-const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelectedHourChange, calLang }) => {
+const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelectedHourChange}) => {
 
   // your code here
   const context = useContext(CONTEXT);
@@ -80,7 +79,8 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     cycleMatches(today, sport);
     onValueChange(date);
   }
-  
+  useEffect(() => {
+  }, [context.language]);
 
   const cycleMatches = async (date: Date, sport: string | null) => {
     const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
@@ -165,7 +165,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     cycleMatches(today, sport);
   }, [selectedDate, sport]);
 
-  const getHeader = ({ calLang = 'es' }) => {
+  const getHeader = () => {
     return (
       <div className="header">
         <div
@@ -175,7 +175,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
             setActiveDate(new Date());
           }}
         >
-          {calLang === 'es' ? 'Hoy' : 'Today'}
+          {context.language === 'es' ? 'Hoy' : 'Today'}
         </div>
         <AiOutlineLeft
           className="navIcon"
@@ -189,20 +189,20 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
             setActiveDate(addMonths(activeDate, 1));
           }}
         />
-        <h2 className="currentMonth">{format(activeDate, 'MMMM yyyy', { locale: calLang === 'es' ? es : enUS })}</h2>
+        <h2 className="currentMonth">{format(activeDate, 'MMMM yyyy', { locale: context.language === 'es' ? es : enUS })}</h2>
       </div>
     );
   };
 
-  const getWeekDaysNames = ({ calLang = 'es' }) => {
+  const getWeekDaysNames = () => {
     const weekStartDate = startOfWeek(activeDate, { weekStartsOn: 1 });
     const weekDays = [];
-    const dayFormat = calLang === 'es' ? 'EEEEEE' : 'E';
+    const dayFormat = context.language === 'es' ? 'EEEEEE' : 'E';
 
     for (let day = 0; day < 7; day++) {
       weekDays.push(
         <div className="day weekNames" key={day}>
-          {format(addDays(weekStartDate, day), dayFormat, { locale: calLang === 'es' ? es : enUS })}
+          {format(addDays(weekStartDate, day), dayFormat, { locale: context.language === 'es' ? es : enUS })}
         </div>
       );
     }
@@ -299,8 +299,8 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     <div className="row">
       <div className="col border-end">
         <section>
-          {getHeader(calLang)}
-          {getWeekDaysNames(calLang)}
+          {getHeader()}
+          {getWeekDaysNames()}
           {getDates()}
         </section>
       </div>
@@ -308,7 +308,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
         <section className="test">
           <h2 className="mb-4">
             <time dateTime={format(selectedDate, "yyyy-MM-dd" ,)}>
-              {format(selectedDate, calLang === 'es' ? "dd MMM, yyy" : "MMM dd, yyy", { locale: calLang === 'es' ? es : enUS })}
+              {format(selectedDate, context.language === 'es' ? "dd MMM, yyy" : "MMM dd, yyy", { locale: context.language === 'es' ? es : enUS })}
             </time>
           </h2>
           <div className="col" style={{ height: `${leftHeight - 50}px`, overflowX: "hidden" }} ref={hourListRef}>

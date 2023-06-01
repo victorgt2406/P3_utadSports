@@ -17,7 +17,7 @@ import { Team } from '../models/Team';
 
 export default function ActivityList() {
   const [resultados, setResultados] = useState<{
-    localitation: Location; description: string, sport: String, home: Team, result: string, date: string
+    location: Location; name: string, sport: String, home: Team, result: string, date: string
   }[]>([]);
   const context = useContext(CONTEXT);
   const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
@@ -33,35 +33,28 @@ export default function ActivityList() {
         console.log(error);
       });
   }, []);
-
   function formatDate(dateString: string) {
+    console.log(dateString);
     const date = new Date(dateString);
-    return format(new Date(date), context.language === 'en' ? 'EEEE, MMMM d HH' : 'EEEE, d MMMM HH:00', { locale });
+    return format(new Date(date), context.language === 'en' ? 'EEEE, MMMM d, hh:mm a' : 'EEEE, d MMMM   HH:mm', { locale });
   }
   const isSmallScreen = context.isMobile();
   const actividad = resultados
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .map((res) => ({
-      nombre: res.description,
+      name: res.name,
+      sport: res.sport,
       escudo: Escudo,
-      deporte:
-        res.sport === 'FUTBOL'
-          ? BalonFutbol
-          : res.sport === 'BALONCESTO'
-            ? BalonBasket
-            : res.sport === 'PADEL'
-              ? Raqueta
-              : '',
-      resultado: res.result,
-      location: res.localitation,
-      fecha: res.date,
+      res: res.result,
+      loc: res.location,
+      date: res.date,
     }));
-
+  console.log(actividad);
   return (
     <NavBarTemplate {...{ filter, setFilter, filters, create: "createActivity", info: "activities", container: false }}>
       <div className="resultados">
         <div className="d-flex flex-column">
-          {resultados.map((resultado, index) => (
+          {actividad.map((resultado, index) => (
             <Link to={"/inscriptionActivity"} className="Link" key={index}>
               <div
                 key={index}
@@ -73,23 +66,23 @@ export default function ActivityList() {
                     className={`icono-deporte ${isSmallScreen ? 'ms-0 me-2' : 'ms-2 me-5'}`}
                     style={{ width: '65px', height: '65px' }}
                   >
-                    {resultado.sport === 'FUTBOL' ? (
+                    {resultado.sport === 'football' ? (
                       <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
                         {<BalonFutbol style={{ width: '65px', height: '65px' }} />}
                       </div>
-                    ) : resultado.sport === 'BALONCESTO' ? (
+                    ) : resultado.sport === 'basketball' ? (
                       <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
                         <BalonBasket style={{ width: '65px', height: '65px' }} />
                       </div>
-                    ) : resultado.sport === 'PADEL' ? (
-                      <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
+                    ) : resultado.sport === 'padel' ? (
+                      <div className="icono-deporte me-5 ms-4" style={{ color: '#0065F3' }}>
                         <Raqueta style={{ width: '65px', height: '65px' }} />
                       </div>
                     ) : null}
                   </div>
-                  <div>
+                  <div className="ms-4">
                     <div className="mb-2" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.description}</span>
+                      <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.name}</span>
                     </div>
                     <VsImage />
                   </div>
@@ -105,7 +98,7 @@ export default function ActivityList() {
                   </div>
                   <div className="d-flex align-items-center">
                     <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
-                    <span className="text-muted">U-tad</span>
+                    <span className="text-muted">{resultado.loc.toString().charAt(0).toUpperCase() + resultado.loc.toString().slice(1)}</span>
                   </div>
                 </div>
               </div>

@@ -21,10 +21,12 @@ export default function crearActividad() {
   const [isChecked, setIsChecked] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team>();
+  const [calendarKey, setCalendarKey] = useState(0);
 
 
-
-
+  useEffect(() => {
+    setCalendarKey((prevKey) => prevKey + 1);
+  },[context.language]);
   useEffect(() => {
     const getTeams = async () => {
       try {
@@ -78,6 +80,7 @@ export default function crearActividad() {
       let registeredTeams = true;
       if (!selectedTeam) {
         registeredTeams = false;
+        console.log("Creando equipo")
       }
       try {
         const activity = await axios.post(`${context.apiUrl}/activities/`, {
@@ -172,12 +175,12 @@ export default function crearActividad() {
         <br></br>
         <p className="activity-heading">Día de la actividad</p>
         <Calendar
+          key={calendarKey} // Set the key prop of the Calendar component
           value={currentDate}
           sport={sport}
           selectedHour={selectedHour}
           onValueChange={setCurrentDate}
           onSelectedHourChange={setSelectedHour}
-          calLang={context.language}
         />
 
         {/* <div className="mt-5 d-flex justify-content-center mb-3">

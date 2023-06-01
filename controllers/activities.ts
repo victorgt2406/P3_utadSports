@@ -71,19 +71,26 @@ const getActivity = async (req: RequestWithUser, res: Response) => {
 const getCalendar = async (req: RequestWithUser, res: Response) => {
     const { startOfDay, endOfDay } = req.query;
 
+    console.log(`Requested start of day: ${startOfDay}`);
+    console.log(`Requested end of day: ${endOfDay}`);
+
     const filter = {
       date: {
         $gte: new Date(String(startOfDay)),
         $lte: new Date(String(endOfDay)),
       },
     };
+
+    console.log(`Constructed filter: ${JSON.stringify(filter)}`);
   
     try {
       const response = await activitiesModel.find(filter);
+      console.log(`Found ${response.length} matching activities`);
       res.send(response);
     } catch (err) {
-      console.log(err);
+      console.error("Error when fetching activities from database:", err);
       handleError(res, "ERROR_GET_CALENDAR", 500);
     }
-}
+};
+
 export {createActivity, getActivity, getCalendar};

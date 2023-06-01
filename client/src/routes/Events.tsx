@@ -15,7 +15,7 @@ import FechaGrande from '../components/common/FechaGrande';
 
 export default function Events() {
   let [resultados, setResultados] = useState<{
-    location: string; description: string, sport: string, total_team: number, result: string, date: string
+    location: string; name: string, sport: string, total_team: number, result: string, date: string
   }[]>([]);
   const context = useContext(CONTEXT);
   const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
@@ -40,7 +40,7 @@ export default function Events() {
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   .filter((res) => new Date(res.date).getTime() > new Date().getTime())
   .map((res) => ({ 
-      nombre: res.description,
+      nombre: res.name,
       escudo: Escudo,
       deporte: res.sport, 
       resultado: res.result,
@@ -67,15 +67,15 @@ export default function Events() {
                   className={`icono-deporte ${isSmallScreen ? 'ms-0 me-1 mt-4' : 'mx-4'}`}
                   style={{ width: '65px', height: '65px' }}
                 >
-                  {resultado.deporte === 'FUTBOL' ? (
+                  {resultado.deporte === 'football' ? (
                     <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
                       {<BalonFutbol style={{ width: '65px', height: '65px' }} />}
                     </div>
-                  ) : resultado.deporte === 'BALONCESTO' ? (
+                  ) : resultado.deporte === 'basketball' ? (
                     <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
                       <BalonBasket style={{ width: '65px', height: '65px' }} />
                     </div>
-                  ) : resultado.deporte === 'PADEL' ? (
+                  ) : resultado.deporte === 'padel' ? (
                     <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
                       <Raqueta style={{ width: '65px', height: '65px' }} />
                     </div>
@@ -99,7 +99,7 @@ export default function Events() {
               <div className="ms-auto d-flex flex-column align-items-end mx-4 pt-3">
                 <div className="d-flex align-items-left mb-2 mt-3">
                   <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
-                  <span className="text-muted">U-tad</span>
+                  <span className="text-muted">{resultado.location.toString().charAt(0).toUpperCase() + resultado.location.toString().slice(1)}</span>
                 </div>
                 <div className="d-flex align-items-right">
                   <button type="button" className="btn btn-sm btn-primary px-3 fs-6 mt-2" onClick={handleClick}><span style={{ fontSize: '16px' }}>INSCRIBIRSE</span></button>
