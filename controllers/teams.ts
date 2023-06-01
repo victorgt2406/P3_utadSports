@@ -21,17 +21,25 @@ const createTeam = async (req: RequestWithUser, res: Response) => {
         };
         const players: UserSum[] = [];
         if (data.players) {
-            data.players.map(async (player: string) => {
-                const p = await usersModel.findOne({ _id: player });
-                if (p) {
-                    players.push({
-                        _id: p.id,
-                        icon: p.icon,
-                        nick: p.nick,
-                        email: p.email,
-                    });
-                }
-            });
+            await Promise.all(
+                data.players.map(async (player: string) => {
+                    const p = await usersModel.findOne({ _id: player });
+                    if (p) {
+                        // const pl = {
+                        //     _id: p.id,
+                        //     icon: p.icon,
+                        //     nick: p.nick,
+                        //     email: p.email,
+                        // };
+                        players.push({
+                            _id: p.id,
+                            icon: p.icon,
+                            nick: p.nick,
+                            email: p.email,
+                        });
+                    }
+                })
+            );
         }
         try {
             let icon: string = "";
@@ -206,7 +214,8 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
     const team = await teamsModel.findOne({ _id: req.params.team });
     if (team && req.user) {
         const player = (await usersModel.findOne({ _id: req.user.id }))!;
-        const players = team.players === undefined ? [] : [...team.players, team.captain];
+        const players =
+            team.players === undefined ? [] : [...team.players, team.captain];
         if (!players.find((pl) => pl._id === player.id)) {
             if (team.open) {
                 // players.push({
@@ -272,8 +281,7 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
                 messagesModel.create(message);
                 res.send("CAPTAIN_WAS_ASKED");
             }
-        }
-        else{
+        } else {
             handleError(res, "USER_JOINED", 403);
         }
     } else {
