@@ -75,6 +75,7 @@ export default function () {
                 "notification",
                 `${res.data.name} was succesfully created`
             );
+            context.setPage("teams");
         } catch (err: any) {
             console.log(err);
             notify("Ups...", "error", "The team can not have that name");

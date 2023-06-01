@@ -38,11 +38,12 @@ export default function JoinTeamItemRow({ team, white }: MyProps) {
 
         </div>
     );
+    const peopleLeft = team.max - (team.players!.length+1)>=0?team.max - (team.players!.length+1):0;
     const right: JSX.Element = (
         <>
             <div className="d-flex flex-column align-items-center justify-content-center">
-                <p className="fw-light text-secondary my-1">Faltan {team.max - team.players!.length} personas</p>
-                <button type="button" className="btn btn-sm btn-primary px-3 fs-5" onClick={handleClick}>Inscribirse</button>
+                <p className="fw-light text-secondary my-1">{context.language === "es"?`Faltan ${peopleLeft} personas`:`${peopleLeft} people left`}</p>
+                <button type="button" className="btn btn-sm btn-primary px-3 fs-5" onClick={handleClick}>{context.getText().join}</button>
             </div>
 
         </>
