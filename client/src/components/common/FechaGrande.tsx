@@ -15,14 +15,14 @@ const FechaGrande = (props: FechaProp) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
     const month = date.toLocaleString(context.language, { month: 'short' });
-    const dayStyle = { fontSize: 60, color: '#ACACAC' };
+    const dayStyle = { fontSize: 50, color: '#ACACAC' };
     const monthStyle = { fontSize: 25, color: '#ACACAC' };
 
     return (
       <div className='d-flex flex-column align-items-center'>
         <span style={{ ...dayStyle, borderTop: 'none' }}>{day}</span>
         <div className="">
-          <span style={{ ...monthStyle, marginTop: '-8px' }}>{month}</span>
+          <span style={{ ...monthStyle, marginTop: 'none' }}>{month}</span>
         </div>
       </div>
     );

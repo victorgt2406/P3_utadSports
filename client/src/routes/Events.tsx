@@ -108,8 +108,8 @@ export default function Events() {
                   <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
                   <span className="text-muted">{resultado.location.toString().charAt(0).toUpperCase() + resultado.location.toString().slice(1)}</span>
                 </div>
-                <div className="d-flex align-items-right">
-                  <button type="button" className="btn btn-sm btn-primary px-3 fs-6 mt-2" onClick={() => handleClick(resultado.id)}><span style={{ fontSize: '16px' }}>INSCRIBIRSE</span></button>
+                <div className="d-flex align-items-right mb-1">
+                  <button type="button" className="btn btn-sm btn-primary px-3 fs-6 mt-2 mb-2" onClick={() => handleClick(resultado.id)}><span style={{ fontSize: '16px' }}>INSCRIBIRSE</span></button>
                 </div>
               </div>
               <FechaGrande fecha ={resultado.fecha} />

@@ -1,4 +1,4 @@
-import  { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 import NavBarTemplate from "../templates/NavBarTemplate";
 import { format } from 'date-fns';
@@ -14,11 +14,11 @@ import { Team } from "../models/Team";
 
 type Activity = {
   _id: String,
-  location: String; 
-  name: string, 
-  sport: string, 
-  home: Team, 
-  result: string, 
+  location: String;
+  name: string,
+  sport: string,
+  home: Team,
+  result: string,
   date: string
 };
 
@@ -51,43 +51,43 @@ export default function ResultsActivity() {
     <NavBarTemplate {...{ container: false }}>
       <div className="resultados" style={{ marginTop: '2rem' }}>
         <div className="d-flex flex-column flex-wrap">
+        </div>
+        <div className="mx-5" style={{ display: 'flex', justifyContent: 'center' }}>
+          <div
+            className="d-flex flex-column align-items-center me-4"
+            style={{ justifyContent: 'center' }}
+          >
+            <div className="d-flex">
+              {resultados.sport === 'football' ? (
+                <BalonFutbol style={{ width: '65px', height: '65px', color: '#0065F3' }} />
+              ) : resultados.sport === 'basketball' ? (
+                <BalonBasket style={{ width: '65px', height: '65px', color: '#0065F3' }} />
+              ) : resultados.sport === 'padel' ? (
+                <Raqueta style={{ width: '65px', height: '65px', color: '#0065F3' }} />
+              ) : null}
+            </div>
           </div>
-          <div className="mx-5" style={{ display: 'flex', justifyContent: 'center' }}>
-            <div
-              className="d-flex flex-column align-items-center me-4"
-              style={{ justifyContent: 'center' }}
-            >
-              <div className="d-flex">
-                {resultados.sport === 'football' ? (
-                  <BalonFutbol style={{ width: '65px', height: '65px', color: '#0065F3' }} />
-                ) : resultados.sport === 'basketball' ? (
-                  <BalonBasket style={{ width: '65px', height: '65px', color: '#0065F3' }} />
-                ) : resultados.sport === 'padel' ? (
-                  <Raqueta style={{ width: '65px', height: '65px', color: '#0065F3' }} />
-                ) : null}
-              </div>
+          <div
+            className="d-flex flex-column align-items-center me-5"
+            style={{ alignItems: 'flex-start', justifyContent: 'left' }}
+          >
+            <span style={{ textTransform: 'uppercase', fontSize: '20px', justifyContent: 'left' }}>
+              {resultados.name}
+            </span>
+            <span className="text-muted">Creado por {resultados.home.name}</span>
+          </div>
+          <div className="d-flex flex-column align-items-right">
+            <div className="d-flex align-items-center mb-2">
+              <Calendar className="me-2" />
+              <span className="text-muted">{formatDate(resultados.date)}</span>
             </div>
-            <div
-              className="d-flex flex-column align-items-center me-5"
-              style={{ alignItems: 'flex-start', justifyContent: 'left' }}
-            >
-              <span style={{ textTransform: 'uppercase', fontSize: '20px', justifyContent: 'left' }}>
-                {resultados.name}
-              </span>
-              <span className="text-muted">Creado por {resultados.home.name}</span>
-            </div>
-            <div className="d-flex flex-column align-items-right">
-              <div className="d-flex align-items-center mb-2">
-                <Calendar className="me-2" />
-                <span className="text-muted">{formatDate(resultados.date)}</span>
-              </div>
-              <div className="d-flex align-items-center">
-                <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
-                <span className="text-muted">{resultados.location.toString().charAt(0).toUpperCase() + resultados.location.toString().slice(1)}</span>
-              </div>
+            <div className="d-flex align-items-center">
+              <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
+              <span className="text-muted">{resultados.location.toString().charAt(0).toUpperCase() + resultados.location.toString().slice(1)}</span>
             </div>
           </div>
         </div>
+      </div>
     </NavBarTemplate>
   );
 }

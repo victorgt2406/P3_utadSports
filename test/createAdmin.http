@@ -15,7 +15,19 @@ Content-Type: application/json
 
 {
     "password": "adminadmin",
-    "email": "admin@admin.com"
+    "
+    email": "admin@admin.com"
+}
+###
+GET http://localhost:3000/api/activities/
+Content-Type: application/json
+
+{
 }
 
-GET http://localhost:3000/api/activities/
+###
+DELETE  http://localhost:3000/api/activities/64780da4adf318df2dcaf8b4
+Content-Type: application/json
+
+{
+}
