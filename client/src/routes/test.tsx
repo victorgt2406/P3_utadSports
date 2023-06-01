@@ -67,7 +67,7 @@ export default function () {
 
     return (
         <NavBarTemplate>
-            <FormTeam
+            {/* <FormTeam
                 {...{
                     name,
                     setName,
@@ -87,7 +87,8 @@ export default function () {
                     setSport,
                     handleSubmit
                 }}
-            />
+            /> */}
+            <></>
         </NavBarTemplate>
     );
 }

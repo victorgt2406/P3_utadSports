@@ -34,21 +34,20 @@ const createTeam = async (req: RequestWithUser, res: Response) => {
             });
         }
         try {
-            let icon:string = "";
-            if(!data.icon){
+            let icon: string = "";
+            if (!data.icon) {
                 icon = getTeamLogo(req, data.sport);
-            }
-            else{
+            } else {
                 icon = data.icon;
             }
-            const body:Team = {
+            const body: Team = {
                 icon,
                 name: data.name,
                 description: data.description,
                 sport: data.sport,
                 players,
                 captain,
-                max: data.max
+                max: data.max,
             };
             const team: Team = await teamsModel.create(body);
             res.send(team);
@@ -209,17 +208,25 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
         const player = (await usersModel.findOne({ _id: req.user.id }))!;
         const players = team.players === undefined ? [] : team.players;
         if (team.open) {
-            players.push({
+            // players.push({
+            //     _id: player.id,
+            //     icon: player.icon,
+            //     nick: player.nick,
+            //     email: player.email,
+            // });
+            const playerData = {
                 _id: player.id,
                 icon: player.icon,
                 nick: player.nick,
                 email: player.email,
-            });
+            };
+            // console.log(playerData);
             try {
-                await teamsModel.updateOne(
+                const response = await teamsModel.updateOne(
                     { _id: team.id },
-                    { $set: players }
+                    { $push: { players: playerData } }
                 );
+                // console.log(response);
                 const message: Message = {
                     type: "notification",
                     content: [
@@ -232,10 +239,10 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
                             lang: "en",
                             content: `${player.nick} has joined ${team.name} %%join=https://localhost:3000%%`,
                             title: `${player.nick} has joined ${team.name}`,
-                        }
+                        },
                     ],
                     state: "unread",
-                    to: team.captain
+                    to: team.captain,
                 };
                 messagesModel.create(message);
                 res.send("JOINED");
@@ -256,10 +263,10 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
                         lang: "en",
                         content: `${player.nick} wants to join ${team.name} %%join=https://localhost:3000%%`,
                         title: `${player.nick} wants to join ${team.name}`,
-                    }
+                    },
                 ],
                 state: "unread",
-                to: team.captain
+                to: team.captain,
             };
             messagesModel.create(message);
             res.send("CAPTAIN_WAS_ASKED");
@@ -269,7 +276,6 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
     }
 };
 
-
 const unjoinTeam = async (req: RequestWithUser, res: Response) => {
     const team = await teamsModel.findOne({ _id: req.params.team });
     if (team && req.user) {
@@ -277,10 +283,7 @@ const unjoinTeam = async (req: RequestWithUser, res: Response) => {
             (p) => p._id !== req.user!.id
         );
         try {
-            await teamsModel.updateOne(
-                { _id: team.id },
-                { $set: players }
-            );
+            await teamsModel.updateOne({ _id: team.id }, { $set: players });
             res.send("UNJOINED");
         } catch (err) {
             console.log(err);
@@ -301,5 +304,5 @@ export {
     openTeam,
     closeTeam,
     joinTeam,
-    unjoinTeam
+    unjoinTeam,
 };
