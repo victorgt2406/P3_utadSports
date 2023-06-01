@@ -7,16 +7,10 @@ import User from "../../models/User";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import notify from "../../utils/notify";
+import { Sport } from "../../models/Options";
 
 export default function () {
     const context = useRouterContext();
-    // const team: Team | undefined = context.cache;
-    // let icon = "",
-    //     name = "",
-    //     captain = "",
-    //     _id: string | undefined = "",
-    //     open: boolean | undefined = false,
-    //     players: string[] = [];
 
     const [icon, setIcon] = useState<string | undefined>("");
     const [name, setName] = useState<string | undefined>("");
@@ -24,6 +18,7 @@ export default function () {
     const [_id, set_id] = useState<string | undefined>("");
     const [open, setOpen] = useState<boolean | undefined>(false);
     const [players, setPlayers] = useState<User[]>([]);
+    const [sport, setSport] = useState<Sport>("basketball");
 
     useEffect(() => {
         const team: Team | undefined = context.cache;
@@ -36,6 +31,8 @@ export default function () {
             setCaptain(team.captain);
             setIcon(team.icon);
             set_id(team._id);
+            setPlayers(team.players?team.players:[]);
+            setSport(team.sport);
         }
     }, [context]);
 
@@ -53,13 +50,15 @@ export default function () {
                     }
                 );
                 console.log(res.data);
-                notify("succesfully joined","","");
+                notify("succesfully joined","",`you are now in ${name} ${sport} team`);
                 setPlayers([...players, context.user!]);
+                context.setCache({...context.cache, players: [...players, context.user!]})
             } else {
-                console.log("nmasd");
+                notify("can not join","","");
             }
         } catch (err) {
             console.log(err);
+            notify("can not join","",`you are already part of ${name} ${sport} team or the team has blocked you`);
         }
     };
 
@@ -78,7 +77,7 @@ export default function () {
                     className={"ms-2 me-4 text-primary"}
                     style={{ height: "80px", width: "80px" }}
                 >
-                    {ICONS_SPORTS.basketball}
+                    {ICONS_SPORTS[sport]}
                 </svg>
                 <div className="d-flex flex-column align-items-center">
                     <div className="fw-bold">{name}</div>
@@ -99,7 +98,7 @@ export default function () {
                     <LabelInfo key={index}>{player.nick}</LabelInfo>
                 ))}
             </div>
-            {open ? (
+            {open && !([...players, captain!].find((pl)=>pl._id===context.user?._id)) ? (
                 <div className="d-flex justify-content-center my-3">
                     <button className="btn btn-primary" onClick={handleJoin}>
                         {context.getText().joinTeam}
