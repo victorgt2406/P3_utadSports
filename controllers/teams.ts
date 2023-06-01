@@ -207,69 +207,74 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
     if (team && req.user) {
         const player = (await usersModel.findOne({ _id: req.user.id }))!;
         const players = team.players === undefined ? [] : team.players;
-        if (team.open) {
-            // players.push({
-            //     _id: player.id,
-            //     icon: player.icon,
-            //     nick: player.nick,
-            //     email: player.email,
-            // });
-            const playerData = {
-                _id: player.id,
-                icon: player.icon,
-                nick: player.nick,
-                email: player.email,
-            };
-            // console.log(playerData);
-            try {
-                const response = await teamsModel.updateOne(
-                    { _id: team.id },
-                    { $push: { players: playerData } }
-                );
-                // console.log(response);
+        if (!players.find((pl) => pl._id === player.id)) {
+            if (team.open) {
+                // players.push({
+                //     _id: player.id,
+                //     icon: player.icon,
+                //     nick: player.nick,
+                //     email: player.email,
+                // });
+                const playerData = {
+                    _id: player.id,
+                    icon: player.icon,
+                    nick: player.nick,
+                    email: player.email,
+                };
+                // console.log(playerData);
+                try {
+                    const response = await teamsModel.updateOne(
+                        { _id: team.id },
+                        { $push: { players: playerData } }
+                    );
+                    // console.log(response);
+                    const message: Message = {
+                        type: "notification",
+                        content: [
+                            {
+                                lang: "es",
+                                content: `${player.nick} se ha unido a ${team.name} %%join=https://localhost:3000%%`,
+                                title: `${player.nick} se ha unido a ${team.name}`,
+                            },
+                            {
+                                lang: "en",
+                                content: `${player.nick} has joined ${team.name} %%join=https://localhost:3000%%`,
+                                title: `${player.nick} has joined ${team.name}`,
+                            },
+                        ],
+                        state: "unread",
+                        to: team.captain,
+                    };
+                    messagesModel.create(message);
+                    res.send("JOINED");
+                } catch (err) {
+                    console.log(err);
+                    handleError(res, "ERROR_JOIN_PLAYER", 500);
+                }
+            } else {
                 const message: Message = {
                     type: "notification",
                     content: [
                         {
                             lang: "es",
-                            content: `${player.nick} se ha unido a ${team.name} %%join=https://localhost:3000%%`,
-                            title: `${player.nick} se ha unido a ${team.name}`,
+                            content: `${player.nick} se quiere unir a ${team.name} %%join=https://localhost:3000%%`,
+                            title: `${player.nick} se quiere unir a ${team.name}`,
                         },
                         {
                             lang: "en",
-                            content: `${player.nick} has joined ${team.name} %%join=https://localhost:3000%%`,
-                            title: `${player.nick} has joined ${team.name}`,
+                            content: `${player.nick} wants to join ${team.name} %%join=https://localhost:3000%%`,
+                            title: `${player.nick} wants to join ${team.name}`,
                         },
                     ],
                     state: "unread",
                     to: team.captain,
                 };
                 messagesModel.create(message);
-                res.send("JOINED");
-            } catch (err) {
-                console.log(err);
-                handleError(res, "ERROR_JOIN_PLAYER", 500);
+                res.send("CAPTAIN_WAS_ASKED");
             }
-        } else {
-            const message: Message = {
-                type: "notification",
-                content: [
-                    {
-                        lang: "es",
-                        content: `${player.nick} se quiere unir a ${team.name} %%join=https://localhost:3000%%`,
-                        title: `${player.nick} se quiere unir a ${team.name}`,
-                    },
-                    {
-                        lang: "en",
-                        content: `${player.nick} wants to join ${team.name} %%join=https://localhost:3000%%`,
-                        title: `${player.nick} wants to join ${team.name}`,
-                    },
-                ],
-                state: "unread",
-                to: team.captain,
-            };
-            messagesModel.create(message);
-            res.send("CAPTAIN_WAS_ASKED");
+        }
+        else{
+            handleError(res, "USER_JOINED", 403);
         }
     } else {
         handleError(res, "DELETED_USER", 403);
