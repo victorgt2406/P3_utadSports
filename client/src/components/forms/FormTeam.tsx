@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useRouterContext from "../../utils/RouterContext";
 import User from "../../models/User";
 import { Sport } from "../../models/Options";
@@ -27,6 +27,8 @@ type MyProps = {
     sport: Sport;
     setSport: (sport: Sport) => void;
     handleSubmit: ()=>void;
+    iconFile: File | undefined;
+    setIconFile: (file:File)=>void;
 };
 
 export default function ({
@@ -46,7 +48,9 @@ export default function ({
     setNickPlayers,
     sport,
     setSport,
-    handleSubmit
+    handleSubmit,
+    iconFile,
+    setIconFile
 }: MyProps) {
     const context = useRouterContext();
 
@@ -57,7 +61,7 @@ export default function ({
                 if(context.token){
                     const res = await axios.get(`${context.apiUrl}/users/`, {
                         headers: {
-                            Authorization: await context.token.token,
+                            Authorization: context.token.token,
                             "Content-Type": "application/json",
                         },
                     });
@@ -84,7 +88,7 @@ export default function ({
             <div className="d-flex flex-column justify-content-center">
                 <div className="d-flex flex-wrap justify-content-center">
                     <div className="col-sm-4 col d-flex justify-content-center align-items-center">
-                        <GetIcon />
+                        <GetIcon onChange={setIconFile}/>
                     </div>
                     <div
                         className="col-sm-8 col d-flex flex-column"

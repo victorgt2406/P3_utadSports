@@ -18,9 +18,31 @@ export default function () {
     const [nickPlayers, setNickPlayers] = useState<string[]>([]);
     const [sport, setSport] = useState<Sport>("" as Sport);
     const [users, setUsers] = useState<User[]>([]);
+    const [iconFile, setIconFile] = useState<File | undefined>(undefined);
 
     const handleSubmit = async () => {
         try {
+            var icon: string | undefined = undefined;
+            if (iconFile) {
+                try {
+                    const formData = new FormData();
+                    formData.append("file", iconFile);
+                    const res = await axios.post(
+                        `${context.apiUrl}/storages`,
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        }
+                    );
+                    console.log(res);
+                    icon = res.data.url;
+                } catch (err) {
+                    console.log(err);
+                    notify("ERROR", "icon", "The icon could not be updated");
+                }
+            }
             const teamToCreate: Team = {
                 name,
                 sport,
@@ -34,7 +56,7 @@ export default function () {
                 ) as string[],
                 max: parseInt(max),
                 open: true,
-                icon: "",
+                icon: icon?icon:"",
             };
 
             const res = await axios.post(
@@ -60,7 +82,7 @@ export default function () {
     };
 
     return (
-        <NavBarTemplate>
+        <NavBarTemplate parentPage="teams" page="createTeam" info="createTeam">
             <FormTeam
                 {...{
                     name,
@@ -79,7 +101,9 @@ export default function () {
                     setNickPlayers,
                     sport,
                     setSport,
-                    handleSubmit
+                    handleSubmit,
+                    iconFile,
+                    setIconFile
                 }}
             />
         </NavBarTemplate>
