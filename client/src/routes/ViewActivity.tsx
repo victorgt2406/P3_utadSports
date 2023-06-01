@@ -93,15 +93,17 @@ export default function ActivityDetail() {
                 <FechaGrande fecha={resultados.date} />
             </div>
             <div>
-                <LabelInfo label="Equipos que van a participar en la actividad" className="text-primary">
-                    {resultados.home.name}
-                    {resultados.away ? (
+                <LabelInfo label="Equipos que van a participar en la actividad" className="pb-2 mt-2">
+                    {resultados.home.name} (lleno)
+                </LabelInfo>
+                <LabelInfo className="">
+                {resultados.away ? (
                         resultados.away.name
                     ) : (
                         <span className="text-primary">1 plaza</span>
                     )}
+                   
                 </LabelInfo>
-
             </div>
         </NavBarTemplate>
     );
