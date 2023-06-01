@@ -15,6 +15,7 @@ export default function OpenTeams() {
             try {
                 const response = await axios.get(`${context.apiUrl}/teams/`);
                 console.log(response);
+                setTeams(response.data);
             }
             catch (err) {
                 console.log(err);

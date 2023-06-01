@@ -4,8 +4,19 @@ import axios from "axios";
 import useRouterContext from "../../utils/RouterContext";
 import Message from "../../models/Messages";
 
-function MessageComponent({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+function MessageComponent({
+    children,
+    deleteMessage,
+}: {
+    children: React.ReactNode;
+    deleteMessage: () => void;
+}) {
+    const context = useRouterContext();
+    return (
+        <div role="button" className="card p-3 my-2" onClick={deleteMessage}>
+            {children}
+        </div>
+    );
 }
 
 export default function () {
@@ -36,13 +47,26 @@ export default function () {
         }
     }, []);
 
+    const deleteMessage = (id: string) => {
+        axios.delete(`${context.apiUrl}/messages/${id}`, {
+            headers: {
+                Authorization: context.token?.token,
+                "Content-Type": "application/json",
+            },
+        });
+        setMessages(messages.filter((message)=>message._id === id));
+    };
+
     return (
         <PopOver
             body={
-                <div className="me-2">
+                <div className="me-2 card p-1">
                     {messages.length >= 1 ? (
                         messages.map((message, index) => (
-                            <MessageComponent key={index}>
+                            <MessageComponent
+                                key={index}
+                                deleteMessage={() => deleteMessage(message._id)}
+                            >
                                 {message.content[0].content}
                             </MessageComponent>
                         ))

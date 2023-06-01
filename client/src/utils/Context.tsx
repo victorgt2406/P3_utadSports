@@ -46,7 +46,7 @@ function ContextProvider({ children }: { children: JSX.Element }) {
     const [token, setToken] = useState<Token | null>(cookie.token);
     const [language, setLanguage] = useState<Lang>(cookie.language);
     const [page, setPage] = useState<Page>(cookie.page);
-    const [cache, setCache] = useState<any>(null);
+    const [cache, setCache] = useState<any>(cookie.cache);
     const getText = () => LANGS[language];
 
     function isMobile() {

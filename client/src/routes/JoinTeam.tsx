@@ -8,7 +8,6 @@ export default function() {
     return (
         <NavBarTemplate page="joinTeam" parentPage="openTeams">
             <TeamInfo/>
-            <button onClick={()=>{}}>{context.getText().joinTeam}</button>
         </NavBarTemplate>
     );
 }
