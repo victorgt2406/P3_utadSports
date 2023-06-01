@@ -7,6 +7,7 @@ import handleError from "../utils/handleError";
 import { Team } from "../models/teams";
 import { ActivityCreationRequest } from "../validators/activities";
 import { Activity } from "../models/activities";
+import mongoose from "mongoose";
 
 const createActivity = async (req: RequestWithUser, res: Response) => {
     const data: ActivityCreationRequest = matchedData(
@@ -49,7 +50,8 @@ const createActivity = async (req: RequestWithUser, res: Response) => {
                 ...data,
                 home,
                 away,
-                result: data.result
+                result: data.result,
+                date: data.date
             }
             activitiesModel.create(body)
         } catch (err) {
@@ -92,5 +94,53 @@ const getCalendar = async (req: RequestWithUser, res: Response) => {
       handleError(res, "ERROR_GET_CALENDAR", 500);
     }
 };
+const getActivityById = async (req: RequestWithUser, res: Response) => {
+    try {
+      const id = req.params.id;
+      const activity = await activitiesModel.findById(id);
+      if (!activity) {
+        return res.status(404).json({ error: "Activity not found" });
+      }
+      res.json(activity);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "An error occurred while retrieving activity" });
+    }
+  };
+  
+  const deleteActivity = async (req: RequestWithUser, res: Response) => {
+    try {
+      const id = req.params.id;
+      const activity = await activitiesModel.findByIdAndDelete(id);
+      if (!activity) {
+        return res.status(404).json({ error: "Activity not found" });
+      }
+      res.json({ message: "Activity deleted successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "An error occurred while deleting activity" });
+    }
+  };
 
-export {createActivity, getActivity, getCalendar};
+  const updateActivity = async (req: RequestWithUser, res: Response) => {
+    try {
+      const id = req.params.id;
+      const { score, away } = req.body;
+      
+      if (!mongoose.Types.ObjectId.isValid(away)) {
+        return res.status(400).json({ error: "Invalid team ID" });
+      }
+  
+      const activity = await activitiesModel.findByIdAndUpdate(id, { score, away }, { new: true });
+      if (!activity) {
+        return res.status(404).json({ error: "Activity not found" });
+      }
+      res.json(activity);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "An error occurred while updating activity" });
+    }
+  };
+  
+  
+export {createActivity, getActivity, getCalendar, updateActivity, deleteActivity, getActivityById};

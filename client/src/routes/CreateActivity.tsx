@@ -49,16 +49,27 @@ export default function crearActividad() {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-
+  
     if (selectedHour !== null && selectedHour >= 0 && selectedHour <= 23) {
       const hour = String(selectedHour).padStart(2, '0');
       return `${year}-${month}-${day} ${hour}:00:00`;
     }
-
-    return `${year}-${month}-${day} 00:00:00`;
+  
+    const formattedDate = new Date(year, date.getMonth(), date.getDate(), 0, 0, 0);
+    return formattedDate.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
   }
+  
+  
 
   useEffect(() => {
+
     WebFont.load({
       google: {
         families: ['Poppins']
@@ -86,7 +97,7 @@ export default function crearActividad() {
         const activity = await axios.post(`${context.apiUrl}/activities/`, {
           sport: sport,
           name: description.current?.value,
-          date: dateConverter(currentDate, selectedHour),
+          date: new Date(dateConverter(currentDate, selectedHour)),
           location: localitation,
           home: selectedTeam?._id,
           registeredTeams: registeredTeams,

@@ -17,6 +17,7 @@ import { Team } from '../models/Team';
 
 export default function ActivityList() {
   const [resultados, setResultados] = useState<{
+    _id: String,
     location: Location; name: string, sport: String, home: Team, result: string, date: string
   }[]>([]);
   const context = useContext(CONTEXT);
@@ -48,6 +49,7 @@ export default function ActivityList() {
       res: res.result,
       loc: res.location,
       date: res.date,
+      id: res._id,
     }));
   console.log(actividad);
   return (
@@ -55,7 +57,7 @@ export default function ActivityList() {
       <div className="resultados">
         <div className="d-flex flex-column">
           {actividad.map((resultado, index) => (
-            <Link to={"/inscriptionActivity"} className="Link" key={index}>
+            <Link to={`/activity/${resultado.id}`} className="Link" key={index}>
               <div
                 key={index}
                 className={`d-flex p-4 ${index % 2 === 0 ? 'bg-light-blue' : ''}`}

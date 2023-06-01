@@ -11,14 +11,18 @@ import Activity from '@mui/icons-material/Flag';
 import VsImage from '../components/common/VsImage';
 import NavBarTemplate from '../templates/NavBarTemplate';
 import FechaGrande from '../components/common/FechaGrande';
+import { useNavigate } from 'react-router-dom';
+import { Team } from '../models/Team';
 
 
 export default function Events() {
-  let [resultados, setResultados] = useState<{
-    location: string; name: string, sport: string, total_team: number, result: string, date: string
+  const [resultados, setResultados] = useState<{
+    _id: string,
+    location: Location; name: string, sport: String, home: Team, result: string, date: string
   }[]>([]);
   const context = useContext(CONTEXT);
   const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -31,15 +35,13 @@ export default function Events() {
       });
   }, []);
   
-  function handleClick(): void {
-    throw new Error('Function not implemented.');
-  }
   
 
   const sorted = resultados
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   .filter((res) => new Date(res.date).getTime() > new Date().getTime())
   .map((res) => ({ 
+      id: res._id,
       nombre: res.name,
       escudo: Escudo,
       deporte: res.sport, 
@@ -48,7 +50,12 @@ export default function Events() {
       fecha: res.date,
     }));
   const isSmallScreen = context.isMobile();
+  function handleClick(activityId: string) {
+    navigate(`/activity/${activityId}`);
+  }
+
   
+    
 
 
   return (
@@ -102,7 +109,7 @@ export default function Events() {
                   <span className="text-muted">{resultado.location.toString().charAt(0).toUpperCase() + resultado.location.toString().slice(1)}</span>
                 </div>
                 <div className="d-flex align-items-right">
-                  <button type="button" className="btn btn-sm btn-primary px-3 fs-6 mt-2" onClick={handleClick}><span style={{ fontSize: '16px' }}>INSCRIBIRSE</span></button>
+                  <button type="button" className="btn btn-sm btn-primary px-3 fs-6 mt-2" onClick={() => handleClick(resultado.id)}><span style={{ fontSize: '16px' }}>INSCRIBIRSE</span></button>
                 </div>
               </div>
               <FechaGrande fecha ={resultado.fecha} />

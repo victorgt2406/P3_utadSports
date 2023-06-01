@@ -6,20 +6,19 @@ import { Location } from "../models/activities";
 
 type ActivityCreationRequest = {
     name: string;
-    date: string;
+    date: Date;
     sport: SportNames;
     location: Location;
     registeredTeams: boolean;
     home: string;
     away?: string;
-    start_date: string;
     result: "0 - 0";
 }
 
 const validatorActivity = [
     check("name").exists().notEmpty().isString(),
     check("sport").exists().notEmpty().isString(),
-    check("date").exists().notEmpty().isString(),
+    check("date").exists().notEmpty(),
     check("location").exists().notEmpty().isString(),
     oneOf([
         [

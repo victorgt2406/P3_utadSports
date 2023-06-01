@@ -8,7 +8,7 @@ type Location = "pista" | "padel"
 
 interface Activity {
     name: string;
-    date: String;
+    date: Date;
     sport: SportNames;
     location: Location;
     registeredTeams: boolean;
@@ -40,18 +40,21 @@ const ActivitiesSchema = new mongoose.Schema<Activity>(
             required: true
             
         },
-        home:{
-            type: TeamsSchema,
+        home: {
+            type: mongoose.Types.ObjectId,
+            ref: 'teams',
             required: true,
         },
-        away:{
-            type: TeamsSchema
+        away: {
+            type: mongoose.Types.ObjectId,
+            ref: 'teams',
+            required: false,
         },
         result:{
             type: String
         },
         date:{
-            type: String,
+            type: Date,
             required: true
         }
     },
@@ -60,6 +63,7 @@ const ActivitiesSchema = new mongoose.Schema<Activity>(
         versionKey: false,
     }
 );
+
 
 ActivitiesSchema.index({ name: 1 });
 
