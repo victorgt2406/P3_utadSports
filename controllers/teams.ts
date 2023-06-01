@@ -206,7 +206,7 @@ const joinTeam = async (req: RequestWithUser, res: Response) => {
     const team = await teamsModel.findOne({ _id: req.params.team });
     if (team && req.user) {
         const player = (await usersModel.findOne({ _id: req.user.id }))!;
-        const players = team.players === undefined ? [] : team.players;
+        const players = team.players === undefined ? [] : [...team.players, team.captain];
         if (!players.find((pl) => pl._id === player.id)) {
             if (team.open) {
                 // players.push({
