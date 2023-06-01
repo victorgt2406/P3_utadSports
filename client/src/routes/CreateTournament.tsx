@@ -175,7 +175,7 @@ export default function CreateTournament() {
                                         selectedHour={selectedHour}
                                         onValueChange={setCurrentDate}
                                         onSelectedHourChange={setSelectedHour}
-                                        calLang={context.language}
+                                        // calLang={context.language}
                                     />
                             </div>
                         <div className="mt-5 d-flex justify-content-center">

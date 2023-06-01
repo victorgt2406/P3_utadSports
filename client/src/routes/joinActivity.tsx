@@ -115,7 +115,7 @@ export default function inscriptionActivity(){
                                     selectedHour={selectedHour}
                                     onValueChange={setCurrentDate}
                                     onSelectedHourChange={setSelectedHour}
-                                    calLang={context.language}
+                                    // calLang={context.language}
                                 />
                     </div>
                 <br></br>
