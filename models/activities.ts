@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { SPORTS, SportNames } from "./sports";
-import teams, { Team, TeamsSchema } from "./teams";
+import teams, { Team, TeamsSchema2 } from "./teams";
 import { StringDecoder } from "string_decoder";
 
 const LOCATIONS = ["pista","padel"];
@@ -41,13 +41,11 @@ const ActivitiesSchema = new mongoose.Schema<Activity>(
             
         },
         home: {
-            type: mongoose.Types.ObjectId,
-            ref: 'teams',
+            type: TeamsSchema2,
             required: true,
         },
         away: {
-            type: mongoose.Types.ObjectId,
-            ref: 'teams',
+            type: TeamsSchema2,
             required: false,
         },
         result:{

@@ -3,6 +3,7 @@ import { check, oneOf } from "express-validator";
 import validateResults from "../utils/handleValidator";
 import { SportNames } from "../models/sports";
 import { Location } from "../models/activities";
+import { Team } from "../models/teams";
 
 type ActivityCreationRequest = {
     name: string;
@@ -10,8 +11,8 @@ type ActivityCreationRequest = {
     sport: SportNames;
     location: Location;
     registeredTeams: boolean;
-    home: string;
-    away?: string;
+    home: Team;
+    away?: Team;
     result: "0 - 0";
 }
 
@@ -23,14 +24,14 @@ const validatorActivity = [
     oneOf([
         [
             check('registeredTeams').isBoolean().equals('true'),
-            check("home").exists().notEmpty().isString(),
+            check("home").exists().notEmpty(),
         ],
         [
             check('registeredTeams').isBoolean().equals('false'),
-            check("home").optional().notEmpty().isString(),
+            check("home").optional().notEmpty(),
         ]
     ]),
-    check("away").optional().notEmpty().isString(),
+    check("away").optional().notEmpty(),
     check("registeredTeams").optional().notEmpty().isBoolean(),
     (req: Request, res: Response, next: NextFunction) => {
         return validateResults(req, res, next);

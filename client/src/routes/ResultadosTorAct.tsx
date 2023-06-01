@@ -1,104 +1,131 @@
 import BalonBasket from '@mui/icons-material/SportsBasketballRounded';
 import BalonFutbol from '@mui/icons-material/SportsSoccer';
 import Raqueta from '@mui/icons-material/SportsTennis';
+import Escudo from '../assets/icons/Shield.svg'
+import Calendario from '../assets/icons/Calendar.svg';
 import axios from 'axios';
-import Activity from '@mui/icons-material/Flag';
-import Tournament from '@mui/icons-material/EmojiEvents';
-import Shield from '@mui/icons-material/Shield';
-import Calendar from '@mui/icons-material/CalendarToday';
-import NavBarTemplate from '../templates/NavBarTemplate';
-import ResultsActivity from './ResultsActivity';
-import ResultsTorneo from './ResultsTorneo';
-
+import { useContext, useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { CONTEXT } from '../utils/Context';
+import es from 'date-fns/locale/es';
+import enUS from 'date-fns/locale/en-US';
+import NavBarTemplate from '../templates/NavBarTemplate';
+import VsImage from '../components/common/VsImage';
+import { Team } from '../models/Team';
+import Activity from '@mui/icons-material/Flag';
 
 
-export default function ResultadosTorAct() {
-    const resultados = [
-        { tipo: 'Actividad', nombre: 'Nombre Actividad', sport: 'FUTBOL', numEquipos: 2, resultado: '2-1', location: 'U-tad'},
-        { tipo: 'Torneo', nombre: 'Nombre Torneo', sport: 'BALONCESTO', numEquipos: 6, location: 'U-tad'},
-        { tipo: 'Actividad', nombre: 'Nombre Actividad', sport: 'PADEL', numEquipos: 2, resultado: '2-1', location: 'U-tad'},
-        { tipo: 'Torneo', nombre: 'Nombre Torneo', sport: 'FUTBOL', numEquipos: 6, location: 'U-tad'},
-        { tipo: 'Actividad', nombre: 'Nombre Actividad', sport: 'FUTBOL', numEquipos: 2, resultado: '2-1', location: 'U-tad'},
-        { tipo: 'Torneo', nombre: 'Nombre Torneo', sport: 'PADEL', numEquipos: 6, location: 'U-tad'},
-    ];
+export default function ActivityList() {
+    const [resultados, setResultados] = useState<{
+        away: Team;
+        _id: String,
+        location: Location; name: string, sport: String, home: Team, result: string, date: string
+    }[]>([]);
+    const context = useContext(CONTEXT);
+    const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
+    const [filter, setFilter] = useState("");
+    const filters = ["Todas las actividades", "Mis actividades", "Actividades finalizadas"];
 
-    
-    const fecha = '15-18 mar.';
-    
+    useEffect(() => {
+        axios.get(`${context.apiUrl}/activities`)
+            .then(response => {
+                setResultados(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
+    function formatDate(dateString: string) {
+        console.log(dateString);
+        const date = new Date(dateString);
+        return format(new Date(date), context.language === 'en' ? 'EEEE, MMMM d, hh:mm a' : 'EEEE, d MMMM   HH:mm', { locale });
+    }
+    const isSmallScreen = context.isMobile();
+    const actividad = resultados
+        .filter((res) => new Date(res.date) < new Date())
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .map((res) => ({
+            name: res.name,
+            home: res.home,
+            away: res.away,
+            sport: res.sport,
+            escudo: Escudo,
+            res: res.result,
+            loc: res.location,
+            date: res.date,
+            id: res._id,
+        }));
+
+    console.log(actividad);
     return (
-        <NavBarTemplate {...{container: false}}>
+        <NavBarTemplate {...{ container: false }}>
             <div className="resultados">
-                <div className="d-flex flex-column flex-wrap">
-                    {resultados.map((resultado, index) => (
-                        <div key = {index} className = {`d-flex px-4 ms-2 ${index % 2 === 0 ? 'bg-light-blue' : ''}`} style={{display : 'flex'}}>
-                            <div className="d-flex align-items-center me-4" style={{ display: 'flex' }}>
-                                <div>
-                                    {resultado.tipo === 'Actividad' ? (
-                                        <Activity className= "me-1" style={{ width: '65px', height: '65px' }} />
-                                    ) : (
-                                        <Tournament className= "me-1" style={{ width: '65px', height: '65px' }} />
-                                    )}
-                                </div>
-                            {resultado.sport === 'FUTBOL' ? (
-                                <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
-                                    {<BalonFutbol style={{ width: '65px', height: '65px' }} />}
-                                </div>
-                            ) : resultado.sport === 'BALONCESTO' ? (
-                                <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
-                                    <BalonBasket style={{ width: '65px', height: '65px' }} />
-                                </div>
-                            ) : resultado.sport === 'PADEL' ? (
-                                <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
-                                    <Raqueta style={{ width: '65px', height: '65px' }} />
-                                </div>
-                            ) : null}
-                            </div>
-                            <div className="mx-5" style={{
-                                display: 'flex',
-                                alignItems: 'right',
-                                flexDirection: 'column',
-                                minWidth: '0px',
-                                justifyContent: "center"
-                            }}>
-                                <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>
-                                    {resultado.tipo === 'Actividad' ? (
-                                        <Link to="/ResultsActivity">{resultado.nombre}</Link>
-                                    ) : (
-                                        <Link to="/ResultsTorneo">{resultado.nombre}</Link>
-                                    )}
-                                    
-                                </span>
-                            </div>
+                <div className="d-flex flex-column">
+                    {actividad.map((resultado, index) => (
+                        <Link to={`/results/${resultado.id}`} className="Link" key={index}>
+                            <div
+                                key={index}
+                                className={`d-flex p-4 ${index % 2 === 0 ? 'bg-light-blue' : ''}`}
+                                style={{ justifyContent: 'space-between' }}
+                            >
+                                <div><Activity className='me-1' style={{ width: '65px', height: '65px' }} /></div>
+                                <div className={`mx-5 ${isSmallScreen ? 'ms-0 me-auto' : 'ms-5'}`} style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div
+                                        className={`icono-deporte ${isSmallScreen ? 'ms-0 me-2' : 'ms-2 me-5'}`}
+                                        style={{ width: '65px', height: '65px' }}
+                                    >
+                                        {resultado.sport === 'football' ? (
+                                            <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
+                                                {<BalonFutbol style={{ width: '65px', height: '65px' }} />}
+                                            </div>
+                                        ) : resultado.sport === 'basketball' ? (
+                                            <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
+                                                <BalonBasket style={{ width: '65px', height: '65px' }} />
+                                            </div>
+                                        ) : resultado.sport === 'padel' ? (
+                                            <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
+                                                <Raqueta style={{ width: '65px', height: '65px' }} />
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                    <div className="ms-2">
+                                        <div className="me-5" style={{
+                                            display: 'flex',
+                                            alignItems: 'right',
+                                            flexDirection: 'column',
+                                            minWidth: '0px',
+                                            justifyContent: "center",
+                                            width: `${isSmallScreen ? '100%' : 'clamp(50px, 250px, 300px)'}`,
 
-                            <div className="ms-5 d-flex align-items-center">
-                                {resultado.tipo === 'Actividad' ? (
-                                    <>
-                                    <Shield className="me-2" style={{ width: '50px', height: '50px' }} />
-                                    <span className="me-2">{resultado.resultado}</span>
-                                    <Shield className="me-2" style={{ width: '50px', height: '50px' }} />
-                                    </>
-                                ) : (
-                                    Array.from({ length: resultado.numEquipos }, (_, index) => (
-                                    <Shield key={index} className="me-1" style={{ width: '50px', height: '50px' }} />
-                                    ))
-                                )}
-                            </div>
+                                        }}>
+                                            <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.name}</span>
+                                        </div>
 
-                            <div className="ms-auto d-flex flex-column align-items-end mx-4 pt-3">
-                                <div className="d-flex align-items-right">
-                                    <Calendar className="me-1"/>
-                                    <span className="text-muted">{fecha}</span>
+                                    </div>
+
                                 </div>
-                                <div className="d-flex align-items-left mb-2 mt-3">
-                                    <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
-                                    <span className="text-muted">U-tad</span>
+                                <VsImage image1={resultado.home?.icon} image2={resultado.away?.icon} result={resultado.res} isResult />
+                                <div className="ms-auto d-flex flex-column align-items-end mx-5 pt-3">
+                                    <div className="d-flex align-items-center mb-2">
+                                        <img
+                                            className="icono-tipo me-1"
+                                            src={Calendario}
+                                            style={{ width: '24px', height: '24px' }}
+                                        />
+                                        <span className="text-muted ms-1">{formatDate(resultado.date)}</span>
+                                    </div>
+                                    <div className="d-flex align-items-center">
+                                        <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
+                                        <span className="text-muted">{resultado.loc.toString().charAt(0).toUpperCase() + resultado.loc.toString().slice(1)}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
         </NavBarTemplate>
     );
-}
+
+}  

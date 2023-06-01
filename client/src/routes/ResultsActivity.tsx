@@ -11,8 +11,11 @@ import Calendar from "@mui/icons-material/CalendarToday";
 import axios from "axios";
 import { CONTEXT } from '../utils/Context';
 import { Team } from "../models/Team";
+import ActivityFlag from '@mui/icons-material/Flag';
+import { generateRandomAvatar } from "../components/common/AvatarCopy";
 
 type Activity = {
+  away: Team;
   _id: String,
   location: String;
   name: string,
@@ -34,6 +37,7 @@ export default function ResultsActivity() {
     axios.get(`${context.apiUrl}/activities/${id}`)
       .then(response => {
         setResultados(response.data);
+        console.log(response)
       })
       .catch(error => {
         console.log(error);
@@ -48,8 +52,8 @@ export default function ResultsActivity() {
     return null;
   }
   return (
-    <NavBarTemplate {...{ container: false }}>
-      <div className="resultados" style={{ marginTop: '2rem' }}>
+    <NavBarTemplate info="activities" parentPage="activities" page="ResultsActivity">
+      <div className="resultados" style={{ marginTop: '5rem' }}>
         <div className="d-flex flex-column flex-wrap">
         </div>
         <div className="mx-5" style={{ display: 'flex', justifyContent: 'center' }}>
@@ -58,12 +62,13 @@ export default function ResultsActivity() {
             style={{ justifyContent: 'center' }}
           >
             <div className="d-flex">
+              <div><ActivityFlag className='me-1' style={{ width: '80px', height: '80px' }} /></div>
               {resultados.sport === 'football' ? (
-                <BalonFutbol style={{ width: '65px', height: '65px', color: '#0065F3' }} />
+                <BalonFutbol style={{ width: '80px', height: '80px', color: '#0065F3' }} />
               ) : resultados.sport === 'basketball' ? (
-                <BalonBasket style={{ width: '65px', height: '65px', color: '#0065F3' }} />
+                <BalonBasket style={{ width: '90px', height: '90px', color: '#0065F3' }} />
               ) : resultados.sport === 'padel' ? (
-                <Raqueta style={{ width: '65px', height: '65px', color: '#0065F3' }} />
+                <Raqueta style={{ width: '90px', height: '90px', color: '#0065F3' }} />
               ) : null}
             </div>
           </div>
@@ -74,20 +79,33 @@ export default function ResultsActivity() {
             <span style={{ textTransform: 'uppercase', fontSize: '20px', justifyContent: 'left' }}>
               {resultados.name}
             </span>
-            <span className="text-muted">Creado por {resultados.home.name}</span>
+            <span className="" style={{ color: '#ACACAC' }}>Creado por {resultados.home.captain.nick}</span>
           </div>
           <div className="d-flex flex-column align-items-right">
             <div className="d-flex align-items-center mb-2">
-              <Calendar className="me-2" />
-              <span className="text-muted">{formatDate(resultados.date)}</span>
+              <Calendar style={{ color: '#ACACAC' }} className="me-2" />
+              <span style={{ color: '#ACACAC' }}>{formatDate(resultados.date)}</span>
             </div>
             <div className="d-flex align-items-center">
-              <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px' }}></i>
-              <span className="text-muted">{resultados.location.toString().charAt(0).toUpperCase() + resultados.location.toString().slice(1)}</span>
+              <i className="bi bi-geo-alt-fill" style={{ width: '24px', height: '24px', color: '#ACACAC' }}></i>
+              <span style={{ color: '#ACACAC' }}>{resultados.location.toString().charAt(0).toUpperCase() + resultados.location.toString().slice(1)}</span>
             </div>
           </div>
         </div>
       </div>
+      <div className="bg-light-blue d-flex align-items-center justify-content-center py-5 mx-5 my-4 rounded">
+          <div className="d-flex flex-column align-items-center me-5">
+            {resultados.home && <img src={resultados.home.icon} alt="Home team icon" style={{width: '60px', height: '60px'}}/>}
+            {resultados.home && <span>{resultados.home.name}</span>}
+          </div>
+          <div className="text-primary" style={{fontSize: '2rem'}}>
+            {resultados.result}
+          </div>
+          <div className="d-flex flex-column align-items-center ms-5">
+            {<img src={ generateRandomAvatar()} alt="Away team icon" style={{width: '60px', height: '60px'}}/>}
+            {<span> Equipo Enemigo </span>}
+          </div>
+        </div>
     </NavBarTemplate>
   );
 }

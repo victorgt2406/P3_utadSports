@@ -17,6 +17,7 @@ import { Team } from '../models/Team';
 
 export default function ActivityList() {
   const [resultados, setResultados] = useState<{
+    away: Team;
     _id: String,
     location: Location; name: string, sport: String, home: Team, result: string, date: string
   }[]>([]);
@@ -44,6 +45,8 @@ export default function ActivityList() {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .map((res) => ({
       name: res.name,
+      home: res.home,
+      away: res.away,
       sport: res.sport,
       escudo: Escudo,
       res: res.result,
@@ -77,17 +80,18 @@ export default function ActivityList() {
                         <BalonBasket style={{ width: '65px', height: '65px' }} />
                       </div>
                     ) : resultado.sport === 'padel' ? (
-                      <div className="icono-deporte me-5 ms-4" style={{ color: '#0065F3' }}>
+                      <div className="icono-deporte me-5 ms-2" style={{ color: '#0065F3' }}>
                         <Raqueta style={{ width: '65px', height: '65px' }} />
                       </div>
                     ) : null}
                   </div>
-                  <div className="ms-4">
-                    <div className="mb-2" style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.name}</span>
-                    </div>
-                    <VsImage />
-                  </div>
+                  <div className="ms-4" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+  <div className="mb-2" style={{ alignSelf: 'center', textAlign: 'center' }}>
+    <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.name}</span>
+  </div>
+  <VsImage image1={resultado.home?.icon} image2={resultado.away?.icon} />
+</div>
+
                 </div>
                 <div className="ms-auto d-flex flex-column align-items-end mx-5 pt-3">
                   <div className="d-flex align-items-center mb-2">

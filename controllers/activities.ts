@@ -50,9 +50,11 @@ const createActivity = async (req: RequestWithUser, res: Response) => {
                 ...data,
                 home,
                 away,
-                result: data.result,
+                result: '0 - 0',
                 date: data.date
             }
+            console.log(body)
+            console.log(data)
             activitiesModel.create(body)
         } catch (err) {
             console.log(err);

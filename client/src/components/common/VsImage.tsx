@@ -1,6 +1,6 @@
 import { generateRandomAvatar } from "./AvatarCopy";
 
-const VsImage = ({ image1 = generateRandomAvatar(), image2 = generateRandomAvatar() }) => {
+const VsImage = ({ image1 = generateRandomAvatar(), image2 = generateRandomAvatar(), result = '0 - 0', isResult = false }) => {
   return (
     <div className="" style={{ display: 'flex', alignItems: 'center', fontSize: 25, color: '#ACACAC' }}>
       <img
@@ -8,7 +8,11 @@ const VsImage = ({ image1 = generateRandomAvatar(), image2 = generateRandomAvata
         src={image1}
         style={{ width: '50px', height: '50px', borderRadius: '40px' }}
       />
-      <span>VS</span>
+      {isResult ? (
+        <span style={{ color: 'black' }}>{result}</span>
+      ) : (
+        <span>VS</span>
+      )}
       <img
         className="icono-derecha ms-3"
         src={image2}
@@ -19,3 +23,4 @@ const VsImage = ({ image1 = generateRandomAvatar(), image2 = generateRandomAvata
 };
 
 export default VsImage;
+
