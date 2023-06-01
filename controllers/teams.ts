@@ -7,7 +7,7 @@ import handleError from "../utils/handleError";
 import { TeamCreationRequest, TeamUpdateRequest } from "../validators/teams";
 import { Team } from "../models/teams";
 import { Message } from "../models/messages";
-import { title } from "process";
+import getTeamLogo from "../utils/handleTeamLogos";
 
 const createTeam = async (req: RequestWithUser, res: Response) => {
     const data: TeamCreationRequest = matchedData(req) as TeamCreationRequest;
@@ -34,8 +34,15 @@ const createTeam = async (req: RequestWithUser, res: Response) => {
             });
         }
         try {
+            let icon:string = "";
+            if(!data.icon){
+                icon = getTeamLogo(req, data.sport);
+            }
+            else{
+                icon = data.icon;
+            }
             const body:Team = {
-                icon: data.icon ? data.icon : "",
+                icon,
                 name: data.name,
                 description: data.description,
                 sport: data.sport,

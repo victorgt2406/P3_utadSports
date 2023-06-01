@@ -3,7 +3,6 @@ import { ICONS_BASIC, ICONS_NEWS } from "../utils/Icons";
 import useRouterContext from "../utils/RouterContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Content from "../models/Content";
 import Message from "../models/Messages";
 
 function BigNew({ className = "", ...message }: Message & { className?: string }) {

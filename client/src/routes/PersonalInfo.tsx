@@ -17,7 +17,7 @@ export default function PersonalInfo() {
     let user: User = context.user!;
     if (!user) {
         context.setPage("news");
-        return;
+        return <></>;
     }
     const [iconFile, setIconFile] = useState<File | undefined>(undefined);
     const [name, setName] = useState(user.name!);

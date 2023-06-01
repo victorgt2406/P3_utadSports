@@ -31,6 +31,7 @@ export default function () {
                 </LabelInfo>
                 {players.sort().map((player, index) => <LabelInfo key={index}>{player}</LabelInfo>)}
             </div>
+            {context.cache.open?<button onClick={()=>{}}>{context.getText().joinTeam}</button>:<></>}
         </>
     );
 }
