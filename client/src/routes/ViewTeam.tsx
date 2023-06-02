@@ -6,7 +6,7 @@ import TeamInfo from "../components/common/TeamInfo";
 export default function () {
     
     return (
-        <NavBarTemplate page="joinTeam" parentPage="openTeams">
+        <NavBarTemplate page="viewTeam" parentPage="teams">
             <TeamInfo/>
         </NavBarTemplate>
     );
