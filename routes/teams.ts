@@ -16,7 +16,7 @@ router.get('/:id', getTeam);
 router.put('/:id', validatorTeamUpdate, tokenAuth, updateTeam);
 
 // delete
-router.delete('/:id', tokenAuth, deleteTeam);
+router.delete('/:id',  deleteTeam);
 
 // join or ask to join as a player to a team
 router.patch('/join/:team', tokenAuth, joinTeam);

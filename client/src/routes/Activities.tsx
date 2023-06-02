@@ -86,11 +86,11 @@ export default function ActivityList() {
                     ) : null}
                   </div>
                   <div className="ms-4" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-  <div className="mb-2" style={{ alignSelf: 'center', textAlign: 'center' }}>
-    <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.name}</span>
-  </div>
-  <VsImage image1={resultado.home?.icon} image2={resultado.away?.icon} />
-</div>
+                    <div className="mb-2" style={{ alignSelf: 'center', textAlign: 'center' }}>
+                      <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.name}</span>
+                    </div>
+                    <VsImage image1={resultado.home?.icon} image2={resultado.away?.icon} />
+                  </div>
 
                 </div>
                 <div className="ms-auto d-flex flex-column align-items-end mx-5 pt-3">

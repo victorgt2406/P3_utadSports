@@ -10,7 +10,7 @@ function BigNew({ className = "", ...message }: Message & { className?: string }
     const content = message.content[0];
     const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return (
-        <div className={`d-flex flex-column ${className?className:""}`}>
+        <div className={`d-flex flex-column mt-2 ${className?className:""}`}>
             <div
                 style={{
                     position: "relative",

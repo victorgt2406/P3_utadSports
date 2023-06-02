@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import LabelInfo from "../components/common/LabelInfo";
 import { Team } from "../models/Team";
 import NavBarTemplate from "../templates/NavBarTemplate";
@@ -6,12 +6,14 @@ import { format } from 'date-fns';
 import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CONTEXT } from "../utils/Context";
 import BalonBasket from "@mui/icons-material/SportsBasketballRounded";
 import BalonFutbol from '@mui/icons-material/SportsSoccer';
 import Raqueta from '@mui/icons-material/SportsTennis';
 import FechaGrande from '../components/common/FechaGrande';
+import Select from 'react-select';
+import notify from "../utils/notify";
 
 type Activity = {
     away: Team;
@@ -25,12 +27,26 @@ type Activity = {
 };
 
 export default function ActivityDetail() {
+    const navigate = useNavigate();
     const context = useContext(CONTEXT);
     const { id } = useParams();
     const [resultados, setResultados] = useState<Activity | null>(null);
-
+    const [teams, setTeams] = useState<Team[]>([]);
+    const [selectedTeam, setSelectedTeam] = useState<Team>();
     const locale = context.language === 'en' ? enUS : { ...es, formatLong: es.formatLong };
-
+    useEffect(() => {
+        const getTeams = async () => {
+            try {
+                const response = await axios.get(`${context.apiUrl}/teams/`);
+                setTeams(response.data);
+            }
+            catch (err) {
+                console.log(err);
+                setTeams([]);
+            }
+        }
+        getTeams();
+    }, []);
     useEffect(() => {
         axios.get(`${context.apiUrl}/activities/${id}`)
             .then(response => {
@@ -40,15 +56,17 @@ export default function ActivityDetail() {
                 console.log(error);
             });
     }, [id, context.apiUrl]);
-
-    const formatDate = (dateString: string | number | Date) => {
-        const date = new Date(dateString);
-        return format(date, context.language === 'en' ? 'EEEE, MMMM d, hh:mm a' : 'EEEE, d MMMM   HH:mm', { locale });
-    };
+    const updateAwayTeam = async (team: Team) => {
+        try {
+            const response = await axios.put(`${context.apiUrl}/activities/${id}`, { away: team._id });
+            setResultados(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     if (resultados === null) {
-        // Render a loading indicator or return null
-        return <div>Loading...</div>;
+        return;
     }
 
     const getSportIcon = () => {
@@ -85,7 +103,17 @@ export default function ActivityDetail() {
                         type="button"
                         className="btn btn-primary px-4 mb-2"
                         style={{ width: "fit-content" }}
-                        onClick={() => { console.log("TODO!! inscribir a equipo") }}
+                        onClick={() => {
+                            if (selectedTeam) {
+                                updateAwayTeam(selectedTeam);
+                                notify(
+                                    "Inscripción completa",
+                                    "SUCCESS",
+                                    "Estas inscrito para " + resultados.name +  ", buena suerte!"
+                                  )
+                            }
+                        }}
+                        disabled={resultados.away !== undefined}
                     >
                         {context.getText().join}
                     </button>
@@ -97,12 +125,53 @@ export default function ActivityDetail() {
                     {resultados.home.name} (lleno)
                 </LabelInfo>
                 <LabelInfo className="">
-                {resultados.away ? (
-                        resultados.away.name
-                    ) : (
-                        <span className="text-primary">1 plaza</span>
-                    )}
-                   
+                    {
+                        resultados.away ? (
+                            `${resultados.away.name} (lleno)`
+                        ) : (
+                            <Select
+                                className="custom-select"
+                                classNamePrefix="custom-select"
+                                placeholder="Plaza abierta"
+                                options={teams.filter(team => team.name !== resultados.home.name).map(team => ({ label: team.name, value: team }))}
+                                value={selectedTeam ? { label: selectedTeam.name, value: selectedTeam } : null}
+                                onChange={selectedOption => setSelectedTeam(selectedOption ? selectedOption.value : undefined)}
+                                formatOptionLabel={({ label }) => label}
+                                styles={{
+                                    control: styles => ({
+                                        ...styles,
+                                        backgroundColor: 'var(--light-blue-opaque)',
+                                        color: 'black',
+                                        border: 'none',
+                                    }),
+                                    placeholder: styles => ({
+                                        ...styles,
+                                        color: 'var(--bs-primary)', // Add your primary color here
+                                    }),
+                                    menu: styles => ({
+                                        ...styles,
+                                        backgroundColor: 'white',
+                                        border: 'none',
+                                        color: 'black',
+                                    }),
+                                    option: (styles, { isFocused }) => ({
+                                        ...styles,
+                                        backgroundColor: isFocused ? 'var(--light-blue-opaque)' : 'white',
+                                        color: 'black',
+                                        ':hover': {
+                                            backgroundColor: 'var(--light-blue-opaque)',
+                                            color: 'black',
+                                        },
+                                        ':active': {
+                                            backgroundColor: 'var(--light-blue-opaque)',
+                                            color: 'black',
+                                        },
+                                    }),
+                                }}
+                            />
+
+                        )
+                    }
                 </LabelInfo>
             </div>
         </NavBarTemplate>

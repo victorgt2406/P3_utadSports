@@ -12,7 +12,6 @@ import axios from "axios";
 import { CONTEXT } from '../utils/Context';
 import { Team } from "../models/Team";
 import ActivityFlag from '@mui/icons-material/Flag';
-import { generateRandomAvatar } from "../components/common/AvatarCopy";
 
 type Activity = {
   away: Team;
@@ -48,8 +47,7 @@ export default function ResultsActivity() {
     return format(date, context.language === 'en' ? 'EEEE, MMMM d, hh:mm a' : 'EEEE, d MMMM   HH:mm', { locale });
   }
   if (!resultados) {
-    // Render some kind of loading indicator or return null if no render should occur.
-    return null;
+    return;
   }
   return (
     <NavBarTemplate info="activities" parentPage="activities" page="ResultsActivity">
@@ -102,8 +100,8 @@ export default function ResultsActivity() {
             {resultados.result}
           </div>
           <div className="d-flex flex-column align-items-center ms-5">
-            {<img src={ generateRandomAvatar()} alt="Away team icon" style={{width: '60px', height: '60px'}}/>}
-            {<span> Equipo Enemigo </span>}
+          {resultados.away && <img src={resultados.away.icon} alt="Home team icon" style={{width: '60px', height: '60px'}}/>}
+            {resultados.away && <span>{resultados.away.name}</span>}
           </div>
         </div>
     </NavBarTemplate>

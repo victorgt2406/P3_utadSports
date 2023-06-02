@@ -9,7 +9,10 @@ import NavBarTemplate from '../templates/NavBarTemplate';
 import useRouterContext from '../utils/RouterContext';
 import { Team } from '../models/Team';
 import Select from 'react-select';
-
+import notify from '../utils/notify';
+import { useNavigate } from 'react-router-dom';
+import langEn from '../langs/langEn';
+import langEs from '../langs/langEs';
 
 export default function crearActividad() {
   const context = useRouterContext();
@@ -22,18 +25,18 @@ export default function crearActividad() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [calendarKey, setCalendarKey] = useState(0);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCalendarKey((prevKey) => prevKey + 1);
-  },[context.language]);
+  }, [context.language]);
+
   useEffect(() => {
     const getTeams = async () => {
       try {
         const response = await axios.get(`${context.apiUrl}/teams/`);
         setTeams(response.data);
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err);
         setTeams([]);
       }
@@ -49,12 +52,12 @@ export default function crearActividad() {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-  
+
     if (selectedHour !== null && selectedHour >= 0 && selectedHour <= 23) {
       const hour = String(selectedHour).padStart(2, '0');
       return `${year}-${month}-${day} ${hour}:00:00`;
     }
-  
+
     const formattedDate = new Date(year, date.getMonth(), date.getDate(), 0, 0, 0);
     return formattedDate.toLocaleString('en-US', {
       year: 'numeric',
@@ -65,18 +68,15 @@ export default function crearActividad() {
       second: '2-digit'
     });
   }
-  
-  
 
   useEffect(() => {
-
     WebFont.load({
       google: {
         families: ['Poppins']
       }
     });
   }, []);
-  //total_users-equipos*12
+
   let image = <></>;
   if (imageExists) {
     image = <img src="..." alt="team logo" />
@@ -107,18 +107,21 @@ export default function crearActividad() {
             "Content-Type": "application/json",
           },
         });
-
-        console.log(activity);
+        console.log('Activity POST request:', activity);
+        notify("Actividad Creada", "SUCCESS", "La actividad " + (description.current?.value || '') + " ha sido creada correctamente");
+        navigate(`/activities`);
       } catch (error) {
-        console.log(error);
+        console.log('Activity POST request failed:', error);
+        notify("Error al crear la actividad", "ERROR", "Checkea que todos los campos estan rellenos, incluido la hora");
+        throw error;
       }
+    } else {
+      console.log('Selected hour is null');
+      throw new Error("Selected hour is null");
     }
   };
 
-  /*
-  1. Comprobar el state del checkbox con la respuesta antonio
-  2. Array dinamico en el num equipos para luego introducir sus nombres
-  */
+  const lang = context.language === 'es' ? langEs : langEn;
 
   return (
     <NavBarTemplate parentPage="activities" page="createActivity" info="createActivity">
@@ -126,17 +129,23 @@ export default function crearActividad() {
         <br></br>
         <br></br>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Control type="text" placeholder="Nombre de la actividad" className="black-placeholder" style={{ paddingLeft: "2%" }} ref={description} />
+          <Form.Control
+            type="text"
+            placeholder={lang.activityNamePlaceholder}
+            className="black-placeholder"
+            style={{ paddingLeft: '2%' }}
+            ref={description}
+          />
         </Form.Group>
 
         <br></br>
-        <p className="activity-heading">Deporte de la actividad</p>
+        <p className="activity-heading">{lang.sportActivity}</p>
 
         <SportsButtons {...{ sport, setSport }} />
 
         <br></br>
         <div>
-          <p className="activity-heading">Equipo con el que crear la actividad</p>
+          <p className="activity-heading">{lang.activityTeam}</p>
           <Select
             className="custom-select"
             classNamePrefix="custom-select"
@@ -172,21 +181,22 @@ export default function crearActividad() {
               }),
             }}
           />
-
         </div>
+
         <Form.Group className="mb-2 mx-3 mt-2" controlId="formBasicCheckbox">
           <Form.Check
             type="checkbox"
-            label="Actividad abierta"
+            label={lang.openActivity}
             onChange={handleCheckboxChange}
             checked={isChecked}
           />
         </Form.Group>
+
         <br></br>
         <br></br>
-        <p className="activity-heading">Día de la actividad</p>
+        <p className="activity-heading">{lang.activityDay}</p>
         <Calendar
-          key={calendarKey} // Set the key prop of the Calendar component
+          key={calendarKey}
           value={currentDate}
           sport={sport}
           selectedHour={selectedHour}
@@ -194,16 +204,12 @@ export default function crearActividad() {
           onSelectedHourChange={setSelectedHour}
         />
 
-        {/* <div className="mt-5 d-flex justify-content-center mb-3">
-          <button type="button" className="btn btn-primary px-4" onClick={handleClick} style={{ borderRadius: '7px' }}>Crear Actividad</button>
-        </div> */}
         <div className="my-5 d-flex justify-content-center">
           <button
             type="button"
             className="btn btn-primary px-4 text-capitalize"
-            onClick={handleClick}
-          >
-            {context.getText().createActivity}
+            onClick={handleClick}>
+            {lang.createActivity}
           </button>
         </div>
 

@@ -258,7 +258,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
     const startDateTime = parseISO(match.date);
     const endDateTime = parseISO(match.date +1);
     const imgSrc =
-      match.sport === "futbol"
+      match.sport === "football"
         ? ICONS_SPORTS.football
         : match.sport === "padel"
           ? ICONS_SPORTS.padel
@@ -273,7 +273,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
         <div className="mx-4">
           {React.cloneElement(imgSrc, { style: { width: "35px", height: "35px" } })}
         </div>
-        <div className="mx-1" style={{ whiteSpace: "nowrap" }}>PISTA RESERVADA</div>
+        <div className="mx-1" style={{ whiteSpace: "nowrap" }}>{context.language === 'es' ? "PISTA RESERVADA" : "RESERVED COURT"}</div>
         <div className="mx-4">
           {React.cloneElement(imgSrc, { style: { width: "35px", height: "35px" } })}
         </div>
@@ -337,7 +337,7 @@ const Calendar: React.FC<Props> = React.memo(({ sport, onValueChange, onSelected
                         e.currentTarget.classList.add('selected');
                       }}
                     >
-                      <div className="text-center">Seleccionar</div>
+                      <div className="text-center">{context.language === 'es' ? "Seleccionar" : "Select"}</div>
                     </div>
                   )}
                 </div>

@@ -35,7 +35,12 @@ type Others = {
     join: string;
     teamName: string;
     selectCaptain: string;
-    maxPlayers: string;    
+    maxPlayers: string;
+    sportActivity: string; 
+    activityTeam: string;
+    openActivity: string;
+    activityDay: string;
+    activityNamePlaceholder: string;
 }
 
 interface Texts extends PagesStr, Options, LangStr, Others {}

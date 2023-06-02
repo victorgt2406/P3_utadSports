@@ -66,7 +66,12 @@ const langEs: Texts = {
     repeatPassword: "repetir contraseña",
     nick: "apodo",
     name: "nombre",
-    surname: "apellido"
+    surname: "apellido",
+    sportActivity: "Deporte de la actividad",
+    activityTeam: "Equipo con el que crear la actividad",
+    openActivity: "Actividad abierta",
+    activityDay: "Día de la actividad",
+    activityNamePlaceholder: "Nombre de la actividad"
 };
 
 export default langEs;

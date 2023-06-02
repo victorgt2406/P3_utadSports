@@ -17,6 +17,7 @@ import { Team } from '../models/Team';
 
 export default function Events() {
   const [resultados, setResultados] = useState<{
+    away: Team;
     _id: string,
     location: Location; name: string, sport: String, home: Team, result: string, date: string
   }[]>([]);
@@ -41,6 +42,8 @@ export default function Events() {
   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   .filter((res) => new Date(res.date).getTime() > new Date().getTime())
   .map((res) => ({ 
+      home: res.home,
+      away: res.away,
       id: res._id,
       nombre: res.name,
       escudo: Escudo,
@@ -100,7 +103,7 @@ export default function Events() {
                   <span style={{ textTransform: 'uppercase', fontSize: '20px' }}>{resultado.nombre}</span>
                 </div>
                 <div className="ms-5 d-flex align-items-center">
-                  <VsImage />
+                  <VsImage image1={resultado.home?.icon} image2={resultado.away?.icon} />
                 </div>
               </div>
               <div className="ms-auto d-flex flex-column align-items-end mx-4 pt-3">

@@ -1,6 +1,11 @@
 import Others from "./Texts";
 
 const langEn: Others = {
+    activityNamePlaceholder: "Activity name",
+    sportActivity: "Select sport",
+    activityTeam: "Select home team",
+    openActivity: "Open activity",
+    activityDay: "Activity day",
     email: "email",
     emailExample: "name.surname@live.u-tad.com",
     password: "password",

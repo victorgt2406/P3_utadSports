@@ -15,23 +15,18 @@ import { Activity } from "../models/activities";
 import mongoose from "mongoose";
 import getTeamLogo from "../utils/handleTeamLogos";
 
+
 const createActivity = async (req: RequestWithUser, res: Response) => {
-    const data: ActivityCreationRequest = matchedData(
-        req
-    ) as ActivityCreationRequest;
+    const data: ActivityCreationRequest = matchedData(req) as ActivityCreationRequest;
     const user = req.user!;
     if (user) {
         var home: Team | undefined = undefined;
         var away: Team | undefined = undefined;
         try {
             if (data.registeredTeams) {
-                home = (
-                    await teamsModel.findOne({ _id: data.home })
-                )?.toJSON() as Team;
+                home = (await teamsModel.findOne({ _id: data.home }))?.toJSON() as Team;
                 if (data.away) {
-                    away = (
-                        await teamsModel.findOne({ _id: data.away })
-                    )?.toJSON() as Team;
+                    away = (await teamsModel.findOne({ _id: data.away }))?.toJSON() as Team;
                 }
             } else {
                 // creating home team
@@ -63,6 +58,10 @@ const createActivity = async (req: RequestWithUser, res: Response) => {
             console.log(body);
             console.log(data);
             activitiesModel.create(body);
+
+            // Send a response after creating the activity
+            res.sendStatus(200);
+
         } catch (err) {
             console.log(err);
         }
@@ -70,6 +69,7 @@ const createActivity = async (req: RequestWithUser, res: Response) => {
         handleError(res, "DELETED_USER", 403);
     }
 };
+
 const getActivity = async (req: RequestWithUser, res: Response) => {
     try {
         const response = await activitiesModel.find();
@@ -82,9 +82,6 @@ const getActivity = async (req: RequestWithUser, res: Response) => {
 const getCalendar = async (req: RequestWithUser, res: Response) => {
     const { startOfDay, endOfDay } = req.query;
 
-    console.log(`Requested start of day: ${startOfDay}`);
-    console.log(`Requested end of day: ${endOfDay}`);
-
     const filter = {
         date: {
             $gte: new Date(String(startOfDay)),
@@ -92,11 +89,8 @@ const getCalendar = async (req: RequestWithUser, res: Response) => {
         },
     };
 
-    console.log(`Constructed filter: ${JSON.stringify(filter)}`);
-
     try {
         const response = await activitiesModel.find(filter);
-        console.log(`Found ${response.length} matching activities`);
         res.send(response);
     } catch (err) {
         console.error("Error when fetching activities from database:", err);
@@ -144,9 +138,15 @@ const updateActivity = async (req: RequestWithUser, res: Response) => {
             return res.status(400).json({ error: "Invalid team ID" });
         }
 
+        // Get team by id
+        const awayTeam = await teamsModel.findById(away);
+        if (!awayTeam) {
+            return res.status(404).json({ error: "Team not found" });
+        }
+
         const activity = await activitiesModel.findByIdAndUpdate(
             id,
-            { score, away },
+            { score, away: awayTeam },
             { new: true }
         );
         if (!activity) {
@@ -160,6 +160,7 @@ const updateActivity = async (req: RequestWithUser, res: Response) => {
         });
     }
 };
+
 
 export {
     createActivity,
