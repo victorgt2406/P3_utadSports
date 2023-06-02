@@ -47,7 +47,7 @@ export default function ResultsActivity() {
     return format(date, context.language === 'en' ? 'EEEE, MMMM d, hh:mm a' : 'EEEE, d MMMM   HH:mm', { locale });
   }
   if (!resultados) {
-    return;
+    return <></>;
   }
   return (
     <NavBarTemplate info="activities" parentPage="activities" page="ResultsActivity">

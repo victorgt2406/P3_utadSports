@@ -66,7 +66,7 @@ export default function ActivityDetail() {
     }
 
     if (resultados === null) {
-        return;
+        return <></>;
     }
 
     const getSportIcon = () => {
