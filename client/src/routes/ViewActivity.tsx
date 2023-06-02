@@ -84,6 +84,7 @@ export default function ActivityDetail() {
 
     return (
         <NavBarTemplate info="activities" parentPage="activities" page="viewActivity">
+            <br></br>
             <div className="d-flex justify-content-center align-items-center my-4">
                 <div className="me-2 text-primary" style={{ height: "80px", width: "80px" }}>
                     {getSportIcon()}
@@ -120,6 +121,7 @@ export default function ActivityDetail() {
                 </div>
                 <FechaGrande fecha={resultados.date} />
             </div>
+            <br></br>
             <div>
                 <LabelInfo label="Equipos que van a participar en la actividad" className="pb-2 mt-2">
                     {resultados.home.name} (lleno)
